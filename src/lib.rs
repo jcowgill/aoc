@@ -49,3 +49,16 @@ pub fn list_stars() -> Vec<String> {
 
     names
 }
+
+// ========================================================================
+
+/// Returns the cartesian product of two iterators
+pub fn cartesian_product<T>(a: &Vec<T>, b: &Vec<T>) -> Vec<(T, T)> where T: Clone {
+    let mut result = Vec::new();
+    for left in a {
+        for right in b {
+            result.push((left.clone(), right.clone()))
+        }
+    }
+    result
+}
