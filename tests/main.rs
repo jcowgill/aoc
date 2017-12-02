@@ -58,10 +58,7 @@ fn test_star(name: &str, func: StarFunction, data_path: &Path) {
     // Generate a list of test cases by scanning the data directory
     let mut tests = Vec::new();
     for entry_result in data_path.read_dir().unwrap() {
-        let entry = entry_result.unwrap();
-        let mut path = entry.path();
-
-        assert!(entry.file_type().unwrap().is_file());
+        let mut path = entry_result.unwrap().path();
         assert!(path.extension().unwrap() == "in" || path.extension().unwrap() == "out");
 
         path.set_extension("dummy");
