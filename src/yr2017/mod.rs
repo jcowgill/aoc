@@ -2,7 +2,7 @@
 
 mod day1;
 
-use aoclib::StarVector;
+use StarVector;
 
 /// Returns the list of stars implemented this year
 pub fn stars() -> StarVector {

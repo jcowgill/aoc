@@ -3,4 +3,10 @@ name = "aoc"
 version = "0.1.0"
 authors = ["James Cowgill <jcowgill@jcowgill.uk>"]
 
-[dependencies]
+[lib]
+name = "aoclib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "aoc"
+path = "src/bin.rs"
