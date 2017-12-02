@@ -51,7 +51,7 @@ fn read_test_file(test: &PathBuf, extension: &str) -> String {
 
 /// Tests that the given star function operates correctly
 ///  Panics on error
-fn test_star(func: StarFunction, data_path: &Path) {
+fn test_star(name: &str, func: StarFunction, data_path: &Path) {
     // Given path must be a directory
     assert!(data_path.is_dir());
 
@@ -74,6 +74,8 @@ fn test_star(func: StarFunction, data_path: &Path) {
     for test in tests {
         let input_data = read_test_file(&test, "in");
         let output_data = read_test_file(&test, "out");
+
+        println!(" running \"{}\" on {:?}...", name, test.file_stem().unwrap());
         assert_eq!(func(input_data.as_ref()).trim(), output_data.trim());
     }
 }
@@ -85,7 +87,7 @@ fn test_star_implementations() {
     let stars = list_stars_in_directory(get_data_dir().as_ref());
     for (name, path) in stars {
         match star_function(name.as_ref()) {
-            Some(func) => test_star(func, path.as_path()),
+            Some(func) => test_star(name.as_ref(), func, path.as_path()),
             None => ()
         }
     }
