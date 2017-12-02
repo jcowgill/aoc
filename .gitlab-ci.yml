@@ -1,0 +1,14 @@
+image: debian:buster
+variables:
+  LC_ALL: C.UTF-8
+  RUST_BACKTRACE: full
+
+before_script:
+- apt-get update
+- apt-get install -y cargo
+- rustc --version && cargo --version
+
+test:
+  stage: test
+  script:
+  - cargo test --verbose --release --jobs 1
