@@ -14,5 +14,6 @@ pub fn stars() -> StarVector {
         ("02-1", day2::star1),
         ("02-2", day2::star2),
         ("03-1", day3::star1),
+        ("03-2", day3::star2),
     ]
 }
