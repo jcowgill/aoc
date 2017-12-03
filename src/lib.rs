@@ -1,6 +1,7 @@
 //! Main AOC library functions
 //!  This library imports all AOC star implementations and provides various global functions
 
+mod yr2015;
 mod yr2017;
 
 /// Function type for all star functions
@@ -13,7 +14,8 @@ pub type StarVector = Vec<(&'static str, StarFunction)>;
 /// Returns a vector containing all star maps
 fn star_maps() -> Vec<(&'static str, StarVector)> {
     vec![
-        ("2017", yr2017::stars())
+        ("2015", yr2015::stars()),
+        ("2017", yr2017::stars()),
     ]
 }
 
