@@ -1,10 +1,13 @@
+/// Identity function - returns given input
+fn id<T>(v: T) -> T { v }
+
 /// Verifies a list of passwords
 ///  Splits the input string into lines and words, passes the words through "word_func" and returns
 ///  the number of lines which do not contain duplicate words
-fn password_checker<'a>(input: &'a str, word_func: fn(&'a str) -> String) -> String {
+fn password_checker<'a, T>(input: &'a str, word_func: fn(&'a str) -> T) -> String where T: Ord {
     input.lines().filter(|line| {
         // A password is valid if we sort it, dedup it and the size is unchanged
-        let mut words: Vec<String> = line.split_whitespace().map(word_func).collect();
+        let mut words: Vec<T> = line.split_whitespace().map(word_func).collect();
         let orig_len = words.len();
         words.sort_unstable();
         words.dedup();
@@ -14,7 +17,7 @@ fn password_checker<'a>(input: &'a str, word_func: fn(&'a str) -> String) -> Str
 
 /// Sum list of strings containing no duplicate words
 pub fn star1(input: &str) -> String {
-    password_checker(input, String::from)
+    password_checker(input, id)
 }
 
 /// Sum list of strings containing no words which are anagrams of each other
