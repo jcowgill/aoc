@@ -64,3 +64,6 @@ pub fn cartesian_product<T>(a: &Vec<T>, b: &Vec<T>) -> Vec<(T, T)> where T: Clon
     }
     result
 }
+
+/// Identity function - returns given input
+pub fn id<T>(v: T) -> T { v }

@@ -1,5 +1,4 @@
-/// Identity function - returns given input
-fn id<T>(v: T) -> T { v }
+use id;
 
 /// Verifies a list of passwords
 ///  Splits the input string into lines and words, passes the words through "word_func" and returns
