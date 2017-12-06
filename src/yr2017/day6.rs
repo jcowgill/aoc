@@ -51,7 +51,6 @@ pub fn star1(input: &str) -> String {
     let mut iterations = 0;
     while set.insert(last_vector.clone()) {
         iterations += 1;
-        println!("{:?}", last_vector);
         redistribute(&mut last_vector);
     }
 
