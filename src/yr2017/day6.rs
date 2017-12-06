@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::HashMap;
 
 /// Returns the index of the largest element in the iterator
 ///  Returns the first index on ties
@@ -40,19 +40,33 @@ fn redistribute(vector: &mut Vec<i32>) {
     }
 }
 
-/// Traverse jump table, incrementing each value after a step
-pub fn star1(input: &str) -> String {
+/// Redistribute memory around banks
+///  Find first repeated configuration
+///  Returns (total iterations taken, iterations in first cycle)
+fn find_repeated_redistribution(input: &str) -> (usize, usize) {
     // Generate initial vector
     let mut last_vector: Vec<i32> =
         input.split_whitespace().map(|value| value.parse().unwrap()).collect();
 
-    // Redistribute and store in a hash set until we get a repeated vector
-    let mut set = HashSet::new();
+    // Redistribute and store in a hash map until we get a repeated vector
+    let mut map = HashMap::new();
     let mut iterations = 0;
-    while set.insert(last_vector.clone()) {
+    while !map.contains_key(&last_vector) {
+        map.insert(last_vector.clone(), iterations);
         iterations += 1;
         redistribute(&mut last_vector);
     }
 
-    iterations.to_string()
+    (iterations, iterations - map[&last_vector])
+}
+
+/// Redistribute memory around banks, return iterations until repeat
+pub fn star1(input: &str) -> String {
+    find_repeated_redistribution(input).0.to_string()
+}
+
+/// Redistribute memory around banks
+///  Return length of cycle which repeat generates
+pub fn star2(input: &str) -> String {
+    find_repeated_redistribution(input).1.to_string()
 }

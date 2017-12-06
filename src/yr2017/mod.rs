@@ -23,5 +23,6 @@ pub fn stars() -> StarVector {
         ("05-1", day5::star1),
         ("05-2", day5::star2),
         ("06-1", day6::star1),
+        ("06-2", day6::star2),
     ]
 }
