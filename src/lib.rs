@@ -67,3 +67,8 @@ pub fn cartesian_product<T>(a: &Vec<T>, b: &Vec<T>) -> Vec<(T, T)> where T: Clon
 
 /// Identity function - returns given input
 pub fn id<T>(v: T) -> T { v }
+
+/// Applies a function combining two heterogeneous tuples
+pub fn apply_tuple2<F: Fn(A, B) -> R, A, B, R>(func: F, left: (A, A), right: (B, B)) -> (R, R) {
+    (func(left.0, right.0), func(left.1, right.1))
+}
