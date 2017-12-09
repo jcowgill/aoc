@@ -24,7 +24,7 @@ pub fn star1(input: &str) -> String {
 /// Calculate spreadsheet checksum using evenly divisible numbers
 pub fn star2(input: &str) -> String {
     spreadsheet_checksum(input, |values| {
-        for (a, b) in cartesian_product(&values, &values) {
+        for (a, b) in cartesian_product(values.iter(), values.iter()) {
             if a != b && a % b == 0 {
                 return a / b;
             }
