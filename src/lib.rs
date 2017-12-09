@@ -1,6 +1,10 @@
 //! Main AOC library functions
 //!  This library imports all AOC star implementations and provides various global functions
 
+use std::iter::Cycle;
+use std::iter::Zip;
+
+mod duplicate;
 mod yr2015;
 mod yr2017;
 
@@ -55,14 +59,11 @@ pub fn list_stars() -> Vec<String> {
 // ========================================================================
 
 /// Returns the cartesian product of two iterators
-pub fn cartesian_product<T>(a: &Vec<T>, b: &Vec<T>) -> Vec<(T, T)> where T: Clone {
-    let mut result = Vec::new();
-    for left in a {
-        for right in b {
-            result.push((left.clone(), right.clone()))
-        }
-    }
-    result
+pub fn cartesian_product<A, B>(a: A, b: B) -> Zip<duplicate::Duplicate<A>, Cycle<B>>
+    where A: Iterator, A::Item: Clone, B: Clone + Iterator {
+    // Return an iterator made up of duplicating the items in a b times and
+    // zipping that up with b cycled a times
+    duplicate::duplicate(a, b.clone().count()).zip(b.cycle())
 }
 
 /// Identity function - returns given input
