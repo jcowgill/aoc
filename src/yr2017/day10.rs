@@ -3,9 +3,6 @@ use std::ops::BitXor;
 /// Result of the knot hasher (16 bytes)
 type KnotHashResult = [u8; 16];
 
-/// Default number of elements in the hash buffer
-const DEFAULT_ELEMENTS: usize = 256;
-
 /// Lengths to append to hash input
 const LENGTHS_APPEND: [u8; 5] = [17, 31, 73, 47, 23];
 
@@ -16,7 +13,7 @@ fn parse_lengths(input: &str) -> (usize, Vec<u8>) {
     let elements = if semicolon_parts.len() == 2 {
         semicolon_parts.remove(0).trim().parse().unwrap()
     } else {
-        DEFAULT_ELEMENTS
+        256
     };
 
     // Extract lengths and return result
