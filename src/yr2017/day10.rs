@@ -1,7 +1,7 @@
 use std::ops::BitXor;
 
 /// Result of the knot hasher (16 bytes)
-type KnotHashResult = [u8; 16];
+pub type KnotHashResult = [u8; 16];
 
 /// Lengths to append to hash input
 const LENGTHS_APPEND: [u8; 5] = [17, 31, 73, 47, 23];
@@ -58,8 +58,9 @@ fn knot_round<T, I>(mut knot: &mut Vec<T>, lengths: I, initial_pos: usize, initi
     pos
 }
 
-/// Runs the full knot hasher on an iterator of bytes
-fn knot_hash<I>(input: I) -> KnotHashResult where I: Iterator<Item=u8> + Clone {
+/// Runs the full knot hash of an iterator of bytes
+///  This function is used by other days so don't change the signature
+pub fn knot_hash<I>(input: I) -> KnotHashResult where I: Iterator<Item=u8> + Clone {
     let full_input = input.chain(LENGTHS_APPEND.iter().cloned());
     let full_input_len = full_input.clone().count();
 
