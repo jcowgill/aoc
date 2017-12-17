@@ -77,15 +77,46 @@ fn test_star(name: &str, func: StarFunction, data_path: &Path) {
     }
 }
 
-/// Checks the star implementations according to the test directory data
-///  Ignores missing stars (unlike above test)
-#[test]
-fn test_star_implementations() {
-    let stars = list_stars_in_directory(get_data_dir().as_ref());
-    for (name, path) in stars {
-        match star_function(name.as_ref()) {
-            Some(func) => test_star(name.as_ref(), func, path.as_path()),
-            None => ()
+/// Helper function for gen_tests macro
+fn gen_tests_helper(year: &str, day: &str) {
+    assert!(year.starts_with("yr"));
+    assert!(day.starts_with("day"));
+    let prefix = format!("{}-{}-", year.split_at(2).1, day.split_at(3).1);
+
+    for (name, path) in list_stars_in_directory(get_data_dir().as_ref()) {
+        if name.starts_with(&prefix[..]) {
+            match star_function(name.as_ref()) {
+                Some(func) => test_star(name.as_ref(), func, path.as_path()),
+                None => ()
+            }
         }
     }
 }
+
+/// Macro which generates a list of tests for specified days in a year
+macro_rules! gen_tests_days {
+    ( $year:ident, $( $day:ident ),* ) => {
+        $(
+            #[test]
+            fn $day() {
+                gen_tests_helper(stringify!($year), stringify!($day))
+            }
+        )*
+    }
+}
+
+/// Macro which generates a list of tests for a specific year
+macro_rules! gen_tests {
+    ( $year:ident ) => {
+        mod $year {
+            use super::gen_tests_helper;
+            gen_tests_days!($year,
+                            day1, day2, day3, day4, day5, day6, day7, day8, day9,
+                            day10, day11, day12, day13, day14, day15, day16, day17,
+                            day18, day19, day20, day21, day22, day23, day24, day25);
+        }
+    }
+}
+
+gen_tests!(yr2015);
+gen_tests!(yr2017);
