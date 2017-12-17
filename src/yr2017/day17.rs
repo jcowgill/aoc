@@ -1,15 +1,15 @@
 /// Prints "spinlock" final value
 pub fn star1(input: &str) -> String {
-    let step: usize = input.parse().unwrap();
-    let mut buffer: Vec<usize> = vec![0];
+    let step: u32 = input.parse().unwrap();
+    let mut buffer: Vec<u32> = vec![0];
     let mut pos = 0;
 
     for i in 1..2018 {
         pos = (pos + step) % i + 1;
-        buffer.insert(pos, i);
+        buffer.insert(pos as usize, i);
     }
 
-    buffer[(pos + 1) % buffer.len()].to_string()
+    buffer[(pos + 1) as usize % buffer.len()].to_string()
 }
 
 /// Prints "spinlock" final value at pos 1 after 5 million iterations
@@ -17,7 +17,7 @@ pub fn star2(input: &str) -> String {
     // We explot the fact that inserting a new value never affects items before the current
     // position. Therefore to know what is in position 1, we only care about changes that happen
     // when inserting at position 1 (nothing is ever inserted at position 0).
-    let step: usize = input.parse().unwrap();
+    let step: u32 = input.parse().unwrap();
     let mut pos1_value = 1;
     let mut pos = 1;
 
