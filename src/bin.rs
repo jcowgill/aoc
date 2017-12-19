@@ -29,7 +29,7 @@ fn main() {
                         let mut stdin = String::new();
                         match io::stdin().read_to_string(&mut stdin) {
                             Ok(_) => {
-                                println!("{}", func(stdin.trim()));
+                                println!("{}", func(stdin.trim_right()));
                                 0
                             },
                             Err(e) => {

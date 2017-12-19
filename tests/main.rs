@@ -73,7 +73,7 @@ fn test_star(name: &str, func: StarFunction, data_path: &Path) {
         let output_data = read_test_file(&test, "out");
 
         println!(" running \"{}\" on {:?}...", name, test.file_stem().unwrap());
-        assert_eq!(output_data.trim(), func(input_data.trim()));
+        assert_eq!(output_data.trim(), func(input_data.trim_right()));
     }
 }
 
