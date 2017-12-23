@@ -153,16 +153,12 @@ pub fn star2(input: &str) -> String {
     let mut particles: Vec<Particle> = input.lines().map(parse_particle).collect();
     let mut last_collision = 0;
 
-    //iter_display("BEGIN", &particles);
     while last_collision < 1000 {
         // Advance all particles by one step
-        //iter_display("PRE", &particles);
         for p in particles.iter_mut() {
             p.velocity += p.accel;
             p.position += p.velocity;
         }
-
-        //iter_display("POST", &particles);
 
         // Dedup particles which have collided
         particles.sort_unstable_by_key(|p| p.position);
@@ -173,6 +169,5 @@ pub fn star2(input: &str) -> String {
         }
     }
 
-    //iter_display("END", &particles);
     particles.len().to_string()
 }
