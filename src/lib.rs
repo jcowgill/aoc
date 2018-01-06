@@ -4,7 +4,9 @@
 use std::iter::Cycle;
 use std::iter::Zip;
 
+mod direction;
 mod duplicate;
+mod vector;
 mod yr2015;
 mod yr2017;
 
