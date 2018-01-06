@@ -1,54 +1,6 @@
 use std::str::FromStr;
-
-/// A direction in the input grid
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-enum Direction {
-    North,
-    East,
-    South,
-    West
-}
-
-impl Direction {
-    /// Get direction clockwise of self
-    fn clockwise(self) -> Direction {
-        match self {
-            Direction::North => Direction::East,
-            Direction::East  => Direction::South,
-            Direction::South => Direction::West,
-            Direction::West  => Direction::North
-        }
-    }
-
-    /// Get direction anti-clockwise of self
-    fn anticlockwise(self) -> Direction {
-        match self {
-            Direction::North => Direction::West,
-            Direction::East  => Direction::North,
-            Direction::South => Direction::East,
-            Direction::West  => Direction::South
-        }
-    }
-}
-
-/// A point on the grid (x going east, y going south)
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-struct Point {
-    x: isize,
-    y: isize
-}
-
-impl Point {
-    /// Move a point in the given direction
-    fn move_direction(self, dir: Direction) -> Point {
-        match dir {
-            Direction::North => Point{ x: self.x,     y: self.y - 1 },
-            Direction::East  => Point{ x: self.x + 1, y: self.y },
-            Direction::South => Point{ x: self.x,     y: self.y + 1 },
-            Direction::West  => Point{ x: self.x - 1, y: self.y }
-        }
-    }
-}
+use direction::Direction;
+use vector::Vector2;
 
 /// Value of each cell in the grid
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -74,7 +26,7 @@ impl Grid {
     }
 
     /// Returns the value at a given point
-    fn cell_value(&self, point: Point) -> CellValue {
+    fn cell_value(&self, point: Vector2<isize>) -> CellValue {
         let pos = (point.y * self.width as isize + point.x) as usize;
         if point.x >= 0 && point.y >= 0 && point.x < self.width as isize && pos < self.data.len() {
             self.data[pos]
@@ -93,7 +45,7 @@ impl Grid {
             let mut new_data = Vec::with_capacity(width * height);
             for y in 0..height {
                 for x in 0..width {
-                    new_data.push(self.cell_value(Point { x: x as isize, y: y as isize }));
+                    new_data.push(self.cell_value(Vector2 { x: x as isize, y: y as isize }));
                 }
             }
 
@@ -133,9 +85,9 @@ impl FromStr for Grid {
 }
 
 /// Find the starting point
-fn find_grid_start(grid: &Grid) -> Option<Point> {
+fn find_grid_start(grid: &Grid) -> Option<Vector2<isize>> {
     (0..grid.width)
-        .map(|x| Point{ x: x as isize, y: 0 })
+        .map(|x| Vector2 { x: x as isize, y: 0 })
         .filter(|p| grid.cell_value(*p) == CellValue::Vertical)
         .next()
 }
@@ -154,7 +106,7 @@ fn trace_path(input: &str) -> (String, usize) {
     let mut steps = 0;
 
     loop {
-        pos = pos.move_direction(dir);
+        pos = pos + dir.to_vec_neg(1);
         steps += 1;
         match grid.cell_value(pos) {
             CellValue::Blank => {
@@ -166,11 +118,11 @@ fn trace_path(input: &str) -> (String, usize) {
             },
             CellValue::Cross => {
                 // Test each possible direction
-                if grid.cell_value(pos.move_direction(dir)) != CellValue::Blank {
+                if grid.cell_value(pos + dir.to_vec_neg(1)) != CellValue::Blank {
                     // Don't change direction
-                } else if grid.cell_value(pos.move_direction(dir.clockwise())) != CellValue::Blank {
+                } else if grid.cell_value(pos + dir.clockwise().to_vec_neg(1)) != CellValue::Blank {
                     dir = dir.clockwise();
-                } else if grid.cell_value(pos.move_direction(dir.anticlockwise())) != CellValue::Blank {
+                } else if grid.cell_value(pos + dir.anticlockwise().to_vec_neg(1)) != CellValue::Blank {
                     dir = dir.anticlockwise()
                 }
             },
