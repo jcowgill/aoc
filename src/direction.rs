@@ -31,6 +31,16 @@ impl Direction {
         }
     }
 
+    /// Get reverse direction
+    pub fn reverse(self) -> Direction {
+        match self {
+            Direction::North => Direction::South,
+            Direction::East  => Direction::West,
+            Direction::South => Direction::North,
+            Direction::West  => Direction::East
+        }
+    }
+
     /// Converts this direction into a vector with the given size
     ///  This function interprets north as positive y values.
     pub fn to_vec<T: Copy + Sub<Output=T> + Neg<Output=T>>(self, size: T) -> Vector2<T> {
