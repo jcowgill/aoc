@@ -1,5 +1,7 @@
 //! Year 2017 modules
 
+mod processor;
+
 mod day1;
 mod day2;
 mod day3;
