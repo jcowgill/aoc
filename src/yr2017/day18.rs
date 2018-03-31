@@ -2,10 +2,23 @@ use yr2017::processor::{ExecutionState, Instruction, StepResult, program_step};
 
 /// Parses the input program into a list of instructions
 fn parse_program(input: &str) -> Vec<Instruction> {
-    match input.lines().map(str::parse).collect() {
+    let list: Vec<Instruction> = match input.lines().map(str::parse).collect() {
         Ok(list) => list,
         Err(_)   => panic!("invalid program")
-    }
+    };
+
+    // Validate program instructions
+    for instr in list.iter() {
+        match instr {
+            &Instruction::Snd(_) | &Instruction::Rcv(_) |
+            &Instruction::Set(_, _) | &Instruction::Add(_, _) |
+            &Instruction::Mul(_, _) | &Instruction::Mod(_, _) |
+            &Instruction::Jgz(_, _) => (),
+            _ => panic!("invalid program"),
+        }
+    };
+
+    list
 }
 
 /// Prints value of first completed rcv instruction
