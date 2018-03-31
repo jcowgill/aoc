@@ -39,7 +39,7 @@ trait ValueQueriable {
 }
 
 /// A machine register name
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Hash, Eq, PartialEq)]
 pub struct Register(u8);
 
 impl FromStr for Register {
@@ -92,9 +92,11 @@ pub enum Instruction {
     Rcv(Register),
     Set(Register, RegImm),
     Add(Register, RegImm),
+    Sub(Register, RegImm),
     Mul(Register, RegImm),
     Mod(Register, RegImm),
-    Jgz(RegImm, RegImm)
+    Jgz(RegImm, RegImm),
+    Jnz(RegImm, RegImm),
 }
 
 impl FromStr for Instruction {
@@ -116,9 +118,11 @@ impl FromStr for Instruction {
             "rcv" => Ok(Instruction::Rcv(parts[1].parse()?)),
             "set" => Ok(Instruction::Set(parts[1].parse()?, parts[2].parse()?)),
             "add" => Ok(Instruction::Add(parts[1].parse()?, parts[2].parse()?)),
+            "sub" => Ok(Instruction::Sub(parts[1].parse()?, parts[2].parse()?)),
             "mul" => Ok(Instruction::Mul(parts[1].parse()?, parts[2].parse()?)),
             "mod" => Ok(Instruction::Mod(parts[1].parse()?, parts[2].parse()?)),
             "jgz" => Ok(Instruction::Jgz(parts[1].parse()?, parts[2].parse()?)),
+            "jnz" => Ok(Instruction::Jnz(parts[1].parse()?, parts[2].parse()?)),
             _     => Err(())
         }
     }
@@ -176,6 +180,10 @@ pub fn program_step(program: &[Instruction], state: &mut ExecutionState) -> Step
             state.regs[reg.0 as usize] += val.get_value(state);
             StepResult::Running
         },
+        Instruction::Sub(reg, val) => {
+            state.regs[reg.0 as usize] -= val.get_value(state);
+            StepResult::Running
+        },
         Instruction::Mul(reg, val) => {
             state.regs[reg.0 as usize] *= val.get_value(state);
             StepResult::Running
@@ -189,6 +197,12 @@ pub fn program_step(program: &[Instruction], state: &mut ExecutionState) -> Step
                 state.pc += offset.get_value(state) - 1;
             };
             StepResult::Running
-        }
+        },
+        Instruction::Jnz(cond, offset) => {
+            if cond.get_value(state) != 0 {
+                state.pc += offset.get_value(state) - 1;
+            };
+            StepResult::Running
+        },
     }
 }

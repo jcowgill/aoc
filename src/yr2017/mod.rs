@@ -24,6 +24,7 @@ mod day19;
 mod day20;
 mod day21;
 mod day22;
+mod day23;
 
 use StarVector;
 
@@ -74,5 +75,7 @@ pub fn stars() -> StarVector {
         ("21-2", day21::star2),
         ("22-1", day22::star1),
         ("22-2", day22::star2),
+        ("23-1", day23::star1),
+        ("23-2", day23::star2),
     ]
 }
