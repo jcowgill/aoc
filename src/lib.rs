@@ -11,6 +11,7 @@ mod vector;
 
 mod yr2015;
 mod yr2017;
+mod yr2018;
 
 /// Function type for all star functions
 pub type StarFunction = fn (&str) -> String;
@@ -24,6 +25,7 @@ fn star_maps() -> Vec<(&'static str, StarVector)> {
     vec![
         ("2015", yr2015::stars()),
         ("2017", yr2017::stars()),
+        ("2018", yr2018::stars()),
     ]
 }
 
