@@ -17,7 +17,7 @@ pub type StarFunction = fn (&str) -> String;
 
 /// Type returned by year stars() functions.
 ///  The vector is always sorted by name and maps star names to implementations.
-pub type StarVector = Vec<(&'static str, StarFunction)>;
+type StarVector = Vec<(&'static str, StarFunction)>;
 
 /// Returns a vector containing all star maps
 fn star_maps() -> Vec<(&'static str, StarVector)> {
