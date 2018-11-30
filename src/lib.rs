@@ -6,7 +6,9 @@ use std::iter::Zip;
 
 mod direction;
 mod duplicate;
+#[macro_use] mod macros;
 mod vector;
+
 mod yr2015;
 mod yr2017;
 
