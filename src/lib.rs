@@ -1,8 +1,10 @@
 //! Main AOC library functions
 //!  This library imports all AOC star implementations and provides various global functions
 
+use std::fmt;
 use std::iter::Cycle;
 use std::iter::Zip;
+use std::str::FromStr;
 
 mod direction;
 mod duplicate;
@@ -16,50 +18,65 @@ mod yr2018;
 /// Function type for all star functions
 pub type StarFunction = fn (&str) -> String;
 
-/// Type returned by year stars() functions.
-///  The vector is always sorted by name and maps star names to implementations.
-type StarVector = Vec<(&'static str, StarFunction)>;
-
-/// Returns a vector containing all star maps
-fn star_maps() -> Vec<(&'static str, StarVector)> {
-    vec![
-        ("2015", yr2015::stars()),
-        ("2017", yr2017::stars()),
-        ("2018", yr2018::stars()),
-    ]
+/// Uniquely identifies a star
+#[derive(Debug, Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct StarId
+{
+    pub year: u16,
+    pub day: u8,
+    pub star: u8,
 }
+
+impl fmt::Display for StarId
+{
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:04}-{:02}-{}", self.year, self.day, self.star)
+    }
+}
+
+impl FromStr for StarId
+{
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut part_iter = s.splitn(3, '-');
+        if let Some(Some(year)) = part_iter.next().map(|s| s.parse().ok()) {
+            if let Some(Some(day)) = part_iter.next().map(|s| s.parse().ok()) {
+                if let Some(Some(star)) = part_iter.next().map(|s| s.parse().ok()) {
+                    return Ok(StarId { year: year, day: day, star: star });
+                }
+            }
+        }
+
+        Err(())
+    }
+}
+
+/// Returns a vector containing all stars sorted by id
+pub fn all_stars() -> Vec<(StarId, StarFunction)> {
+    let mut result = Vec::new();
+    result.append(&mut yr2015::stars());
+    result.append(&mut yr2017::stars());
+    result.append(&mut yr2018::stars());
+    result
+}
+
 
 /// Returns the star function with the given name
 pub fn star_function(name: &str) -> Option<StarFunction> {
-    let maps = star_maps();
-
-    // Split name into year and star parts, then try to find it in the star maps
-    let parts: Vec<&str> = name.splitn(2, '-').collect();
-    if parts.len() == 2 {
-        match maps.binary_search_by(|probe| probe.0.cmp(parts[0])) {
-            Ok(i_yr) => {
-                match maps[i_yr].1.binary_search_by(|probe| probe.0.cmp(parts[1])) {
-                    Ok(i_func) => Some(maps[i_yr].1[i_func].1),
-                    _ => None
-                }
-            },
-            _ => None
+    if let Ok(id) = name.parse::<StarId>() {
+        let stars = all_stars();
+        if let Ok(index) = stars.binary_search_by(|probe| probe.0.cmp(&id)) {
+            return Some(stars[index].1);
         }
-    } else {
-        None
     }
+
+    None
 }
 
 /// Returns a list of all available stars
 pub fn list_stars() -> Vec<String> {
-    let mut names = Vec::new();
-    for (year, year_stars) in star_maps() {
-        for (name, _) in year_stars {
-            names.push(year.to_owned() + "-" + name);
-        }
-    }
-
-    names
+    all_stars().iter().map(|(id, _)| id.to_string()).collect()
 }
 
 // ========================================================================
