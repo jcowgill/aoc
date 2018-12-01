@@ -2,7 +2,7 @@
 
 extern crate aoclib;
 
-use aoclib::{StarFunction, list_stars, star_function};
+use aoclib::{StarFunction, star_function};
 use std::fs::File;
 use std::io::Read;
 use std::path::{Path, PathBuf};
@@ -28,14 +28,6 @@ fn list_stars_in_directory(data_dir: &str) -> Vec<(String, PathBuf)> {
 
     names.sort_unstable();
     names
-}
-
-/// Checks the star list contains the same set of stars as the test directory does
-#[test]
-fn test_star_list() {
-    let mut stars = list_stars_in_directory(get_data_dir().as_ref());
-    let names: Vec<String> = stars.drain(..).map(|(name, _)| name).collect();
-    assert_eq!(names, list_stars());
 }
 
 /// Reads the entire contents of a test data file
