@@ -74,11 +74,6 @@ pub fn star_function(name: &str) -> Option<StarFunction> {
     None
 }
 
-/// Returns a list of all available stars
-pub fn list_stars() -> Vec<String> {
-    all_stars().iter().map(|(id, _)| id.to_string()).collect()
-}
-
 #[cfg(test)]
 mod tests
 {

@@ -5,7 +5,7 @@
 
 extern crate aoclib;
 
-use aoclib::{list_stars, star_function};
+use aoclib::{StarId, all_stars};
 use std::env;
 use std::io::{self, Read};
 
@@ -18,18 +18,19 @@ fn print_usage() {
 }
 
 fn main() {
+    let stars = all_stars();
     let args: Vec<String> = env::args().collect();
     std::process::exit(
         match args.len() {
             0 | 1 => { print_usage(); 0 },
             2 => {
-                match star_function(&args[1]) {
-                    Some(func) => {
+                if let Ok(id) = args[1].parse::<StarId>() {
+                    if let Ok(index) = stars.binary_search_by(|probe| probe.0.cmp(&id)) {
                         // Consume all of stdin and run the star!
                         let mut stdin = String::new();
                         match io::stdin().read_to_string(&mut stdin) {
                             Ok(_) => {
-                                println!("{}", func(stdin.trim_right()));
+                                println!("{}", stars[index].1(stdin.trim_right()));
                                 0
                             },
                             Err(e) => {
@@ -37,23 +38,23 @@ fn main() {
                                 1
                             }
                         }
+                    } else {
+                        eprintln!("{}: unimplemented star \"{}\"", args[0], args[1]);
+                        1
                     }
-                    None => {
-                        // Try known arguments
-                        match args[1].as_ref() {
-                            "--help" | "-h" => { print_usage(); 0 },
-                            "--list" | "-l" => {
-                                for name in list_stars() {
-                                    println!("{}", name);
-                                }
-                                0
-                            },
-                            _ => {
-                                let thing =
-                                    if args[1].starts_with("--") { "option" } else { "star" };
-                                eprintln!("{}: unknown {} \"{}\"", args[0], thing, args[1]);
-                                1
+                } else {
+                    // Try known arguments
+                    match args[1].as_ref() {
+                        "--help" | "-h" => { print_usage(); 0 },
+                        "--list" | "-l" => {
+                            for (id, _) in stars {
+                                println!("{}", id);
                             }
+                            0
+                        },
+                        _ => {
+                            eprintln!("{}: unknown argument \"{}\"", args[0], args[1]);
+                            1
                         }
                     }
                 }
