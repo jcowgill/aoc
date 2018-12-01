@@ -79,6 +79,21 @@ pub fn list_stars() -> Vec<String> {
     all_stars().iter().map(|(id, _)| id.to_string()).collect()
 }
 
+#[cfg(test)]
+mod tests
+{
+    use super::*;
+
+    /// Tests that all_stars returns sorted and unique stars
+    #[test]
+    fn all_stars_sorted() {
+        for window in all_stars().windows(2) {
+            assert!(window[0].0 < window[1].0);
+        }
+    }
+}
+
+
 // ========================================================================
 
 /// Returns the cartesian product of two iterators
