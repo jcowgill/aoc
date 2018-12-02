@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::hash::Hash;
 
+/// Returns map containing the frequencies of each item in the given
+/// iterator
 fn frequency_map<I, T>(iter: I) -> HashMap<T, usize>
     where I: Iterator<Item=T>, T: Eq + Hash {
 
