@@ -1,6 +1,8 @@
 //! Main AOC library functions
 //!  This library imports all AOC star implementations and provides various global functions
 
+#![forbid(unsafe_code)]
+
 use std::fmt;
 use std::iter::Cycle;
 use std::iter::Zip;
