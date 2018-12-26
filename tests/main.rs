@@ -2,70 +2,67 @@
 
 extern crate aoclib;
 
-use aoclib::{StarFunction, star_function};
+use aoclib::{StarId, star_function};
 use std::fs::File;
-use std::io::Read;
+use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 
-/// Returns the data directory to use
-fn get_data_dir() -> String {
-    option_env!("CARGO_MANIFEST_DIR").unwrap_or(".").to_string() + "/tests/data"
+/// Returns the test data directory containing all the files for the given day
+fn get_day_data_dir(year: u16, day: u8) -> PathBuf {
+    [
+        option_env!("CARGO_MANIFEST_DIR").unwrap_or("."),
+        "tests",
+        "data",
+        &format!("{:04}", year),
+        &format!("{:02}", day)
+    ].iter().collect()
 }
 
-/// Generates a sorted list of stars available in the given data directory
-///  Panics if an IO error occurs
-fn list_stars_in_directory(data_dir: &str) -> Vec<(String, PathBuf)> {
-    let mut names = Vec::new();
-    for year_entry_result in Path::new(data_dir).read_dir().unwrap() {
-        let year_entry = year_entry_result.unwrap();
-        let year_name = year_entry.file_name().into_string().unwrap();
-        for star_entry_result in year_entry.path().read_dir().unwrap() {
-            let star_entry = star_entry_result.unwrap();
-            let star_name = star_entry.file_name().into_string().unwrap();
-            names.push((year_name.clone() + "-" + star_name.as_ref(), star_entry.path()));
-        }
-    }
-
-    names.sort_unstable();
-    names
-}
-
-/// Reads the entire contents of a test data file
-///  Panics on error
-fn read_test_file(test: &PathBuf, extension: &str) -> String {
-    let mut path = test.clone();
-    path.set_extension(extension);
-
+/// Reads an entire file into a string
+fn read_whole_file(path: &Path) -> io::Result<String> {
     let mut result = String::new();
-    File::open(path).unwrap().read_to_string(&mut result).unwrap();
-    result
+    File::open(path)?.read_to_string(&mut result)?;
+    Ok(result)
 }
 
-/// Tests that the given star function operates correctly
-///  Panics on error
-fn test_star(name: &str, func: StarFunction, data_path: &Path) {
-    // Given path must be a directory
-    assert!(data_path.is_dir());
+/// Run all tests for the given day
+fn test_day(year: u16, day: u8) {
+    // Skip this day if the data directory is missing
+    if let Ok(dir_iter) = get_day_data_dir(year, day).read_dir() {
+        let files: Vec<PathBuf> = dir_iter.map(|entry| entry.unwrap().path()).collect();
 
-    // Generate a list of test cases by scanning the data directory
-    let mut tests = Vec::new();
-    for entry_result in data_path.read_dir().unwrap() {
-        let mut path = entry_result.unwrap().path();
-        assert!(path.extension().unwrap() == "in" || path.extension().unwrap() == "out");
+        // Iterate over each output file
+        for file in files.iter() {
+            let file_name_parts: Vec<&str> = file.file_name().unwrap()
+                .to_str().expect("non utf-8 filename")
+                .splitn(3, '.').collect();
 
-        path.set_extension("dummy");
-        tests.push(path);
-    }
-    tests.sort_unstable();
-    tests.dedup();
+            if file_name_parts[1] == "out" {
+                // Extract star to be processed
+                let id = StarId {
+                    year: year,
+                    day: day,
+                    star: file_name_parts[2].parse().expect("invalid output filename")
+                };
 
-    // Run func on each test
-    for test in tests {
-        let input_data = read_test_file(&test, "in");
-        let output_data = read_test_file(&test, "out");
+                // Find the corresponding input file
+                let input_nonspecific = file_name_parts[0].to_owned() + ".in";
+                let input_specific = input_nonspecific.to_owned() + "." + file_name_parts[2];
 
-        println!(" running \"{}\" on {:?}...", name, test.file_stem().unwrap());
-        assert_eq!(output_data.trim(), func(input_data.trim_right()));
+                let input_path = files.iter().find(|p| p.file_name().unwrap().to_str().unwrap_or("") == input_specific)
+                    .or_else(|| files.iter().find(|p| p.file_name().unwrap().to_str().unwrap_or("") == input_nonspecific))
+                    .expect("failed to find input test");
+
+                // Read input files
+                let input_data = read_whole_file(&input_path).expect("failed to read input file");
+                let output_data = read_whole_file(&file).expect("failed to read output file");
+
+                // Execute test
+                let func = star_function(id).expect("star not found");
+                println!(" running \"{}\" on {:?}...", id, file_name_parts[0]);
+                assert_eq!(output_data.trim(), func(input_data.trim_right()));
+            }
+        }
     }
 }
 
@@ -73,16 +70,9 @@ fn test_star(name: &str, func: StarFunction, data_path: &Path) {
 fn gen_tests_helper(year: &str, day: &str) {
     assert!(year.starts_with("yr"));
     assert!(day.starts_with("day"));
-    let prefix = format!("{}-{}-", year.split_at(2).1, day.split_at(3).1);
 
-    for (name, path) in list_stars_in_directory(get_data_dir().as_ref()) {
-        if name.starts_with(&prefix[..]) {
-            match star_function(name.as_ref()) {
-                Some(func) => test_star(name.as_ref(), func, path.as_path()),
-                None => ()
-            }
-        }
-    }
+    test_day(year.split_at(2).1.parse().unwrap(),
+             day.split_at(3).1.parse().unwrap());
 }
 
 /// Macro which generates a list of tests for specified days in a year
