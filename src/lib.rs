@@ -63,14 +63,11 @@ pub fn all_stars() -> Vec<(StarId, StarFunction)> {
     result
 }
 
-
-/// Returns the star function with the given name
-pub fn star_function(name: &str) -> Option<StarFunction> {
-    if let Ok(id) = name.parse::<StarId>() {
-        let stars = all_stars();
-        if let Ok(index) = stars.binary_search_by(|probe| probe.0.cmp(&id)) {
-            return Some(stars[index].1);
-        }
+/// Returns the star function with the given id
+pub fn star_function(id: StarId) -> Option<StarFunction> {
+    let stars = all_stars();
+    if let Ok(index) = stars.binary_search_by(|probe| probe.0.cmp(&id)) {
+        return Some(stars[index].1);
     }
 
     None
