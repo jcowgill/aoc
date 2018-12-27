@@ -10,3 +10,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "aoc"
 path = "src/bin.rs"
+
+[dependencies]
+lazy_static = "1"
+regex = "1"
