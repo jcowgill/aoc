@@ -29,7 +29,8 @@ fn read_whole_file(path: &Path) -> io::Result<String> {
 fn test_day(year: u16, day: u8) {
     // Skip this day if the data directory is missing
     if let Ok(dir_iter) = get_day_data_dir(year, day).read_dir() {
-        let files: Vec<PathBuf> = dir_iter.map(|entry| entry.unwrap().path()).collect();
+        let mut files: Vec<PathBuf> = dir_iter.map(|entry| entry.unwrap().path()).collect();
+        files.sort_by(|a, b| a.file_name().unwrap().cmp(b.file_name().unwrap()));
 
         // Iterate over each output file
         for file in files.iter() {
