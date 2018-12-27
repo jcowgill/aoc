@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use direction::Direction;
-use vector::Vector2;
+use crate::direction::Direction;
+use crate::vector::Vector2;
 
 /// State of an individual node
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

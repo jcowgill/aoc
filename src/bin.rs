@@ -3,8 +3,6 @@
 //! This module handles command line arguments, collects together all the available stars, and runs
 //! the chosen one using data supplied via standard input.
 
-extern crate aoclib;
-
 use aoclib::{StarId, all_stars};
 use std::env;
 use std::io::{self, Read};

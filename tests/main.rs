@@ -1,7 +1,5 @@
 /// Main testing entry point
 
-extern crate aoclib;
-
 use aoclib::{StarId, star_function};
 use std::fs::File;
 use std::io::{self, Read};

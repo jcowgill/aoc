@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::str::FromStr;
 
-use vector::Vector2;
+use crate::vector::Vector2;
 
 /// A 2D rectangle with integer dimensions and an ID
 #[derive(Debug, Clone)]

@@ -35,7 +35,7 @@ impl ExecutionState {
 /// Trait implemented by objects which have a "value" within an execution context
 trait ValueQueriable {
     /// Returns the value of this object
-    fn get_value(&self, &ExecutionState) -> i64;
+    fn get_value(&self, _: &ExecutionState) -> i64;
 }
 
 /// A machine register name
