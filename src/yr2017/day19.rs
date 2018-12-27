@@ -1,6 +1,6 @@
 use std::str::FromStr;
-use direction::Direction;
-use vector::Vector2;
+use crate::direction::Direction;
+use crate::vector::Vector2;
 
 /// Value of each cell in the grid
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

@@ -1,5 +1,5 @@
 use std::ops::Add;
-use apply_tuple2;
+use crate::apply_tuple2;
 
 /// Parses the garbage in the given stream, returning the non-canclled amount
 ///  The opening < must already be consumed

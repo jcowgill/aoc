@@ -1,5 +1,5 @@
 use std::ops::{Neg, Sub};
-use vector::Vector2;
+use crate::vector::Vector2;
 
 /// A direction in the input grid
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

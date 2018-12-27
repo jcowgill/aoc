@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::ops::{Index, IndexMut};
 use std::str::FromStr;
 
-use cartesian_product;
+use crate::cartesian_product;
 
 /// Monochrome image
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]

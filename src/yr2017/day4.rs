@@ -1,4 +1,4 @@
-use id;
+use crate::id;
 
 /// Verifies a list of passwords
 ///  Splits the input string into lines and words, passes the words through "word_func" and returns

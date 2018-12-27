@@ -40,7 +40,7 @@ trait Transformation {
     fn combine(&self, other: &Self) -> Self;
 
     /// Performs the transformation on the given group of programs
-    fn transform(&self, &[Program]) -> Vec<Program>;
+    fn transform(&self, _: &[Program]) -> Vec<Program>;
 }
 
 /// A transposition transformation

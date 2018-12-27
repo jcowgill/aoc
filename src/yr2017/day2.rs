@@ -1,4 +1,4 @@
-use cartesian_product;
+use crate::cartesian_product;
 
 /// Implements a generic spreadsheet checksum function
 ///  Parses the input data and passes the vector of values on each line to line_func,

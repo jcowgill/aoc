@@ -3,9 +3,6 @@
 
 #![forbid(unsafe_code)]
 
-#[macro_use] extern crate lazy_static;
-extern crate regex;
-
 use std::fmt;
 use std::iter::Cycle;
 use std::iter::Zip;

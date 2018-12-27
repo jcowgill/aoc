@@ -1,5 +1,5 @@
 use std::cmp::Ordering;
-use vector::Vector3;
+use crate::vector::Vector3;
 
 #[derive(Clone, Debug)]
 struct Particle {
