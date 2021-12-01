@@ -13,5 +13,6 @@ name = "aoc"
 path = "src/bin.rs"
 
 [dependencies]
+itertools = "0.10"
 lazy_static = "1"
 regex = "1"
