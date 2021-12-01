@@ -1,8 +1,8 @@
+use itertools::Itertools;
+
 use std::collections::HashMap;
 use std::ops::{Index, IndexMut};
 use std::str::FromStr;
-
-use crate::cartesian_product;
 
 /// Monochrome image
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
@@ -33,7 +33,8 @@ impl Image {
     {
         Self::from_raw_data(
             width,
-            cartesian_product(0..height, 0..width)
+            (0..height)
+                .cartesian_product(0..width)
                 .map(|(y, x)| coord_map(x, y))
                 .collect(),
         )
@@ -170,7 +171,8 @@ fn fractal_iterate(image: Image, rules: &HashMap<Image, Image>) -> Image {
     // Get list of blocks which we're going to expand into
     let block_size = if image.width % 2 == 0 { 2 } else { 3 };
     let block_count = image.width / block_size;
-    let matched_blocks: Vec<&Image> = cartesian_product(0..block_count, 0..block_count)
+    let matched_blocks: Vec<&Image> = (0..block_count)
+        .cartesian_product(0..block_count)
         .map(|(by, bx)| {
             rules
                 .get(&image.subimage(bx * block_size, by * block_size, block_size, block_size))

@@ -1,4 +1,4 @@
-use crate::cartesian_product;
+use itertools::Itertools;
 
 /// Implements a generic spreadsheet checksum function
 ///  Parses the input data and passes the vector of values on each line to line_func,
@@ -29,7 +29,7 @@ pub fn star1(input: &str) -> String {
 /// Calculate spreadsheet checksum using evenly divisible numbers
 pub fn star2(input: &str) -> String {
     spreadsheet_checksum(input, |values| {
-        for (a, b) in cartesian_product(values.iter(), values.iter()) {
+        for (a, b) in values.iter().cartesian_product(values.iter()) {
             if a != b && a % b == 0 {
                 return a / b;
             }
