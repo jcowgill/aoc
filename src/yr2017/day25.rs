@@ -61,8 +61,8 @@ impl<State: Copy + Eq + Hash, Symbol: Copy + Eq + Hash> TuringMachine<State, Sym
         };
 
         TuringMachine {
-            blank: blank,
-            transitions: transitions,
+            blank,
+            transitions,
             state: initial_state,
             cursor: 0,
             tape: initial_tape.into(),

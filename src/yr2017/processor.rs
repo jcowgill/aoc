@@ -26,7 +26,7 @@ impl ExecutionState {
             receive_queue: VecDeque::new(),
             blocked: false,
         };
-        state.regs[('p' as u8 - 'a' as u8) as usize] = pid;
+        state.regs[(b'p' - b'a') as usize] = pid;
         state
     }
 }
@@ -46,7 +46,7 @@ impl FromStr for Register {
     fn from_str(s: &str) -> Result<Self, ()> {
         if let Some(c) = s.chars().next() {
             if s.len() == 1 && c >= 'a' && c <= 'z' {
-                return Ok(Register(c as u8 - 'a' as u8));
+                return Ok(Register(c as u8 - b'a'));
             }
         }
 
@@ -111,10 +111,8 @@ impl FromStr for Instruction {
             if parts.len() != 2 {
                 return Err(());
             }
-        } else {
-            if parts.len() != 3 {
-                return Err(());
-            }
+        } else if parts.len() != 3 {
+            return Err(());
         }
 
         // Parse the input parts

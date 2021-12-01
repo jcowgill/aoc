@@ -27,7 +27,7 @@ pub fn star1(input: &str) -> String {
 
 pub fn star2(input: &str) -> String {
     (b'a'..=b'z')
-        .map(|r| char::from(r))
+        .map(char::from)
         .map(|r| react(input.chars().filter(|c| c.to_ascii_lowercase() != r)).len())
         .min()
         .unwrap()

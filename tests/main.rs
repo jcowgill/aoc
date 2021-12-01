@@ -44,8 +44,8 @@ fn test_day(year: u16, day: u8) {
             if file_name_parts[1] == "out" {
                 // Extract star to be processed
                 let id = StarId {
-                    year: year,
-                    day: day,
+                    year,
+                    day,
                     star: file_name_parts[2].parse().expect("invalid output filename"),
                 };
 
@@ -64,13 +64,13 @@ fn test_day(year: u16, day: u8) {
                     .expect("failed to find input test");
 
                 // Read input files
-                let input_data = read_whole_file(&input_path).expect("failed to read input file");
-                let output_data = read_whole_file(&file).expect("failed to read output file");
+                let input_data = read_whole_file(input_path).expect("failed to read input file");
+                let output_data = read_whole_file(file).expect("failed to read output file");
 
                 // Execute test
                 let func = star_function(id).expect("star not found");
                 println!(" running \"{}\" on {:?}...", id, file_name_parts[0]);
-                assert_eq!(output_data.trim(), func(input_data.trim_right()));
+                assert_eq!(output_data.trim(), func(input_data.trim_end()));
             }
         }
     }

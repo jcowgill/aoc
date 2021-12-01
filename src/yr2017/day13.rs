@@ -14,7 +14,7 @@ fn parse_depths(input: &str) -> Vec<(i32, i32)> {
 ///  time_offset = time to start the walk at
 ///  depths      = the depths of each layer
 /// Returns Some(severity) or None if not caught
-fn walk_severity(time_offset: i32, depths: &Vec<(i32, i32)>) -> Option<i32> {
+fn walk_severity(time_offset: i32, depths: &[(i32, i32)]) -> Option<i32> {
     depths.iter().fold(None, |sum, &(layer, depth)| {
         if (time_offset + layer) % (2 * depth - 2) == 0 {
             Some(sum.unwrap_or(0) + layer * depth)

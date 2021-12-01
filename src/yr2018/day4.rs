@@ -21,14 +21,14 @@ impl FromStr for Action {
 
     fn from_str(s: &str) -> Result<Action, ()> {
         lazy_static! {
-            static ref guard_re: Regex = Regex::new(r"^Guard #([0-9]*) begins shift$").unwrap();
+            static ref GUARD_RE: Regex = Regex::new(r"^Guard #([0-9]*) begins shift$").unwrap();
         }
 
         if s == "falls asleep" {
             Ok(Action::FallAsleep)
         } else if s == "wakes up" {
             Ok(Action::WakeUp)
-        } else if let Some(caps) = guard_re.captures(s) {
+        } else if let Some(caps) = GUARD_RE.captures(s) {
             Ok(Action::BeginShift(
                 caps.get(1).unwrap().as_str().parse().map_err(|_| ())?,
             ))
@@ -51,11 +51,11 @@ impl<'a> FromStr for Record {
 
     fn from_str(s: &str) -> Result<Record, ()> {
         lazy_static! {
-            static ref re: Regex =
+            static ref RE: Regex =
                 Regex::new(r"^\s*\[([0-9-]* [0-9]*):([0-9]*)\]\s*(.*)$").unwrap();
         }
 
-        if let Some(caps) = re.captures(s) {
+        if let Some(caps) = RE.captures(s) {
             Ok(Record {
                 date_hour: caps.get(1).unwrap().as_str().to_owned(),
                 minute: caps.get(2).unwrap().as_str().parse().map_err(|_| ())?,
@@ -78,7 +78,7 @@ struct WakeupIterator<'a, I> {
 impl<'a, I> WakeupIterator<'a, I> {
     pub fn new(parent: I) -> Self {
         WakeupIterator {
-            parent: parent,
+            parent,
             active_guard: None,
             last_sleep: None,
         }
@@ -103,7 +103,7 @@ where
                 Action::FallAsleep => {
                     assert_ne!(self.active_guard, None);
                     assert_eq!(self.last_sleep, None);
-                    self.last_sleep = Some(&record);
+                    self.last_sleep = Some(record);
                     self.next()
                 }
                 Action::WakeUp => {

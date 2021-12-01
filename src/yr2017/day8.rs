@@ -43,8 +43,8 @@ fn parse_instruction(line: &str) -> Instruction {
 
     Instruction {
         register: tokens[0],
-        value: value,
-        condition: condition,
+        value,
+        condition,
         condition_register: tokens[4],
         condition_value: tokens[6].parse().unwrap(),
     }
