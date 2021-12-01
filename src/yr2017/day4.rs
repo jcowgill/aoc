@@ -1,5 +1,3 @@
-use crate::id;
-
 /// Verifies a list of passwords
 ///  Splits the input string into lines and words, passes the words through "word_func" and returns
 ///  the number of lines which do not contain duplicate words
@@ -23,7 +21,7 @@ where
 
 /// Sum list of strings containing no duplicate words
 pub fn star1(input: &str) -> String {
-    password_checker(input, id)
+    password_checker(input, |f| f)
 }
 
 /// Sum list of strings containing no words which are anagrams of each other

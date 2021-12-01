@@ -4,12 +4,9 @@
 #![forbid(unsafe_code)]
 
 use std::fmt;
-use std::iter::Cycle;
-use std::iter::Zip;
 use std::str::FromStr;
 
 mod direction;
-mod duplicate;
 #[macro_use]
 mod macros;
 mod vector;
@@ -89,23 +86,6 @@ mod tests {
 }
 
 // ========================================================================
-
-/// Returns the cartesian product of two iterators
-pub fn cartesian_product<A, B>(a: A, b: B) -> Zip<duplicate::Duplicate<A>, Cycle<B>>
-where
-    A: Iterator,
-    A::Item: Clone,
-    B: Clone + Iterator,
-{
-    // Return an iterator made up of duplicating the items in a b times and
-    // zipping that up with b cycled a times
-    duplicate::duplicate(a, b.clone().count()).zip(b.cycle())
-}
-
-/// Identity function - returns given input
-pub fn id<T>(v: T) -> T {
-    v
-}
 
 /// Applies a function combining two heterogeneous tuples
 pub fn apply_tuple2<F: Fn(A, B) -> R, A, B, R>(func: F, left: (A, A), right: (B, B)) -> (R, R) {
