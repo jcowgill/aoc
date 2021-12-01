@@ -1,8 +1,7 @@
 ///! Very simple vector implementation for AOC
-
 use std::cmp::Ordering;
-use std::ops::{Add, Sub, Neg, Mul, Div, Rem};
-use std::ops::{AddAssign, SubAssign, MulAssign, DivAssign, RemAssign};
+use std::ops::{Add, Div, Mul, Neg, Rem, Sub};
+use std::ops::{AddAssign, DivAssign, MulAssign, RemAssign, SubAssign};
 
 /// 2D Vector
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]

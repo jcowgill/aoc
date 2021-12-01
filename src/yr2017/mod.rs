@@ -28,5 +28,8 @@ mod day9;
 
 mod processor;
 
-use crate::StarFunction; use crate::StarId;
-pub fn stars() -> Vec<(StarId, StarFunction)> { vec_all_days!(2017) }
+use crate::StarFunction;
+use crate::StarId;
+pub fn stars() -> Vec<(StarId, StarFunction)> {
+    vec_all_days!(2017)
+}

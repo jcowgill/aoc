@@ -8,10 +8,14 @@ pub struct Duplicate<I: Iterator> {
     duplicates: usize,
 
     /// Currently duplicated value (duplicates left, value)
-    current: Option<(usize, I::Item)>
+    current: Option<(usize, I::Item)>,
 }
 
-impl<I> Iterator for Duplicate<I> where I: Iterator, I::Item: Clone {
+impl<I> Iterator for Duplicate<I>
+where
+    I: Iterator,
+    I::Item: Clone,
+{
     type Item = I::Item;
 
     fn next(&mut self) -> Option<I::Item> {
@@ -32,7 +36,7 @@ impl<I> Iterator for Duplicate<I> where I: Iterator, I::Item: Clone {
                     };
 
                     Some(value)
-                },
+                }
                 None => {
                     // We need to fetch a new item from the iterator
                     match self.iter.next() {
@@ -40,7 +44,7 @@ impl<I> Iterator for Duplicate<I> where I: Iterator, I::Item: Clone {
                             self.current = Some((self.duplicates - 1, value.clone()));
                             Some(value)
                         }
-                        None => None
+                        None => None,
                     }
                 }
             }
@@ -51,8 +55,10 @@ impl<I> Iterator for Duplicate<I> where I: Iterator, I::Item: Clone {
         let (iter_lo, iter_hi) = self.iter.size_hint();
         let current_left = self.current.as_ref().map_or(0, |&(last, _)| last);
 
-        (iter_lo * self.duplicates + current_left,
-         iter_hi.map(|hi| hi * self.duplicates + current_left))
+        (
+            iter_lo * self.duplicates + current_left,
+            iter_hi.map(|hi| hi * self.duplicates + current_left),
+        )
     }
 
     fn count(self) -> usize {
@@ -62,6 +68,13 @@ impl<I> Iterator for Duplicate<I> where I: Iterator, I::Item: Clone {
 }
 
 /// Returns an iterator which duplicates each element in iter a given number of times
-pub fn duplicate<I: Iterator>(iter: I, duplicates: usize) -> Duplicate<I> where I::Item: Clone {
-    Duplicate { iter: iter, duplicates: duplicates, current: None }
+pub fn duplicate<I: Iterator>(iter: I, duplicates: usize) -> Duplicate<I>
+where
+    I::Item: Clone,
+{
+    Duplicate {
+        iter: iter,
+        duplicates: duplicates,
+        current: None,
+    }
 }

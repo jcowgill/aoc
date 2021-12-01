@@ -26,5 +26,8 @@ mod day7;
 mod day8;
 mod day9;
 
-use crate::StarFunction; use crate::StarId;
-pub fn stars() -> Vec<(StarId, StarFunction)> { vec_all_days!(2018) }
+use crate::StarFunction;
+use crate::StarId;
+pub fn stars() -> Vec<(StarId, StarFunction)> {
+    vec_all_days!(2018)
+}
