@@ -29,7 +29,9 @@ pub fn star2(input: &str) -> String {
     let mut sum = 0;
     for (i, c) in chars.iter().enumerate() {
         // Exit if we get to the end of the string
-        if i >= chars.len() / 2 { break }
+        if i >= chars.len() / 2 {
+            break;
+        }
 
         // Add to sum if the current character matches the one halfway around
         if *c == chars[i + chars.len() / 4] {

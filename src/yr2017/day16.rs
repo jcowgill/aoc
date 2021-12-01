@@ -31,7 +31,7 @@ enum DanceMove {
     Exchange(u8, u8),
 
     /// Swap the programs given (at whatever position they are in)
-    Partner(Program, Program)
+    Partner(Program, Program),
 }
 
 /// Trait in common with both types of transformation
@@ -61,7 +61,9 @@ impl Transposition {
     /// Like transform, but works on any clonable type
     fn transform_any<T: Clone>(&self, input: &[T]) -> Vec<T> {
         assert_eq!(input.len(), self.0.len());
-        (0..input.len()).map(|i| input[self.0[i] as usize].clone()).collect()
+        (0..input.len())
+            .map(|i| input[self.0[i] as usize].clone())
+            .collect()
     }
 }
 
@@ -96,7 +98,9 @@ impl Transformation for Substitution {
     }
 
     fn transform(&self, input: &[Program]) -> Vec<Program> {
-        (0..input.len()).map(|i| self.0[input[i].0 as usize]).collect()
+        (0..input.len())
+            .map(|i| self.0[input[i].0 as usize])
+            .collect()
     }
 }
 
@@ -109,10 +113,10 @@ fn parse_move(input: &str) -> DanceMove {
         "s" => DanceMove::Spin(mdata[0].parse().unwrap()),
         "x" => DanceMove::Exchange(mdata[0].parse().unwrap(), mdata[1].parse().unwrap()),
         "p" => DanceMove::Partner(
-                Program::from_char(mdata[0].chars().next().unwrap()).unwrap(),
-                Program::from_char(mdata[1].chars().next().unwrap()).unwrap()
-               ),
-        _   => panic!("invalid dance move type {}", mtype)
+            Program::from_char(mdata[0].chars().next().unwrap()).unwrap(),
+            Program::from_char(mdata[1].chars().next().unwrap()).unwrap(),
+        ),
+        _ => panic!("invalid dance move type {}", mtype),
     }
 }
 
@@ -122,8 +126,8 @@ fn parse_input(input: &str) -> (u8, Vec<DanceMove>) {
         Some(pos) => {
             let (left, right) = input.split_at(pos);
             (left.parse().unwrap(), right.trim_left())
-        },
-        None => (16, input)
+        }
+        None => (16, input),
     };
 
     (programs, moves_str.split(',').map(parse_move).collect())
@@ -144,10 +148,10 @@ fn derive_transformation(programs: u8, moves: &[DanceMove]) -> (Transposition, S
                 let (a, b) = transposition.0.split_at_mut(spin as usize);
                 a.reverse();
                 b.reverse();
-            },
+            }
             DanceMove::Exchange(a, b) => {
                 transposition.0.swap(a as usize, b as usize);
-            },
+            }
             DanceMove::Partner(a, b) => {
                 let a_pos = substitution.0.iter().position(|p| *p == a).unwrap();
                 let b_pos = substitution.0.iter().position(|p| *p == b).unwrap();
@@ -184,10 +188,10 @@ fn whole_dance(input: &str, repeats: usize) -> String {
     let repeat_trans = repeat_transformation(transposition, repeats);
     let repeat_subst = repeat_transformation(substitution, repeats);
 
-    let result = repeat_subst.transform(&repeat_trans.transform(&Substitution::identity(programs).0));
+    let result =
+        repeat_subst.transform(&repeat_trans.transform(&Substitution::identity(programs).0));
     result.iter().map(|p| p.to_char().unwrap()).collect()
 }
-
 
 /// Executes a series of dance moves
 pub fn star1(input: &str) -> String {

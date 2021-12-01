@@ -5,12 +5,18 @@ type Nodes = HashMap<i32, Vec<i32>>;
 
 /// Split the list of programs into a list of the nodes connected to each node
 fn split_programs(input: &str) -> Nodes {
-    input.lines().map(|line| {
-        let halves: Vec<&str> = line.splitn(2, "<->").collect();
-        let node = halves[0].trim().parse().unwrap();
-        let children = halves[1].split(',').map(|n| n.trim().parse().unwrap()).collect();
-        (node, children)
-    }).collect()
+    input
+        .lines()
+        .map(|line| {
+            let halves: Vec<&str> = line.splitn(2, "<->").collect();
+            let node = halves[0].trim().parse().unwrap();
+            let children = halves[1]
+                .split(',')
+                .map(|n| n.trim().parse().unwrap())
+                .collect();
+            (node, children)
+        })
+        .collect()
 }
 
 /// Partitions a set of nodes by separating all the nodes belonging to the same group as the
@@ -46,7 +52,9 @@ fn partition_by_group(initial: i32, nodes: &mut Nodes) -> Vec<i32> {
 
 /// Find number of nodes in first group
 pub fn star1(input: &str) -> String {
-    partition_by_group(0, &mut split_programs(input)).len().to_string()
+    partition_by_group(0, &mut split_programs(input))
+        .len()
+        .to_string()
 }
 
 /// Find total number of groups

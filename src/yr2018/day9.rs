@@ -50,14 +50,19 @@ fn marble_game(players: u32, last_marble: u32) -> Vec<u32> {
 /// From an input description, returns the max score as a string
 fn max_score(input: &str, multiplier: u32) -> String {
     lazy_static! {
-        static ref re: Regex = Regex::new("^([0-9]+) players; last marble is worth ([0-9]+) points$").unwrap();
+        static ref re: Regex =
+            Regex::new("^([0-9]+) players; last marble is worth ([0-9]+) points$").unwrap();
     }
 
     let caps = re.captures(input).unwrap();
-    let players: u32 =     caps.get(1).unwrap().as_str().parse().unwrap();
+    let players: u32 = caps.get(1).unwrap().as_str().parse().unwrap();
     let last_marble: u32 = caps.get(2).unwrap().as_str().parse().unwrap();
 
-    marble_game(players, last_marble * multiplier).iter().max().unwrap().to_string()
+    marble_game(players, last_marble * multiplier)
+        .iter()
+        .max()
+        .unwrap()
+        .to_string()
 }
 
 pub fn star1(input: &str) -> String {

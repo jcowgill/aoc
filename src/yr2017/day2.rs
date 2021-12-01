@@ -3,10 +3,15 @@ use crate::cartesian_product;
 /// Implements a generic spreadsheet checksum function
 ///  Parses the input data and passes the vector of values on each line to line_func,
 ///  then sums all the lines up and returns the result
-fn spreadsheet_checksum<F>(input: &str, line_value: F) -> String where F: Fn(&Vec<i32>) -> i32 {
+fn spreadsheet_checksum<F>(input: &str, line_value: F) -> String
+where
+    F: Fn(&Vec<i32>) -> i32,
+{
     let line_checksum = |line: &str| {
-        let values: Vec<i32> =
-            line.split_whitespace().map(|value| value.parse().unwrap()).collect();
+        let values: Vec<i32> = line
+            .split_whitespace()
+            .map(|value| value.parse().unwrap())
+            .collect();
         line_value(&values)
     };
 

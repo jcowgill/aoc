@@ -26,7 +26,7 @@ struct SporificaState {
 
 /// Parses the input map into the initial infection state
 ///  The middle of the map is NOT given 0,0 for ease of parsing
-fn parse_state<'a, I: Iterator<Item=&'a str>>(lines: I) -> SporificaState {
+fn parse_state<'a, I: Iterator<Item = &'a str>>(lines: I) -> SporificaState {
     let mut map = HashMap::new();
     let mut width = 0;
     let mut height = 0;
@@ -41,20 +41,28 @@ fn parse_state<'a, I: Iterator<Item=&'a str>>(lines: I) -> SporificaState {
         };
 
         // Insert pre-infected nodes into the map
-        map.extend(line
-                   .chars()
-                   .enumerate()
-                   .filter_map(|(i, c)| if c == '#' {
-                       Some((Vector2 { x: i as i32, y: height }, NodeState::Infected))
-                   } else {
-                       None
-                   }));
+        map.extend(line.chars().enumerate().filter_map(|(i, c)| {
+            if c == '#' {
+                Some((
+                    Vector2 {
+                        x: i as i32,
+                        y: height,
+                    },
+                    NodeState::Infected,
+                ))
+            } else {
+                None
+            }
+        }));
         height += 1;
     }
 
     SporificaState {
         infection_map: map,
-        virus_node: Vector2 { x: width as i32 / 2, y: height / 2 },
+        virus_node: Vector2 {
+            x: width as i32 / 2,
+            y: height / 2,
+        },
         virus_dir: Direction::North,
     }
 }
@@ -63,17 +71,21 @@ fn parse_state<'a, I: Iterator<Item=&'a str>>(lines: I) -> SporificaState {
 ///  state_transform is the function which determines the next node state
 ///  Returns true if a node was newly infected
 fn burst<F>(s: &mut SporificaState, state_transform: &F) -> bool
-    where F: Fn(NodeState) -> NodeState {
-
+where
+    F: Fn(NodeState) -> NodeState,
+{
     // Get node state
-    let node_state = *s.infection_map.get(&s.virus_node).unwrap_or(&NodeState::Clean);
+    let node_state = *s
+        .infection_map
+        .get(&s.virus_node)
+        .unwrap_or(&NodeState::Clean);
 
     // Change virus direction (always the same rules)
     match node_state {
-        NodeState::Clean    => s.virus_dir = s.virus_dir.anticlockwise(),
+        NodeState::Clean => s.virus_dir = s.virus_dir.anticlockwise(),
         NodeState::Weakened => (),
         NodeState::Infected => s.virus_dir = s.virus_dir.clockwise(),
-        NodeState::Flagged  => s.virus_dir = s.virus_dir.reverse(),
+        NodeState::Flagged => s.virus_dir = s.virus_dir.reverse(),
     };
 
     // Update state map
@@ -92,18 +104,23 @@ fn burst<F>(s: &mut SporificaState, state_transform: &F) -> bool
 
 /// Common star entry point
 fn star_common<F>(input: &str, default_iterations: usize, state_transform: F) -> String
-    where F: Fn(NodeState) -> NodeState {
-
+where
+    F: Fn(NodeState) -> NodeState,
+{
     // Extract iterations from first line (if given)
     let mut lines = input.lines().peekable();
     let iterations = match lines.peek().unwrap().parse::<usize>() {
-        Ok(i)  => { lines.next(); i },
-        Err(_) => default_iterations
+        Ok(i) => {
+            lines.next();
+            i
+        }
+        Err(_) => default_iterations,
     };
 
     // Process iterations and count new infections
     let mut s = parse_state(lines);
-    (0..iterations).map(|_| burst(&mut s, &state_transform))
+    (0..iterations)
+        .map(|_| burst(&mut s, &state_transform))
         .filter(|&i| i)
         .count()
         .to_string()
@@ -112,15 +129,15 @@ fn star_common<F>(input: &str, default_iterations: usize, state_transform: F) ->
 pub fn star1(input: &str) -> String {
     star_common(input, 10000, |ns| match ns {
         NodeState::Clean => NodeState::Infected,
-        _                => NodeState::Clean,
+        _ => NodeState::Clean,
     })
 }
 
 pub fn star2(input: &str) -> String {
     star_common(input, 10000000, |ns| match ns {
-        NodeState::Clean    => NodeState::Weakened,
+        NodeState::Clean => NodeState::Weakened,
         NodeState::Weakened => NodeState::Infected,
         NodeState::Infected => NodeState::Flagged,
-        NodeState::Flagged  => NodeState::Clean,
+        NodeState::Flagged => NodeState::Clean,
     })
 }

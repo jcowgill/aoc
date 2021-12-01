@@ -27,8 +27,10 @@ impl Component {
 impl FromStr for Component {
     type Err = ();
     fn from_str(s: &str) -> Result<Component, ()> {
-        let parts_result: Result<Vec<usize>, ()> =
-            s.split('/').map(|part| part.parse().map_err(|_| ())).collect();
+        let parts_result: Result<Vec<usize>, ()> = s
+            .split('/')
+            .map(|part| part.parse().map_err(|_| ()))
+            .collect();
         let parts = parts_result?;
         if parts.len() == 2 {
             Ok(Component(parts[0], parts[1]))
@@ -40,16 +42,24 @@ impl FromStr for Component {
 
 /// Parses the list of components into a vector
 fn parse_components(input: &str) -> Vec<Option<Component>> {
-    input.lines().map(|line| Some(line.parse().unwrap())).collect()
+    input
+        .lines()
+        .map(|line| Some(line.parse().unwrap()))
+        .collect()
 }
 
 /// Finds the "best" bridge which can be built with the given components and start port
 ///  Returns (length, strength) of the bridge
 ///  best_test is a comparison function over (new, old) which returns the ordering of the two
 ///   bridges (the greater one is used)
-fn find_bridge<C>(bridge_cmp: &C, port: usize, components: &mut Vec<Option<Component>>)
-    -> (usize, usize) where C: Fn((usize, usize), (usize, usize)) -> Ordering {
-
+fn find_bridge<C>(
+    bridge_cmp: &C,
+    port: usize,
+    components: &mut Vec<Option<Component>>,
+) -> (usize, usize)
+where
+    C: Fn((usize, usize), (usize, usize)) -> Ordering,
+{
     // Try pushing all subcomponents which fit
     let mut best_result = (0, 0);
     for i in 0..components.len() {
@@ -74,13 +84,22 @@ fn find_bridge<C>(bridge_cmp: &C, port: usize, components: &mut Vec<Option<Compo
 pub fn star1(input: &str) -> String {
     find_bridge(
         &|(_, new), (_, old)| new.cmp(&old),
-        0, &mut parse_components(input)).1.to_string()
+        0,
+        &mut parse_components(input),
+    )
+    .1
+    .to_string()
 }
 
 /// Find strength of the longest bridge
 pub fn star2(input: &str) -> String {
     find_bridge(
-        &|(new_len, new_strength), (old_len, old_strength)|
-            new_len.cmp(&old_len).then(new_strength.cmp(&old_strength)),
-        0, &mut parse_components(input)).1.to_string()
+        &|(new_len, new_strength), (old_len, old_strength)| {
+            new_len.cmp(&old_len).then(new_strength.cmp(&old_strength))
+        },
+        0,
+        &mut parse_components(input),
+    )
+    .1
+    .to_string()
 }

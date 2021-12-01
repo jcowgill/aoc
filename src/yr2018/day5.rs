@@ -4,7 +4,7 @@ fn units_react(a: char, b: char) -> bool {
 }
 
 /// React a polymer returning a new vector
-fn react<I: Iterator<Item=char>>(polymer: I) -> Vec<char> {
+fn react<I: Iterator<Item = char>>(polymer: I) -> Vec<char> {
     let mut result = Vec::new();
 
     for c in polymer {
@@ -29,5 +29,7 @@ pub fn star2(input: &str) -> String {
     (b'a'..=b'z')
         .map(|r| char::from(r))
         .map(|r| react(input.chars().filter(|c| c.to_ascii_lowercase() != r)).len())
-        .min().unwrap().to_string()
+        .min()
+        .unwrap()
+        .to_string()
 }

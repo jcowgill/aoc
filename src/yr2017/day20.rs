@@ -1,11 +1,11 @@
-use std::cmp::Ordering;
 use crate::vector::Vector3;
+use std::cmp::Ordering;
 
 #[derive(Clone, Debug)]
 struct Particle {
     position: Vector3<i32>,
     velocity: Vector3<i32>,
-    accel: Vector3<i32>
+    accel: Vector3<i32>,
 }
 
 /// Parses a particle description
@@ -13,44 +13,63 @@ fn parse_particle(line: &str) -> Particle {
     // We are going to ... err ... cheat and exploit the fact that there is exactly one integer
     // between each comma separated part of the particle expression. Ignore all other non relevant
     // characters to get 9 integers and assign those in order :)
-    let ints: Vec<i32> =
-        line.split(',')
-            .map(|raw_str|
-                 raw_str.chars()
-                        .filter(|&c| (c >= '0' && c <= '9') || c == '-')
-                        .collect::<String>()
-                        .parse()
-                        .unwrap())
-            .collect();
+    let ints: Vec<i32> = line
+        .split(',')
+        .map(|raw_str| {
+            raw_str
+                .chars()
+                .filter(|&c| (c >= '0' && c <= '9') || c == '-')
+                .collect::<String>()
+                .parse()
+                .unwrap()
+        })
+        .collect();
 
     assert_eq!(ints.len(), 9);
     Particle {
-        position: Vector3 { x: ints[0], y: ints[1], z: ints[2] },
-        velocity: Vector3 { x: ints[3], y: ints[4], z: ints[5] },
-        accel:    Vector3 { x: ints[6], y: ints[7], z: ints[8] },
+        position: Vector3 {
+            x: ints[0],
+            y: ints[1],
+            z: ints[2],
+        },
+        velocity: Vector3 {
+            x: ints[3],
+            y: ints[4],
+            z: ints[5],
+        },
+        accel: Vector3 {
+            x: ints[6],
+            y: ints[7],
+            z: ints[8],
+        },
     }
 }
 
 /// Orders particles by closest to origin as time tends to infinity
 fn order_range_at_inf(a: &Particle, b: &Particle) -> Ordering {
-    a.accel.taxicab_norm().cmp(&b.accel.taxicab_norm()).then_with(|| {
-        // If the accelerations are the same, break ties using the norm of
-        // velocity _after_ adding enough acceleration vectors to flip the signs
-        // of any elements
-        let t = a.velocity.taxicab_norm().max(b.velocity.taxicab_norm());
-        (a.velocity + a.accel * t).taxicab_norm().cmp(
-            &(b.velocity + b.accel * t).taxicab_norm())
+    a.accel
+        .taxicab_norm()
+        .cmp(&b.accel.taxicab_norm())
+        .then_with(|| {
+            // If the accelerations are the same, break ties using the norm of
+            // velocity _after_ adding enough acceleration vectors to flip the signs
+            // of any elements
+            let t = a.velocity.taxicab_norm().max(b.velocity.taxicab_norm());
+            (a.velocity + a.accel * t)
+                .taxicab_norm()
+                .cmp(&(b.velocity + b.accel * t).taxicab_norm())
 
-        // Pray there are no cases (that are important) where the above velocities match :)
-    })
+            // Pray there are no cases (that are important) where the above velocities match :)
+        })
 }
 
 /// Remove all the duplicates in the given vector using the given equality func
 ///  Input vector must be sorted
 ///  Returns true if any duplicates were removed
 fn remove_duplicates<T, P>(vec: &mut Vec<T>, mut equal: P) -> bool
-    where P: FnMut(&T, &T) -> bool {
-
+where
+    P: FnMut(&T, &T) -> bool,
+{
     // Remove duplicates by swapping elements
     let old_len = vec.len();
     let mut write_pos = 0;
@@ -81,7 +100,9 @@ pub fn star1(input: &str) -> String {
         .map(parse_particle)
         .enumerate()
         .min_by(|&(_, ref a), &(_, ref b)| order_range_at_inf(&a, &b))
-        .unwrap().0.to_string()
+        .unwrap()
+        .0
+        .to_string()
 }
 
 /// Find particles left after collisions

@@ -29,7 +29,7 @@ fn parse_unresolved_tower(line: &str) -> UnresolvedTower {
     let weight = name_weight[1].trim_right().trim_right_matches(')').trim();
     let children: Vec<&str> = match head_tail.get(1) {
         Some(value) => value.split(',').map(|s| s.trim()).collect(),
-        None        => vec![]
+        None => vec![],
     };
 
     // Return generated structure
@@ -64,16 +64,23 @@ fn resolve_towers(mut input: HashMap<String, UnresolvedTower>) -> Tower {
     // and the resolved map will contain one final root tower.
     while !input.is_empty() {
         // Find a resolvable tower
-        let resolvable = input.iter().find(
-            |&(_, value)| value.children.iter().all(|s| resolved.contains_key(s)))
-            .unwrap().0.clone();
+        let resolvable = input
+            .iter()
+            .find(|&(_, value)| value.children.iter().all(|s| resolved.contains_key(s)))
+            .unwrap()
+            .0
+            .clone();
 
         // Remove it from the input and convert to a resolved tower
         let value = input.remove(&resolvable).unwrap();
         let new_tower = Tower {
             name: value.name,
             weight: value.weight,
-            children: value.children.iter().map(|s| resolved.remove(s).unwrap()).collect(),
+            children: value
+                .children
+                .iter()
+                .map(|s| resolved.remove(s).unwrap())
+                .collect(),
         };
 
         resolved.insert(resolvable, new_tower);
@@ -89,29 +96,30 @@ fn resolve_towers(mut input: HashMap<String, UnresolvedTower>) -> Tower {
 ///  Returns: Ok(tower weight), Err(fixed weight)
 fn check_tower(tower: &Tower) -> Result<i32, i32> {
     // Recurse to children and return if an error result is found
-    let child_results_err: Result<Vec<i32>, i32> =
-        tower.children.iter().map(check_tower).collect();
+    let child_results_err: Result<Vec<i32>, i32> = tower.children.iter().map(check_tower).collect();
     let child_results = child_results_err?;
 
     // Check that all children are balanced
     if child_results.len() >= 3 {
         // Choose the "correct" weight
-        let good_weight =
-            if child_results[0] == child_results[1] {
-                child_results[0]
-            } else {
-                assert!(child_results[2] == child_results[0] ||
-                        child_results[2] == child_results[1]);
-                child_results[2]
-            };
+        let good_weight = if child_results[0] == child_results[1] {
+            child_results[0]
+        } else {
+            assert!(child_results[2] == child_results[0] || child_results[2] == child_results[1]);
+            child_results[2]
+        };
 
         // Find child which doesn't match this weight
-        match child_results.iter().enumerate().find(|&(_, &value)| value != good_weight) {
+        match child_results
+            .iter()
+            .enumerate()
+            .find(|&(_, &value)| value != good_weight)
+        {
             Some((i, value)) => {
                 // Return corrected weight
-                return Err(tower.children[i].weight + good_weight - value)
-            },
-            None => ()
+                return Err(tower.children[i].weight + good_weight - value);
+            }
+            None => (),
         }
     } else if child_results.len() == 2 && child_results[0] != child_results[1] {
         // There are two children with different weights
@@ -132,7 +140,7 @@ pub fn star1(input: &str) -> String {
 /// Check weights of the tower and return the corrected weight
 pub fn star2(input: &str) -> String {
     match check_tower(&resolve_towers(parse_tower_list(input))) {
-        Ok(_)      => panic!("tower was correct !?"),
-        Err(value) => value.to_string()
+        Ok(_) => panic!("tower was correct !?"),
+        Err(value) => value.to_string(),
     }
 }

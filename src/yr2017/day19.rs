@@ -1,6 +1,6 @@
-use std::str::FromStr;
 use crate::direction::Direction;
 use crate::vector::Vector2;
+use std::str::FromStr;
 
 /// Value of each cell in the grid
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -9,20 +9,23 @@ enum CellValue {
     Vertical,
     Horizontal,
     Cross,
-    Letter(u8)
+    Letter(u8),
 }
 
 /// An "infinite" grid used in this problem
 #[derive(Clone, Debug)]
 struct Grid {
     data: Vec<CellValue>,
-    width: usize
+    width: usize,
 }
 
 impl Grid {
     /// Returns an empty grid
     fn new() -> Grid {
-        Grid { data: Vec::new(), width: 0 }
+        Grid {
+            data: Vec::new(),
+            width: 0,
+        }
     }
 
     /// Returns the value at a given point
@@ -45,7 +48,10 @@ impl Grid {
             let mut new_data = Vec::with_capacity(width * height);
             for y in 0..height {
                 for x in 0..width {
-                    new_data.push(self.cell_value(Vector2 { x: x as isize, y: y as isize }));
+                    new_data.push(self.cell_value(Vector2 {
+                        x: x as isize,
+                        y: y as isize,
+                    }));
                 }
             }
 
@@ -66,16 +72,18 @@ impl FromStr for Grid {
 
             for (x, c) in line.chars().enumerate() {
                 // Expand grid
-                if x >= result.width { result.resize(x + 1, y + 1); }
+                if x >= result.width {
+                    result.resize(x + 1, y + 1);
+                }
 
                 // Write character
                 result.data[y * result.width + x] = match c {
-                    ' '       => CellValue::Blank,
-                    '|'       => CellValue::Vertical,
-                    '-'       => CellValue::Horizontal,
-                    '+'       => CellValue::Cross,
+                    ' ' => CellValue::Blank,
+                    '|' => CellValue::Vertical,
+                    '-' => CellValue::Horizontal,
+                    '+' => CellValue::Cross,
                     'A'...'Z' => CellValue::Letter(c as u8 - 'A' as u8),
-                    _         => return Err(c)
+                    _ => return Err(c),
                 }
             }
         }
@@ -87,7 +95,10 @@ impl FromStr for Grid {
 /// Find the starting point
 fn find_grid_start(grid: &Grid) -> Option<Vector2<isize>> {
     (0..grid.width)
-        .map(|x| Vector2 { x: x as isize, y: 0 })
+        .map(|x| Vector2 {
+            x: x as isize,
+            y: 0,
+        })
         .filter(|p| grid.cell_value(*p) == CellValue::Vertical)
         .next()
 }
@@ -97,7 +108,7 @@ fn find_grid_start(grid: &Grid) -> Option<Vector2<isize>> {
 fn trace_path(input: &str) -> (String, usize) {
     let grid: Grid = match input.parse() {
         Ok(grid) => grid,
-        Err(c)   => panic!("invalid grid character: {}", c)
+        Err(c) => panic!("invalid grid character: {}", c),
     };
 
     let mut pos = find_grid_start(&grid).unwrap();
@@ -112,20 +123,22 @@ fn trace_path(input: &str) -> (String, usize) {
             CellValue::Blank => {
                 // We went off the end of the path, do we're done now
                 break;
-            },
+            }
             CellValue::Vertical | CellValue::Horizontal => {
                 // Keep going in same direction
-            },
+            }
             CellValue::Cross => {
                 // Test each possible direction
                 if grid.cell_value(pos + dir.to_vec_neg(1)) != CellValue::Blank {
                     // Don't change direction
                 } else if grid.cell_value(pos + dir.clockwise().to_vec_neg(1)) != CellValue::Blank {
                     dir = dir.clockwise();
-                } else if grid.cell_value(pos + dir.anticlockwise().to_vec_neg(1)) != CellValue::Blank {
+                } else if grid.cell_value(pos + dir.anticlockwise().to_vec_neg(1))
+                    != CellValue::Blank
+                {
                     dir = dir.anticlockwise()
                 }
-            },
+            }
             CellValue::Letter(l) => {
                 // Append letter to letters list (and keep going)
                 letters.push((l + 'A' as u8) as char)

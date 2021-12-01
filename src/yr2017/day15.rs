@@ -12,9 +12,10 @@ const FACTOR_B: u16 = 48271;
 
 /// Parses the two initial values to give the generators
 fn parse_values(input: &str) -> Vec<u32> {
-    let values: Vec<u32> = input.lines().map(|line| {
-        line.split_whitespace().last().unwrap().parse().unwrap()
-    }).collect();
+    let values: Vec<u32> = input
+        .lines()
+        .map(|line| line.split_whitespace().last().unwrap().parse().unwrap())
+        .collect();
 
     assert_eq!(values.len(), 2);
     values
@@ -22,15 +23,19 @@ fn parse_values(input: &str) -> Vec<u32> {
 
 /// Count the number of good judgements by running A and B over a number of iterations
 fn count_judgement<A, B>(mut a: A, mut b: B, iterations: usize) -> usize
-    where A: Iterator<Item=u16>, B: Iterator<Item=u16> {
-
-    (0..iterations).filter(|_| a.next().unwrap() == b.next().unwrap()).count()
+where
+    A: Iterator<Item = u16>,
+    B: Iterator<Item = u16>,
+{
+    (0..iterations)
+        .filter(|_| a.next().unwrap() == b.next().unwrap())
+        .count()
 }
 
 /// Internal structure of a generator
 struct Generator {
     value: u32,
-    factor: u16
+    factor: u16,
 }
 
 impl Iterator for Generator {
@@ -46,16 +51,34 @@ impl Iterator for Generator {
 pub fn star1(input: &str) -> String {
     let values = parse_values(input);
     count_judgement(
-        Generator { factor: FACTOR_A, value: values[0] },
-        Generator { factor: FACTOR_B, value: values[1] },
-        STAR1_ITERATIONS).to_string()
+        Generator {
+            factor: FACTOR_A,
+            value: values[0],
+        },
+        Generator {
+            factor: FACTOR_B,
+            value: values[1],
+        },
+        STAR1_ITERATIONS,
+    )
+    .to_string()
 }
 
 /// Find judge's final count in dueling generators (with filtering)
 pub fn star2(input: &str) -> String {
     let values = parse_values(input);
     count_judgement(
-        Generator { factor: FACTOR_A, value: values[0] }.filter(|v| v % 4 == 0),
-        Generator { factor: FACTOR_B, value: values[1] }.filter(|v| v % 8 == 0),
-        STAR2_ITERATIONS).to_string()
+        Generator {
+            factor: FACTOR_A,
+            value: values[0],
+        }
+        .filter(|v| v % 4 == 0),
+        Generator {
+            factor: FACTOR_B,
+            value: values[1],
+        }
+        .filter(|v| v % 8 == 0),
+        STAR2_ITERATIONS,
+    )
+    .to_string()
 }

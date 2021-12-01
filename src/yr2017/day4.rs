@@ -3,15 +3,22 @@ use crate::id;
 /// Verifies a list of passwords
 ///  Splits the input string into lines and words, passes the words through "word_func" and returns
 ///  the number of lines which do not contain duplicate words
-fn password_checker<'a, T>(input: &'a str, word_func: fn(&'a str) -> T) -> String where T: Ord {
-    input.lines().filter(|line| {
-        // A password is valid if we sort it, dedup it and the size is unchanged
-        let mut words: Vec<T> = line.split_whitespace().map(word_func).collect();
-        let orig_len = words.len();
-        words.sort_unstable();
-        words.dedup();
-        orig_len == words.len()
-    }).count().to_string()
+fn password_checker<'a, T>(input: &'a str, word_func: fn(&'a str) -> T) -> String
+where
+    T: Ord,
+{
+    input
+        .lines()
+        .filter(|line| {
+            // A password is valid if we sort it, dedup it and the size is unchanged
+            let mut words: Vec<T> = line.split_whitespace().map(word_func).collect();
+            let orig_len = words.len();
+            words.sort_unstable();
+            words.dedup();
+            orig_len == words.len()
+        })
+        .count()
+        .to_string()
 }
 
 /// Sum list of strings containing no duplicate words

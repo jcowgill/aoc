@@ -11,7 +11,7 @@ struct Image {
     width: usize,
 
     /// Pixel data
-    data: Vec<bool>
+    data: Vec<bool>,
 }
 
 impl Image {
@@ -19,18 +19,24 @@ impl Image {
     ///  Size of vector must be a multiple of width
     fn from_raw_data(width: usize, data: Vec<bool>) -> Image {
         assert!(data.len() % width == 0);
-        Image { width: width, data: data }
+        Image {
+            width: width,
+            data: data,
+        }
     }
 
     /// Constructs an image from a coordinate generator
     ///  coord_map maps (x, y) points to values in the image
     fn from_generator<F>(width: usize, height: usize, coord_map: F) -> Image
-        where F: Fn(usize, usize) -> bool {
-
-        Self::from_raw_data(width,
-                            cartesian_product(0..height, 0..width)
-                            .map(|(y, x)| coord_map(x, y))
-                            .collect())
+    where
+        F: Fn(usize, usize) -> bool,
+    {
+        Self::from_raw_data(
+            width,
+            cartesian_product(0..height, 0..width)
+                .map(|(y, x)| coord_map(x, y))
+                .collect(),
+        )
     }
 
     /// Returns the height of the image
@@ -44,18 +50,22 @@ impl Image {
     ///  coord_transform = function is given NEW coordinates and returns OLD
     ///                    coordinates to get pixel data from
     fn transform<F>(&self, width: usize, height: usize, coord_transform: F) -> Image
-        where F: Fn(usize, usize) -> (usize, usize) {
-
+    where
+        F: Fn(usize, usize) -> (usize, usize),
+    {
         Self::from_generator(width, height, |x, y| self[coord_transform(x, y)])
     }
 
     /// Like transform, but keeps the same size
     ///  coord_transform is provided (new x, new y, width, height)
     fn transform_noscale<F>(&self, coord_transform: F) -> Image
-        where F: Fn(usize, usize, usize, usize) -> (usize, usize) {
-
+    where
+        F: Fn(usize, usize, usize, usize) -> (usize, usize),
+    {
         let height = self.height();
-        self.transform(self.width, height, |x, y| coord_transform(x, y, self.width, height))
+        self.transform(self.width, height, |x, y| {
+            coord_transform(x, y, self.width, height)
+        })
     }
 
     /// Returns the given extract of an image
@@ -88,10 +98,16 @@ impl FromStr for Image {
         /// Pushes a row to the data vector, returning the size pushed
         fn push_image_row(data: &mut Vec<bool>, row: &str) -> Result<usize, ()> {
             let prev_len = data.len();
-            data.extend(row.chars()
-                .filter(|c| !c.is_whitespace())
-                .map(|c| match c { '#' => Ok(true), '.' => Ok(false), _ => Err(()) })
-                .collect::<Result<Vec<bool>, ()>>()?);
+            data.extend(
+                row.chars()
+                    .filter(|c| !c.is_whitespace())
+                    .map(|c| match c {
+                        '#' => Ok(true),
+                        '.' => Ok(false),
+                        _ => Err(()),
+                    })
+                    .collect::<Result<Vec<bool>, ()>>()?,
+            );
 
             Ok(data.len() - prev_len)
         }
@@ -102,21 +118,21 @@ impl FromStr for Image {
         // Extract width from first row
         let width = match rows.next() {
             Some(row) => push_image_row(&mut data, row)?,
-            None      => 0
+            None => 0,
         };
 
         // Push all other rows
         for row in rows {
             let pushed = push_image_row(&mut data, row)?;
             assert_eq!(width, pushed);
-        };
+        }
 
         Ok(Image::from_raw_data(width, data))
     }
 }
 
 /// Parses the input list of rules
-fn parse_rules<'a, I: Iterator<Item=&'a str>>(lines: I) -> HashMap<Image, Image> {
+fn parse_rules<'a, I: Iterator<Item = &'a str>>(lines: I) -> HashMap<Image, Image> {
     let mut rules = HashMap::new();
     for line in lines {
         // Parse line
@@ -126,20 +142,20 @@ fn parse_rules<'a, I: Iterator<Item=&'a str>>(lines: I) -> HashMap<Image, Image>
         // Insert all linear transformations of left side into the ruleset
         //  This is the dihedral group of order 8 (a = rotate 90, b = flip horiz)
         let lhs_list = vec![
-            line_parts[0].clone(),                                                 // e Identity
-            line_parts[0].transform_noscale(|x, y, _, h| (y,         h - x - 1)),  // a Rotate 90
-            line_parts[0].transform_noscale(|x, y, w, h| (w - x - 1, h - y - 1)),  // aa Rotate 180
-            line_parts[0].transform_noscale(|x, y, w, _| (w - y - 1, x        )),  // aaa Rotate 270
-            line_parts[0].transform_noscale(|x, y, w, _| (w - x - 1, y        )),  // b Flip horizontal
-            line_parts[0].transform_noscale(|x, y, w, h| (w - y - 1, h - x - 1)),  // ab
-            line_parts[0].transform_noscale(|x, y, _, h| (x,         h - y - 1)),  // aab Flip vertical
-            line_parts[0].transform_noscale(|x, y, _, _| (y,         x        )),  // aaab
+            line_parts[0].clone(),                                        // e Identity
+            line_parts[0].transform_noscale(|x, y, _, h| (y, h - x - 1)), // a Rotate 90
+            line_parts[0].transform_noscale(|x, y, w, h| (w - x - 1, h - y - 1)), // aa Rotate 180
+            line_parts[0].transform_noscale(|x, y, w, _| (w - y - 1, x)), // aaa Rotate 270
+            line_parts[0].transform_noscale(|x, y, w, _| (w - x - 1, y)), // b Flip horizontal
+            line_parts[0].transform_noscale(|x, y, w, h| (w - y - 1, h - x - 1)), // ab
+            line_parts[0].transform_noscale(|x, y, _, h| (x, h - y - 1)), // aab Flip vertical
+            line_parts[0].transform_noscale(|x, y, _, _| (y, x)),         // aaab
         ];
 
         for lhs in lhs_list {
             rules.insert(lhs, line_parts[1].clone());
         }
-    };
+    }
 
     rules
 }
@@ -154,11 +170,12 @@ fn fractal_iterate(image: Image, rules: &HashMap<Image, Image>) -> Image {
     // Get list of blocks which we're going to expand into
     let block_size = if image.width % 2 == 0 { 2 } else { 3 };
     let block_count = image.width / block_size;
-    let matched_blocks: Vec<&Image> =
-        cartesian_product(0..block_count, 0..block_count)
-        .map(|(by, bx)| rules.get(
-                &image.subimage(bx * block_size, by * block_size, block_size, block_size))
-                .unwrap())
+    let matched_blocks: Vec<&Image> = cartesian_product(0..block_count, 0..block_count)
+        .map(|(by, bx)| {
+            rules
+                .get(&image.subimage(bx * block_size, by * block_size, block_size, block_size))
+                .unwrap()
+        })
         .collect();
 
     // Splice blocks together
@@ -166,8 +183,11 @@ fn fractal_iterate(image: Image, rules: &HashMap<Image, Image>) -> Image {
     Image::from_generator(
         block_count * new_block_size,
         block_count * new_block_size,
-        |x, y| matched_blocks[(x / new_block_size) + (y / new_block_size) * block_count]
-                             [(x % new_block_size, y % new_block_size)])
+        |x, y| {
+            matched_blocks[(x / new_block_size) + (y / new_block_size) * block_count]
+                [(x % new_block_size, y % new_block_size)]
+        },
+    )
 }
 
 /// Find number of enabled bits after n iterations
@@ -175,8 +195,11 @@ fn star_common(input: &str, default: usize) -> String {
     // Read number of iterations from the first line
     let mut lines = input.lines().peekable();
     let iterations = match lines.peek().unwrap().parse::<usize>() {
-        Ok(v)  => { lines.next(); v },
-        Err(_) => default
+        Ok(v) => {
+            lines.next();
+            v
+        }
+        Err(_) => default,
     };
 
     let rules = parse_rules(lines);
@@ -189,5 +212,9 @@ fn star_common(input: &str, default: usize) -> String {
     result.data.iter().filter(|&p| *p).count().to_string()
 }
 
-pub fn star1(input: &str) -> String { star_common(input, 5) }
-pub fn star2(input: &str) -> String { star_common(input, 18) }
+pub fn star1(input: &str) -> String {
+    star_common(input, 5)
+}
+pub fn star2(input: &str) -> String {
+    star_common(input, 18)
+}

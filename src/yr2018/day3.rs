@@ -5,15 +5,13 @@ use crate::vector::Vector2;
 
 /// A 2D rectangle with integer dimensions and an ID
 #[derive(Debug, Clone)]
-struct Rectangle
-{
+struct Rectangle {
     id: u32,
     pos: Vector2<u32>,
     size: Vector2<u32>,
 }
 
-impl FromStr for Rectangle
-{
+impl FromStr for Rectangle {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Rectangle, ()> {
@@ -26,8 +24,14 @@ impl FromStr for Rectangle
         if parts.len() == 5 && parts.iter().all(|part| part.is_ok()) {
             return Ok(Rectangle {
                 id: parts[0]?,
-                pos: Vector2 { x: parts[1]?, y: parts[2]? },
-                size: Vector2 { x: parts[3]?, y: parts[4]? },
+                pos: Vector2 {
+                    x: parts[1]?,
+                    y: parts[2]?,
+                },
+                size: Vector2 {
+                    x: parts[3]?,
+                    y: parts[4]?,
+                },
             });
         }
 
@@ -38,8 +42,9 @@ impl FromStr for Rectangle
 /// Returns a hash map mapping points to the number of times they
 /// appear in the rectangle iterator given
 fn count_points_in_rectangles<I>(iter: I) -> HashMap<Vector2<u32>, usize>
-    where I: Iterator<Item=Rectangle> {
-
+where
+    I: Iterator<Item = Rectangle>,
+{
     let mut result = HashMap::new();
 
     for rect in iter {
@@ -50,12 +55,11 @@ fn count_points_in_rectangles<I>(iter: I) -> HashMap<Vector2<u32>, usize>
         }
     }
 
-
     result
 }
 
 /// Parses the input rectangles string into an iterator
-fn parse_rectangles<'a>(input: &'a str) -> impl Iterator<Item=Rectangle> + Clone + 'a {
+fn parse_rectangles<'a>(input: &'a str) -> impl Iterator<Item = Rectangle> + Clone + 'a {
     input.lines().map(|line| line.parse::<Rectangle>().unwrap())
 }
 

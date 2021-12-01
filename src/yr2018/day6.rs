@@ -7,13 +7,17 @@ fn parse_coord(line: &str) -> Vector2<i32> {
         .map(|p| p.trim().parse().unwrap())
         .collect();
 
-    Vector2 { x: coords[0], y: coords[1] }
+    Vector2 {
+        x: coords[0],
+        y: coords[1],
+    }
 }
 
 /// Find the bounding rectangle (as x1y1, x2y2) of a set of points
 fn find_bounding_rect<'a, I>(points: I) -> Option<(Vector2<i32>, Vector2<i32>)>
-    where I: Iterator<Item=&'a Vector2<i32>> + Clone {
-
+where
+    I: Iterator<Item = &'a Vector2<i32>> + Clone,
+{
     Some((
         Vector2 {
             x: points.clone().map(|v| v.x).min()?,
@@ -22,15 +26,16 @@ fn find_bounding_rect<'a, I>(points: I) -> Option<(Vector2<i32>, Vector2<i32>)>
         Vector2 {
             x: points.clone().map(|v| v.x).max()?,
             y: points.clone().map(|v| v.y).max()?,
-        }
+        },
     ))
 }
 
 /// Find the nearest coord id to a given point
 ///  Returns None if there is no nearest point (ie no coords, or 2+ equal coords)
 fn find_nearest_coord<'a, I>(point: Vector2<i32>, coords: I) -> Option<usize>
-    where I: Iterator<Item=&'a Vector2<i32>> {
-
+where
+    I: Iterator<Item = &'a Vector2<i32>>,
+{
     let mut nearest_id = None;
     let mut nearest_dist = std::i32::MAX;
 
@@ -76,12 +81,11 @@ pub fn star1(input: &str) -> String {
 /// Find size of area "close" to a set of all points
 pub fn star2(input: &str) -> String {
     let mut input_lines = input.lines().peekable();
-    let safe_distance: i32 =
-        if input_lines.peek().map_or(false, |l| !l.contains(',')) {
-            input_lines.next().unwrap().parse().unwrap()
-        } else {
-            10000
-        };
+    let safe_distance: i32 = if input_lines.peek().map_or(false, |l| !l.contains(',')) {
+        input_lines.next().unwrap().parse().unwrap()
+    } else {
+        10000
+    };
 
     let coords: Vec<Vector2<i32>> = input_lines.map(parse_coord).collect();
     let bounds = find_bounding_rect(coords.iter()).unwrap();

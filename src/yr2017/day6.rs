@@ -2,7 +2,11 @@ use std::collections::HashMap;
 
 /// Returns the index of the largest element in the iterator
 ///  Returns the first index on ties
-fn first_max_index<T, Iter>(mut iter: Iter) -> Option<usize> where T: Ord, Iter: Iterator<Item=T> {
+fn first_max_index<T, Iter>(mut iter: Iter) -> Option<usize>
+where
+    T: Ord,
+    Iter: Iterator<Item = T>,
+{
     match iter.next() {
         Some(value) => {
             let mut max = (value, 0);
@@ -16,8 +20,8 @@ fn first_max_index<T, Iter>(mut iter: Iter) -> Option<usize> where T: Ord, Iter:
             }
 
             Some(max.1)
-        },
-        None => None
+        }
+        None => None,
     }
 }
 
@@ -32,7 +36,9 @@ fn redistribute(vector: &mut Vec<i32>) {
     vector[index] = 0;
     index += 1;
     while value > 0 {
-        if index >= vector.len() { index = 0 };
+        if index >= vector.len() {
+            index = 0
+        };
         vector[index] += 1;
 
         index += 1;
@@ -45,8 +51,10 @@ fn redistribute(vector: &mut Vec<i32>) {
 ///  Returns (total iterations taken, iterations in first cycle)
 fn find_repeated_redistribution(input: &str) -> (usize, usize) {
     // Generate initial vector
-    let mut last_vector: Vec<i32> =
-        input.split_whitespace().map(|value| value.parse().unwrap()).collect();
+    let mut last_vector: Vec<i32> = input
+        .split_whitespace()
+        .map(|value| value.parse().unwrap())
+        .collect();
 
     // Redistribute and store in a hash map until we get a repeated vector
     let mut map = HashMap::new();

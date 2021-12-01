@@ -1,13 +1,14 @@
-use std::collections::{BinaryHeap, HashMap};
 use std::cmp::Reverse;
+use std::collections::{BinaryHeap, HashMap};
 
 use lazy_static::lazy_static;
 use regex::Regex;
 
 /// Parses the input list of dependencies
-fn parse_input<'a, I: Iterator<Item=&'a str>>(lines: I) -> HashMap<char, Vec<char>> {
+fn parse_input<'a, I: Iterator<Item = &'a str>>(lines: I) -> HashMap<char, Vec<char>> {
     lazy_static! {
-        static ref re: Regex = Regex::new("^Step ([A-Z]) must be finished before step ([A-Z]) can begin.$").unwrap();
+        static ref re: Regex =
+            Regex::new("^Step ([A-Z]) must be finished before step ([A-Z]) can begin.$").unwrap();
     }
 
     let mut result = HashMap::new();
@@ -15,7 +16,7 @@ fn parse_input<'a, I: Iterator<Item=&'a str>>(lines: I) -> HashMap<char, Vec<cha
     for line in lines {
         let caps = re.captures(line).unwrap();
         let from = caps.get(1).unwrap().as_str().chars().next().unwrap();
-        let to   = caps.get(2).unwrap().as_str().chars().next().unwrap();
+        let to = caps.get(2).unwrap().as_str().chars().next().unwrap();
 
         result.entry(from).or_insert(Vec::new()).push(to);
     }
@@ -49,12 +50,17 @@ impl<'a> TopologicalSort<'a> {
         }
 
         // Open set initialised to nodes with no incoming edges
-        let open = incoming_count.iter()
+        let open = incoming_count
+            .iter()
             .filter(|(_, &c)| c == 0)
             .map(|(&n, _)| Reverse(n))
             .collect();
 
-        TopologicalSort { edges, incoming_count, open }
+        TopologicalSort {
+            edges,
+            incoming_count,
+            open,
+        }
     }
 
     /// Returns true if the topological sort is complete
@@ -105,16 +111,16 @@ pub fn star1(input: &str) -> String {
 /// Return time it takes for elves to process steps
 pub fn star2(input: &str) -> String {
     // Parse input
-    let (edges, workers, all_step_time) =
-        if !input.starts_with("Step") {
-            let int_parts: Vec<usize> = input.lines()
-                .take(2)
-                .map(|l| l.parse().unwrap())
-                .collect();
-            (parse_input(input.lines().skip(2)), int_parts[0], int_parts[1])
-        } else {
-            (parse_input(input.lines()), 5, 60)
-        };
+    let (edges, workers, all_step_time) = if !input.starts_with("Step") {
+        let int_parts: Vec<usize> = input.lines().take(2).map(|l| l.parse().unwrap()).collect();
+        (
+            parse_input(input.lines().skip(2)),
+            int_parts[0],
+            int_parts[1],
+        )
+    } else {
+        (parse_input(input.lines()), 5, 60)
+    };
 
     // Simulate parallel working
     let mut top_sort_state = TopologicalSort::new(&edges);
@@ -125,7 +131,10 @@ pub fn star2(input: &str) -> String {
         // Start as many workers as possible
         while active_steps.len() < workers {
             if let Some(c) = top_sort_state.take_open_node() {
-                active_steps.push(Reverse((now + all_step_time + (c as usize - 'A' as usize + 1), c)));
+                active_steps.push(Reverse((
+                    now + all_step_time + (c as usize - 'A' as usize + 1),
+                    c,
+                )));
             } else {
                 break;
             }
@@ -143,7 +152,6 @@ pub fn star2(input: &str) -> String {
                 break;
             }
         }
-
     }
 
     now.to_string()

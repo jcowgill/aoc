@@ -1,22 +1,25 @@
-use crate::yr2017::processor::{ExecutionState, Instruction, StepResult, program_step};
+use crate::yr2017::processor::{program_step, ExecutionState, Instruction, StepResult};
 
 /// Parses the input program into a list of instructions
 fn parse_program(input: &str) -> Vec<Instruction> {
     let list: Vec<Instruction> = match input.lines().map(str::parse).collect() {
         Ok(list) => list,
-        Err(_)   => panic!("invalid program")
+        Err(_) => panic!("invalid program"),
     };
 
     // Validate program instructions
     for instr in list.iter() {
         match instr {
-            &Instruction::Snd(_) | &Instruction::Rcv(_) |
-            &Instruction::Set(_, _) | &Instruction::Add(_, _) |
-            &Instruction::Mul(_, _) | &Instruction::Mod(_, _) |
-            &Instruction::Jgz(_, _) => (),
+            &Instruction::Snd(_)
+            | &Instruction::Rcv(_)
+            | &Instruction::Set(_, _)
+            | &Instruction::Add(_, _)
+            | &Instruction::Mul(_, _)
+            | &Instruction::Mod(_, _)
+            | &Instruction::Jgz(_, _) => (),
             _ => panic!("invalid program"),
         }
-    };
+    }
 
     list
 }
@@ -30,10 +33,10 @@ pub fn star1(input: &str) -> String {
     let mut last_sent = 0;
     loop {
         match program_step(&program, &mut state) {
-            StepResult::Running        => (),
-            StepResult::Sent(val)      => last_sent = val,
+            StepResult::Running => (),
+            StepResult::Sent(val) => last_sent = val,
             StepResult::ReceiveBlocked => return last_sent.to_string(),
-            StepResult::Terminated     => panic!("program terminated ?!"),
+            StepResult::Terminated => panic!("program terminated ?!"),
         }
     }
 }
@@ -53,7 +56,7 @@ pub fn star2(input: &str) -> String {
                 stats_sent[current] += 1;
                 states[1 - current].blocked = false;
                 states[1 - current].receive_queue.push_back(val);
-            },
+            }
             StepResult::ReceiveBlocked => {
                 // If both programs are blocked, we terminate, otherwise switch
                 if states[0].blocked && states[1].blocked {
@@ -61,8 +64,8 @@ pub fn star2(input: &str) -> String {
                 } else {
                     current = 1 - current;
                 }
-            },
-            StepResult::Terminated => break
+            }
+            StepResult::Terminated => break,
         }
     }
 
