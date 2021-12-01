@@ -29,7 +29,9 @@ impl FromStr for Action {
         } else if s == "wakes up" {
             Ok(Action::WakeUp)
         } else if let Some(caps) = guard_re.captures(s) {
-            Ok(Action::BeginShift(caps.get(1).unwrap().as_str().parse().map_err(|_| ())?))
+            Ok(Action::BeginShift(
+                caps.get(1).unwrap().as_str().parse().map_err(|_| ())?,
+            ))
         } else {
             Err(())
         }
@@ -49,14 +51,15 @@ impl<'a> FromStr for Record {
 
     fn from_str(s: &str) -> Result<Record, ()> {
         lazy_static! {
-            static ref re: Regex = Regex::new(r"^\s*\[([0-9-]* [0-9]*):([0-9]*)\]\s*(.*)$").unwrap();
+            static ref re: Regex =
+                Regex::new(r"^\s*\[([0-9-]* [0-9]*):([0-9]*)\]\s*(.*)$").unwrap();
         }
 
         if let Some(caps) = re.captures(s) {
             Ok(Record {
                 date_hour: caps.get(1).unwrap().as_str().to_owned(),
-                minute:    caps.get(2).unwrap().as_str().parse().map_err(|_| ())?,
-                action:    caps.get(3).unwrap().as_str().parse().map_err(|_| ())?,
+                minute: caps.get(2).unwrap().as_str().parse().map_err(|_| ())?,
+                action: caps.get(3).unwrap().as_str().parse().map_err(|_| ())?,
             })
         } else {
             Err(())
@@ -69,7 +72,7 @@ impl<'a> FromStr for Record {
 struct WakeupIterator<'a, I> {
     parent: I,
     active_guard: Option<u32>,
-    last_sleep: Option<&'a Record>
+    last_sleep: Option<&'a Record>,
 }
 
 impl<'a, I> WakeupIterator<'a, I> {
@@ -77,12 +80,15 @@ impl<'a, I> WakeupIterator<'a, I> {
         WakeupIterator {
             parent: parent,
             active_guard: None,
-            last_sleep: None
+            last_sleep: None,
         }
     }
 }
 
-impl<'a, I> Iterator for WakeupIterator<'a, I> where I: Iterator<Item=&'a Record>{
+impl<'a, I> Iterator for WakeupIterator<'a, I>
+where
+    I: Iterator<Item = &'a Record>,
+{
     /// (guard id, sleep minute, wakeup minute)
     type Item = (u32, u8, u8);
 
@@ -93,7 +99,7 @@ impl<'a, I> Iterator for WakeupIterator<'a, I> where I: Iterator<Item=&'a Record
                     assert_eq!(self.last_sleep, None);
                     self.active_guard = Some(guard);
                     self.next()
-                },
+                }
                 Action::FallAsleep => {
                     assert_ne!(self.active_guard, None);
                     assert_eq!(self.last_sleep, None);
@@ -107,7 +113,11 @@ impl<'a, I> Iterator for WakeupIterator<'a, I> where I: Iterator<Item=&'a Record
                     assert!(record.minute > last_sleep_rec.minute);
 
                     self.last_sleep = None;
-                    Some((self.active_guard.unwrap(), last_sleep_rec.minute, record.minute))
+                    Some((
+                        self.active_guard.unwrap(),
+                        last_sleep_rec.minute,
+                        record.minute,
+                    ))
                 }
             }
         } else {
@@ -118,7 +128,7 @@ impl<'a, I> Iterator for WakeupIterator<'a, I> where I: Iterator<Item=&'a Record
 }
 
 /// Finds the guard id of the guard who slept the longest
-fn longest_sleep<'a, I: Iterator<Item=&'a Record>>(records: I) -> u32 {
+fn longest_sleep<'a, I: Iterator<Item = &'a Record>>(records: I) -> u32 {
     let mut minutes_asleep = HashMap::new();
 
     for (guard, sleep, wakeup) in WakeupIterator::new(records) {
@@ -130,7 +140,9 @@ fn longest_sleep<'a, I: Iterator<Item=&'a Record>>(records: I) -> u32 {
 
 /// Returns the frequency map which counts the frequency each guard is
 /// asleep in each minute
-fn minute_frequency_map<'a, I: Iterator<Item=&'a Record>>(records: I) -> HashMap<(u32, u8), usize> {
+fn minute_frequency_map<'a, I: Iterator<Item = &'a Record>>(
+    records: I,
+) -> HashMap<(u32, u8), usize> {
     let mut freq_map = HashMap::new();
 
     for (guard, sleep, wakeup) in WakeupIterator::new(records) {
@@ -143,11 +155,14 @@ fn minute_frequency_map<'a, I: Iterator<Item=&'a Record>>(records: I) -> HashMap
 }
 
 /// Returns most frequent minute a guard sleeps in
-fn most_frequent_minute<'a, I: Iterator<Item=&'a Record>>(records: I, freq_guard: u32) -> u8 {
-    (minute_frequency_map(records).iter()
+fn most_frequent_minute<'a, I: Iterator<Item = &'a Record>>(records: I, freq_guard: u32) -> u8 {
+    (minute_frequency_map(records)
+        .iter()
         .filter(|&(&(guard, _), _)| guard == freq_guard)
         .max_by_key(|(_, &v)| v)
-        .unwrap().0).1
+        .unwrap()
+        .0)
+        .1
 }
 
 pub fn star1(input: &str) -> String {
@@ -165,7 +180,10 @@ pub fn star2(input: &str) -> String {
     records.sort();
 
     let (guard, minute) = *minute_frequency_map(records.iter())
-        .iter().max_by_key(|(_, &v)| v).unwrap().0;
+        .iter()
+        .max_by_key(|(_, &v)| v)
+        .unwrap()
+        .0;
 
     (guard * minute as u32).to_string()
 }

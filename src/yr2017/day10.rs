@@ -17,14 +17,22 @@ fn parse_lengths(input: &str) -> (usize, Vec<u8>) {
     };
 
     // Extract lengths and return result
-    (elements, semicolon_parts[0].split(',').flat_map(|s| s.trim().parse()).collect())
+    (
+        elements,
+        semicolon_parts[0]
+            .split(',')
+            .flat_map(|s| s.trim().parse())
+            .collect(),
+    )
 }
 
 /// Reverses part of a cyclic list starting at pos
 fn reverse_cyclic_sublist<T>(list: &mut Vec<T>, pos: usize, length: usize) {
     let mut left = pos;
     let mut right = pos + length - 1;
-    if right >= list.len() { right -= list.len() }
+    if right >= list.len() {
+        right -= list.len()
+    }
 
     assert!(left < list.len());
     assert!(right < list.len());
@@ -33,7 +41,11 @@ fn reverse_cyclic_sublist<T>(list: &mut Vec<T>, pos: usize, length: usize) {
     for _ in 0..(length / 2) {
         list.swap(left, right);
         left = if left == list.len() - 1 { 0 } else { left + 1 };
-        right = if right == 0 { list.len() - 1 } else { right - 1 };
+        right = if right == 0 {
+            list.len() - 1
+        } else {
+            right - 1
+        };
     }
 }
 
@@ -43,9 +55,16 @@ fn reverse_cyclic_sublist<T>(list: &mut Vec<T>, pos: usize, length: usize) {
 ///  initial_pos = initial position to start rotating at
 ///  initial_skip = initial number of positions to skip after each length
 /// Returns final position
-fn knot_round<T, I>(mut knot: &mut Vec<T>, lengths: I, initial_pos: usize, initial_skip: usize) -> usize
-    where I: Iterator, I::Item: Into<usize> {
-
+fn knot_round<T, I>(
+    mut knot: &mut Vec<T>,
+    lengths: I,
+    initial_pos: usize,
+    initial_skip: usize,
+) -> usize
+where
+    I: Iterator,
+    I::Item: Into<usize>,
+{
     assert!(initial_pos < knot.len());
 
     let mut pos = initial_pos;
@@ -60,7 +79,10 @@ fn knot_round<T, I>(mut knot: &mut Vec<T>, lengths: I, initial_pos: usize, initi
 
 /// Runs the full knot hash of an iterator of bytes
 ///  This function is used by other days so don't change the signature
-pub fn knot_hash<I>(input: I) -> KnotHashResult where I: Iterator<Item=u8> + Clone {
+pub fn knot_hash<I>(input: I) -> KnotHashResult
+where
+    I: Iterator<Item = u8> + Clone,
+{
     let full_input = input.chain(LENGTHS_APPEND.iter().cloned());
     let full_input_len = full_input.clone().count();
 
@@ -78,7 +100,8 @@ pub fn knot_hash<I>(input: I) -> KnotHashResult where I: Iterator<Item=u8> + Clo
     let mut result: KnotHashResult = [0; 16];
     for dense_byte in 0..16 {
         result[dense_byte] = knot[(16 * dense_byte)..(16 * (dense_byte + 1))]
-            .iter().fold(0, u8::bitxor);
+            .iter()
+            .fold(0, u8::bitxor);
     }
 
     result
@@ -96,6 +119,7 @@ pub fn star1(input: &str) -> String {
 
 /// Hash given input and return a hex string of the result
 pub fn star2(input: &str) -> String {
-    knot_hash(input.bytes()).iter()
+    knot_hash(input.bytes())
+        .iter()
         .fold(String::new(), |acc, &b| acc + &format!("{:02x}", b))
 }

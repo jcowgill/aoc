@@ -1,8 +1,10 @@
 use std::collections::HashSet;
 
 /// Parses the input string and returns an iterator over each integer
-fn parse_input<'a>(input: &'a str) -> impl Iterator<Item=i32> + Clone + 'a {
-    input.lines().map(|line| line.trim().parse::<i32>().unwrap())
+fn parse_input<'a>(input: &'a str) -> impl Iterator<Item = i32> + Clone + 'a {
+    input
+        .lines()
+        .map(|line| line.trim().parse::<i32>().unwrap())
 }
 
 /// Calculate resulting frequency from given list of signed integers

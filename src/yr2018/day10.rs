@@ -4,7 +4,9 @@ use regex::Regex;
 use crate::vector::Vector2;
 
 /// Returns the smallest rectangle which bounds a set of points
-fn bounding_rect<'a, I: Iterator<Item=&'a Vector2<i32>>>(mut points: I) -> Option<(Vector2<i32>, Vector2<i32>)> {
+fn bounding_rect<'a, I: Iterator<Item = &'a Vector2<i32>>>(
+    mut points: I,
+) -> Option<(Vector2<i32>, Vector2<i32>)> {
     if let Some(&initial) = points.next() {
         let (mut p1, mut p2) = (initial, initial);
 
@@ -29,7 +31,7 @@ fn bounding_rect<'a, I: Iterator<Item=&'a Vector2<i32>>>(mut points: I) -> Optio
 }
 
 /// Returns the size of the smallest rectangle which bounds a set of points
-fn bounding_rect_size<'a, I: Iterator<Item=&'a Vector2<i32>>>(points: I) -> Option<i32> {
+fn bounding_rect_size<'a, I: Iterator<Item = &'a Vector2<i32>>>(points: I) -> Option<i32> {
     bounding_rect(points).map(|(p1, p2)| (p2 - p1).taxicab_norm())
 }
 
@@ -67,7 +69,6 @@ fn points_to_string(mut points: Vec<Vector2<i32>>) -> String {
     let mut result = String::new();
 
     if !points.is_empty() {
-
         // Sort input points into the order to be displayed
         points.sort_unstable_by(|&a, &b| a.y.cmp(&b.y).then(a.x.cmp(&b.x)));
         points.dedup();
@@ -75,8 +76,12 @@ fn points_to_string(mut points: Vec<Vector2<i32>>) -> String {
         // Render each point after inserting needed passing
         let (mut cursor, _) = bounding_rect(points.iter()).unwrap();
         for point in points {
-            for _ in cursor.y..point.y { result.push('\n') }
-            for _ in cursor.x..point.x { result.push(' ') }
+            for _ in cursor.y..point.y {
+                result.push('\n')
+            }
+            for _ in cursor.x..point.x {
+                result.push(' ')
+            }
             result.push('#');
             cursor = point + Vector2 { x: 1, y: 0 };
         }
@@ -97,11 +102,22 @@ fn parse_input(input: &str) -> (Vec<Vector2<i32>>, Vec<Vector2<i32>>) {
     let mut velocities: Vec<Vector2<i32>> = Vec::new();
 
     for line in input.lines() {
-        let parts: Vec<i32> = re.captures(line).unwrap().iter().skip(1)
-            .map(|m| m.unwrap().as_str().parse().unwrap()).collect();
+        let parts: Vec<i32> = re
+            .captures(line)
+            .unwrap()
+            .iter()
+            .skip(1)
+            .map(|m| m.unwrap().as_str().parse().unwrap())
+            .collect();
 
-        points.push(Vector2 { x: parts[0], y: parts[1] });
-        velocities.push(Vector2 { x: parts[2], y: parts[3] });
+        points.push(Vector2 {
+            x: parts[0],
+            y: parts[1],
+        });
+        velocities.push(Vector2 {
+            x: parts[2],
+            y: parts[3],
+        });
     }
 
     (points, velocities)

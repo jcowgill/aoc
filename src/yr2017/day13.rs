@@ -1,10 +1,13 @@
 /// Parse the list layer depths into a vector
 fn parse_depths(input: &str) -> Vec<(i32, i32)> {
-    input.lines().map(|line| {
-        let parts: Vec<i32> = line.split(':').map(|s| s.trim().parse().unwrap()).collect();
-        assert_eq!(parts.len(), 2);
-        (parts[0], parts[1])
-    }).collect()
+    input
+        .lines()
+        .map(|line| {
+            let parts: Vec<i32> = line.split(':').map(|s| s.trim().parse().unwrap()).collect();
+            assert_eq!(parts.len(), 2);
+            (parts[0], parts[1])
+        })
+        .collect()
 }
 
 /// Calculates the severity of performing a walk
@@ -23,7 +26,9 @@ fn walk_severity(time_offset: i32, depths: &Vec<(i32, i32)>) -> Option<i32> {
 
 /// Find severity of whole firewall trip
 pub fn star1(input: &str) -> String {
-    walk_severity(0, &parse_depths(input)).unwrap_or(0).to_string()
+    walk_severity(0, &parse_depths(input))
+        .unwrap_or(0)
+        .to_string()
 }
 
 /// Find smallest time delay which gets through safely

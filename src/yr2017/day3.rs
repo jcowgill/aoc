@@ -7,13 +7,29 @@ use std::cmp;
 ///  3 = Down
 fn xy_to_side((x, y): (i32, i32)) -> i32 {
     if x >= 0 && y >= 0 {
-        if x >= y { 0 } else { 1 }
+        if x >= y {
+            0
+        } else {
+            1
+        }
     } else if x < 0 && y >= 0 {
-        if y >= -x { 1 } else { 2 }
+        if y >= -x {
+            1
+        } else {
+            2
+        }
     } else if x < 0 && y < 0 {
-        if x <= y { 2 } else { 3 }
+        if x <= y {
+            2
+        } else {
+            3
+        }
     } else {
-        if y <= -x { 3 } else { 0 }
+        if y <= -x {
+            3
+        } else {
+            0
+        }
     }
 }
 
@@ -31,7 +47,7 @@ fn spiral_grid_value(point: (i32, i32)) -> i32 {
         1 => ring_number - x,
         2 => ring_number - y,
         3 => ring_number + x,
-        _ => panic!("invalid side number")
+        _ => panic!("invalid side number"),
     };
 
     // Return calculated value
@@ -43,7 +59,9 @@ fn spiral_grid_xy(value: i32) -> (i32, i32) {
     assert!(value >= 1);
 
     // Special case 1
-    if value == 1 { return (0, 0) };
+    if value == 1 {
+        return (0, 0);
+    };
 
     // Determine ring number, last value in previous ring and side number
     let ring_number = ((((value - 1) as f64).sqrt() + 1.0) / 2.0).floor() as i32;
@@ -58,7 +76,7 @@ fn spiral_grid_xy(value: i32) -> (i32, i32) {
         1 => (ring_number - side_distance_p1, ring_number),
         2 => (-ring_number, ring_number - side_distance_p1),
         3 => (side_distance_p1 - ring_number, -ring_number),
-        _ => panic!("invalid side number")
+        _ => panic!("invalid side number"),
     }
 }
 
@@ -72,7 +90,9 @@ pub fn star1(input: &str) -> String {
 pub fn star2(input: &str) -> String {
     /// Returns value at a point in the spreadsheet
     fn value_at(spreadsheet: &Vec<i32>, x: i32, y: i32) -> i32 {
-        *spreadsheet.get(spiral_grid_value((x, y)) as usize - 1).unwrap_or(&0)
+        *spreadsheet
+            .get(spiral_grid_value((x, y)) as usize - 1)
+            .unwrap_or(&0)
     }
 
     // The spreadsheet is represented as a growing vector where the indexes spiral around
@@ -85,15 +105,14 @@ pub fn star2(input: &str) -> String {
 
     while *spreadsheet.last().unwrap() < stop_value {
         let (x, y) = spiral_grid_xy(spreadsheet.len() as i32 + 1);
-        let new_value =
-            value_at(&spreadsheet, x - 1, y - 1) +
-            value_at(&spreadsheet, x - 1, y    ) +
-            value_at(&spreadsheet, x - 1, y + 1) +
-            value_at(&spreadsheet, x,     y - 1) +
-            value_at(&spreadsheet, x,     y + 1) +
-            value_at(&spreadsheet, x + 1, y - 1) +
-            value_at(&spreadsheet, x + 1, y   ) +
-            value_at(&spreadsheet, x + 1, y + 1);
+        let new_value = value_at(&spreadsheet, x - 1, y - 1)
+            + value_at(&spreadsheet, x - 1, y)
+            + value_at(&spreadsheet, x - 1, y + 1)
+            + value_at(&spreadsheet, x, y - 1)
+            + value_at(&spreadsheet, x, y + 1)
+            + value_at(&spreadsheet, x + 1, y - 1)
+            + value_at(&spreadsheet, x + 1, y)
+            + value_at(&spreadsheet, x + 1, y + 1);
         spreadsheet.push(new_value);
     }
 
@@ -108,28 +127,96 @@ mod tests {
     struct TestEntry {
         point: (i32, i32),
         value: i32,
-        side: i32
+        side: i32,
     }
 
     /// Data for unit tests
     const UNIT_TEST_DATA: [TestEntry; 17] = [
-        TestEntry {point: ( 0,  0), value:  1, side: 0},
-        TestEntry {point: ( 2, -1), value: 10, side: 0},
-        TestEntry {point: ( 2,  0), value: 11, side: 0},
-        TestEntry {point: ( 2,  1), value: 12, side: 0},
-        TestEntry {point: ( 2,  2), value: 13, side: 0},
-        TestEntry {point: ( 1,  2), value: 14, side: 1},
-        TestEntry {point: ( 0,  2), value: 15, side: 1},
-        TestEntry {point: (-1,  2), value: 16, side: 1},
-        TestEntry {point: (-2,  2), value: 17, side: 1},
-        TestEntry {point: (-2,  1), value: 18, side: 2},
-        TestEntry {point: (-2,  0), value: 19, side: 2},
-        TestEntry {point: (-2, -1), value: 20, side: 2},
-        TestEntry {point: (-2, -2), value: 21, side: 2},
-        TestEntry {point: (-1, -2), value: 22, side: 3},
-        TestEntry {point: ( 0, -2), value: 23, side: 3},
-        TestEntry {point: ( 1, -2), value: 24, side: 3},
-        TestEntry {point: ( 2, -2), value: 25, side: 3},
+        TestEntry {
+            point: (0, 0),
+            value: 1,
+            side: 0,
+        },
+        TestEntry {
+            point: (2, -1),
+            value: 10,
+            side: 0,
+        },
+        TestEntry {
+            point: (2, 0),
+            value: 11,
+            side: 0,
+        },
+        TestEntry {
+            point: (2, 1),
+            value: 12,
+            side: 0,
+        },
+        TestEntry {
+            point: (2, 2),
+            value: 13,
+            side: 0,
+        },
+        TestEntry {
+            point: (1, 2),
+            value: 14,
+            side: 1,
+        },
+        TestEntry {
+            point: (0, 2),
+            value: 15,
+            side: 1,
+        },
+        TestEntry {
+            point: (-1, 2),
+            value: 16,
+            side: 1,
+        },
+        TestEntry {
+            point: (-2, 2),
+            value: 17,
+            side: 1,
+        },
+        TestEntry {
+            point: (-2, 1),
+            value: 18,
+            side: 2,
+        },
+        TestEntry {
+            point: (-2, 0),
+            value: 19,
+            side: 2,
+        },
+        TestEntry {
+            point: (-2, -1),
+            value: 20,
+            side: 2,
+        },
+        TestEntry {
+            point: (-2, -2),
+            value: 21,
+            side: 2,
+        },
+        TestEntry {
+            point: (-1, -2),
+            value: 22,
+            side: 3,
+        },
+        TestEntry {
+            point: (0, -2),
+            value: 23,
+            side: 3,
+        },
+        TestEntry {
+            point: (1, -2),
+            value: 24,
+            side: 3,
+        },
+        TestEntry {
+            point: (2, -2),
+            value: 25,
+            side: 3,
+        },
     ];
 
     #[test]

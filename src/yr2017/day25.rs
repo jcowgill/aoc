@@ -47,11 +47,12 @@ struct TuringMachine<State, Symbol> {
 
 impl<State: Copy + Eq + Hash, Symbol: Copy + Eq + Hash> TuringMachine<State, Symbol> {
     /// Creates a new turing machine
-    fn new(blank: Symbol,
-           transitions: TransitionMap<State, Symbol>,
-           initial_state: State,
-           mut initial_tape: Vec<Symbol>) -> Self {
-
+    fn new(
+        blank: Symbol,
+        transitions: TransitionMap<State, Symbol>,
+        initial_state: State,
+        mut initial_tape: Vec<Symbol>,
+    ) -> Self {
         assert!(!initial_tape.contains(&blank));
 
         // Cursor must point to a valid tape position
@@ -72,8 +73,8 @@ impl<State: Copy + Eq + Hash, Symbol: Copy + Eq + Hash> TuringMachine<State, Sym
     ///  Returns true if the machine is still running
     fn step(&mut self) -> bool {
         if let Some(&(new_state, new_symbol, tape_move)) =
-            self.transitions.get(&(self.state, self.tape[self.cursor])) {
-
+            self.transitions.get(&(self.state, self.tape[self.cursor]))
+        {
             self.state = new_state;
             self.tape[self.cursor] = new_symbol;
             if tape_move == TapeMove::Left {
@@ -141,10 +142,10 @@ fn parse_machine(input: &str) -> (TuringMachine<char, bool>, usize) {
 
     for line_untrimmed in input.lines().chain(iter::once("Flush")) {
         // Trim and skip blank lines
-        let line = line_untrimmed.trim_matches(
-            |c: char| c.is_whitespace() || c == '.' || c == ':' || c == '-');
+        let line = line_untrimmed
+            .trim_matches(|c: char| c.is_whitespace() || c == '.' || c == ':' || c == '-');
         if line.is_empty() {
-            continue
+            continue;
         };
 
         // Handle inner transitions first
@@ -163,7 +164,12 @@ fn parse_machine(input: &str) -> (TuringMachine<char, bool>, usize) {
             // Flush current transition
             transitions.insert(
                 (current_state.unwrap(), current_symbol.unwrap()),
-                (next_state.unwrap(), next_symbol.unwrap(), next_move.unwrap()));
+                (
+                    next_state.unwrap(),
+                    next_symbol.unwrap(),
+                    next_move.unwrap(),
+                ),
+            );
             current_symbol = None;
         }
 
@@ -181,7 +187,10 @@ fn parse_machine(input: &str) -> (TuringMachine<char, bool>, usize) {
         }
     }
 
-    (TuringMachine::new(false, transitions, initial_state.unwrap(), vec![]), checksum)
+    (
+        TuringMachine::new(false, transitions, initial_state.unwrap(), vec![]),
+        checksum,
+    )
 }
 
 /// Calculate diagnostic checksum
@@ -191,7 +200,7 @@ pub fn star1(input: &str) -> String {
         if !machine.step() {
             panic!("machine stopped ?!");
         }
-    };
+    }
 
     // Count ones
     machine.tape.iter().filter(|&v| *v).count().to_string()

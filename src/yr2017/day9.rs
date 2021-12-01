@@ -1,17 +1,23 @@
-use std::ops::Add;
 use crate::apply_tuple2;
+use std::ops::Add;
 
 /// Parses the garbage in the given stream, returning the non-canclled amount
 ///  The opening < must already be consumed
 ///  Panics on unexpected eof
-fn parse_garbage<I>(stream: &mut I) -> i32 where I: Iterator<Item=char> {
+fn parse_garbage<I>(stream: &mut I) -> i32
+where
+    I: Iterator<Item = char>,
+{
     let mut garbage = 0;
 
     loop {
         match stream.next().unwrap() {
             '>' => return garbage,
-            '!' => { stream.next(); () },
-            _   => garbage += 1
+            '!' => {
+                stream.next();
+                ()
+            }
+            _ => garbage += 1,
         };
     }
 }
@@ -19,7 +25,10 @@ fn parse_garbage<I>(stream: &mut I) -> i32 where I: Iterator<Item=char> {
 /// Parses one group from a stream, retuning its (score, non-cancelled garbage)
 ///  The opening { must already be consumed
 ///  Panics on unexpected eof
-fn parse_group<I>(stream: &mut I, depth: i32) -> (i32, i32) where I: Iterator<Item=char> {
+fn parse_group<I>(stream: &mut I, depth: i32) -> (i32, i32)
+where
+    I: Iterator<Item = char>,
+{
     let mut result = (depth, 0);
 
     loop {
@@ -28,7 +37,7 @@ fn parse_group<I>(stream: &mut I, depth: i32) -> (i32, i32) where I: Iterator<It
             '{' => result = apply_tuple2(i32::add, result, parse_group(stream, depth + 1)),
             '<' => result.1 += parse_garbage(stream),
             ',' => (),
-            c   => panic!("invalid character found in group {}", c)
+            c => panic!("invalid character found in group {}", c),
         };
     }
 }

@@ -1,4 +1,4 @@
-use crate::yr2017::day10::{KnotHashResult, knot_hash};
+use crate::yr2017::day10::{knot_hash, KnotHashResult};
 
 /// The size of the grid (in both dimensions)
 const GRID_SIZE: u8 = 128;
@@ -6,13 +6,18 @@ const GRID_SIZE: u8 = 128;
 /// Calculates the disk grid from the given input key
 ///  The returned vector always contains 128 elements
 fn get_grid(key: &str) -> Vec<KnotHashResult> {
-    (0..128).map(|row| knot_hash(format!("{}-{}", key, row).bytes())).collect()
+    (0..128)
+        .map(|row| knot_hash(format!("{}-{}", key, row).bytes()))
+        .collect()
 }
 
 /// Find number of bits set in defrag disk
 pub fn star1(input: &str) -> String {
-    get_grid(input).iter().map(|row| row.iter().map(|b| b.count_ones()).sum::<u32>())
-        .sum::<u32>().to_string()
+    get_grid(input)
+        .iter()
+        .map(|row| row.iter().map(|b| b.count_ones()).sum::<u32>())
+        .sum::<u32>()
+        .to_string()
 }
 
 /// Returns the value at a given point
@@ -32,15 +37,23 @@ fn clear_point(grid: &mut [KnotHashResult], (x, y): (u8, u8)) {
 }
 
 /// Consumes the region containing the given point
-fn consume_region(grid: &mut[KnotHashResult], point: (u8, u8)) {
+fn consume_region(grid: &mut [KnotHashResult], point: (u8, u8)) {
     // Only continue if point is actually set
     if get_point(grid, point) {
         // Erase point and recurse to 4 surrounding points
         clear_point(grid, point);
-        if point.0 != 0 { consume_region(grid, (point.0 - 1, point.1)) };
-        if point.1 != 0 { consume_region(grid, (point.0, point.1 - 1)) };
-        if point.0 != (GRID_SIZE - 1) { consume_region(grid, (point.0 + 1, point.1)) };
-        if point.1 != (GRID_SIZE - 1) { consume_region(grid, (point.0, point.1 + 1)) };
+        if point.0 != 0 {
+            consume_region(grid, (point.0 - 1, point.1))
+        };
+        if point.1 != 0 {
+            consume_region(grid, (point.0, point.1 - 1))
+        };
+        if point.0 != (GRID_SIZE - 1) {
+            consume_region(grid, (point.0 + 1, point.1))
+        };
+        if point.1 != (GRID_SIZE - 1) {
+            consume_region(grid, (point.0, point.1 + 1))
+        };
     }
 }
 

@@ -18,13 +18,13 @@ impl FromStr for HexDirection {
 
     fn from_str(s: &str) -> Result<Self, ()> {
         match s {
-            "n"  => Ok(HexDirection::North),
+            "n" => Ok(HexDirection::North),
             "ne" => Ok(HexDirection::NorthEast),
             "se" => Ok(HexDirection::SouthEast),
-            "s"  => Ok(HexDirection::South),
+            "s" => Ok(HexDirection::South),
             "sw" => Ok(HexDirection::SouthWest),
             "nw" => Ok(HexDirection::NorthWest),
-            _    => Err(())
+            _ => Err(()),
         }
     }
 }
@@ -75,10 +75,10 @@ impl HexMove for HexPointCubic {
 
     fn hex_move(self, direction: HexDirection) -> HexPointCubic {
         self + match direction {
-            HexDirection::North     => HexPointCubic(0, 1, -1),
+            HexDirection::North => HexPointCubic(0, 1, -1),
             HexDirection::NorthEast => HexPointCubic(1, 0, -1),
             HexDirection::SouthEast => HexPointCubic(1, -1, 0),
-            HexDirection::South     => HexPointCubic(0, -1, 1),
+            HexDirection::South => HexPointCubic(0, -1, 1),
             HexDirection::SouthWest => HexPointCubic(-1, 0, 1),
             HexDirection::NorthWest => HexPointCubic(-1, 1, 0),
         }
@@ -95,16 +95,19 @@ fn hex_taxicab_norm(vector: HexPointCubic) -> i32 {
 /// Traverse hex grid, return distance from origin
 pub fn star1(input: &str) -> String {
     hex_taxicab_norm(
-        input.split(',')
-        .filter(|m| !m.is_empty())
-        .map(|m| m.parse().unwrap())
-        .fold(HexPointCubic(0, 0, 0), HexPointCubic::hex_move)
-    ).to_string()
+        input
+            .split(',')
+            .filter(|m| !m.is_empty())
+            .map(|m| m.parse().unwrap())
+            .fold(HexPointCubic(0, 0, 0), HexPointCubic::hex_move),
+    )
+    .to_string()
 }
 
 /// Traverse hex grid, return maximum ever distance from origin
 pub fn star2(input: &str) -> String {
-    input.split(',')
+    input
+        .split(',')
         .filter(|m| !m.is_empty())
         .map(|m| m.parse().unwrap())
         .scan(HexPointCubic(0, 0, 0), |pos, m| {
