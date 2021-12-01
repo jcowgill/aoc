@@ -116,3 +116,4 @@ macro_rules! gen_tests {
 gen_tests!(yr2015);
 gen_tests!(yr2017);
 gen_tests!(yr2018);
+gen_tests!(yr2021);
