@@ -21,13 +21,17 @@ macro_rules! vec_24_days
 
 /// Generates a vector containing all 49 stars (minus 25-2) for the
 /// current year. Designed to be returned from a "stars" function.
-macro_rules! vec_all_days
-{
-    ($year:expr) => {
-        {
-            let mut result: Vec<(StarId, StarFunction)> = vec_24_days!($year);
-            result.push((StarId { year: $year, day: 25, star: 1 }, day25::star1));
-            result
-        }
-    }
+macro_rules! vec_all_days {
+    ($year:expr) => {{
+        let mut result: Vec<(StarId, StarFunction)> = vec_24_days!($year);
+        result.push((
+            StarId {
+                year: $year,
+                day: 25,
+                star: 1,
+            },
+            day25::star1,
+        ));
+        result
+    }};
 }

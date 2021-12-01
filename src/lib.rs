@@ -10,7 +10,8 @@ use std::str::FromStr;
 
 mod direction;
 mod duplicate;
-#[macro_use] mod macros;
+#[macro_use]
+mod macros;
 mod vector;
 
 mod yr2015;
@@ -18,26 +19,23 @@ mod yr2017;
 mod yr2018;
 
 /// Function type for all star functions
-pub type StarFunction = fn (&str) -> String;
+pub type StarFunction = fn(&str) -> String;
 
 /// Uniquely identifies a star
 #[derive(Debug, Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct StarId
-{
+pub struct StarId {
     pub year: u16,
     pub day: u8,
     pub star: u8,
 }
 
-impl fmt::Display for StarId
-{
+impl fmt::Display for StarId {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:04}-{:02}-{}", self.year, self.day, self.star)
     }
 }
 
-impl FromStr for StarId
-{
+impl FromStr for StarId {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -45,7 +43,11 @@ impl FromStr for StarId
         if let Some(Some(year)) = part_iter.next().map(|s| s.parse().ok()) {
             if let Some(Some(day)) = part_iter.next().map(|s| s.parse().ok()) {
                 if let Some(Some(star)) = part_iter.next().map(|s| s.parse().ok()) {
-                    return Ok(StarId { year: year, day: day, star: star });
+                    return Ok(StarId {
+                        year: year,
+                        day: day,
+                        star: star,
+                    });
                 }
             }
         }
@@ -74,8 +76,7 @@ pub fn star_function(id: StarId) -> Option<StarFunction> {
 }
 
 #[cfg(test)]
-mod tests
-{
+mod tests {
     use super::*;
 
     /// Tests that all_stars returns sorted and unique stars
@@ -87,19 +88,24 @@ mod tests
     }
 }
 
-
 // ========================================================================
 
 /// Returns the cartesian product of two iterators
 pub fn cartesian_product<A, B>(a: A, b: B) -> Zip<duplicate::Duplicate<A>, Cycle<B>>
-    where A: Iterator, A::Item: Clone, B: Clone + Iterator {
+where
+    A: Iterator,
+    A::Item: Clone,
+    B: Clone + Iterator,
+{
     // Return an iterator made up of duplicating the items in a b times and
     // zipping that up with b cycled a times
     duplicate::duplicate(a, b.clone().count()).zip(b.cycle())
 }
 
 /// Identity function - returns given input
-pub fn id<T>(v: T) -> T { v }
+pub fn id<T>(v: T) -> T {
+    v
+}
 
 /// Applies a function combining two heterogeneous tuples
 pub fn apply_tuple2<F: Fn(A, B) -> R, A, B, R>(func: F, left: (A, A), right: (B, B)) -> (R, R) {
