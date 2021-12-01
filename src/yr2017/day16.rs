@@ -5,8 +5,8 @@ struct Program(u8);
 
 impl Program {
     fn from_char(prog: char) -> Option<Program> {
-        if prog >= 'a' && prog <= 'z' {
-            Some(Program(prog as u8 - 'a' as u8))
+        if ('a'..='z').contains(&prog) {
+            Some(Program(prog as u8 - b'a'))
         } else {
             None
         }
@@ -14,7 +14,7 @@ impl Program {
 
     fn to_char(self) -> Option<char> {
         if self.0 < 26 {
-            Some(('a' as u8 + self.0) as char)
+            Some((b'a' + self.0) as char)
         } else {
             None
         }
@@ -88,7 +88,7 @@ struct Substitution(Vec<Program>);
 impl Substitution {
     /// Returns the identity substitution with n elements
     fn identity(n: u8) -> Substitution {
-        Substitution((0..n).map(|v| Program(v)).collect())
+        Substitution((0..n).map(Program).collect())
     }
 }
 
@@ -125,7 +125,7 @@ fn parse_input(input: &str) -> (u8, Vec<DanceMove>) {
     let (programs, moves_str) = match input.find('\n') {
         Some(pos) => {
             let (left, right) = input.split_at(pos);
-            (left.parse().unwrap(), right.trim_left())
+            (left.parse().unwrap(), right.trim_start())
         }
         None => (16, input),
     };

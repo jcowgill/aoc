@@ -1,17 +1,16 @@
 ///! Very simple vector implementation for AOC
-use std::cmp::Ordering;
 use std::ops::{Add, Div, Mul, Neg, Rem, Sub};
 use std::ops::{AddAssign, DivAssign, MulAssign, RemAssign, SubAssign};
 
 /// 2D Vector
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Vector2<T> {
     pub x: T,
     pub y: T,
 }
 
 /// 3D Vector
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Vector3<T> {
     pub x: T,
     pub y: T,
@@ -94,13 +93,6 @@ macro_rules! impl_vec_num {
 /// Main macro implementing all vectors
 macro_rules! impl_vec {
     ($vec:ident { $($field:ident),* }) => (
-        /// Optionally impl Ord if T also implements it
-        impl<T: Ord> Ord for $vec<T> {
-            fn cmp(&self, other: &Self) -> Ordering {
-                self.partial_cmp(other).unwrap()
-            }
-        }
-
         #[allow(dead_code)]
         impl<T: Copy + Into<f64>> $vec<T> {
             /// Calculates the euclidean (L2) norm of this vector

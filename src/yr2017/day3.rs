@@ -24,12 +24,10 @@ fn xy_to_side((x, y): (i32, i32)) -> i32 {
         } else {
             3
         }
+    } else if y <= -x {
+        3
     } else {
-        if y <= -x {
-            3
-        } else {
-            0
-        }
+        0
     }
 }
 
@@ -89,7 +87,7 @@ pub fn star1(input: &str) -> String {
 /// Sum numbers around points in spiral order, return first value larger than input
 pub fn star2(input: &str) -> String {
     /// Returns value at a point in the spreadsheet
-    fn value_at(spreadsheet: &Vec<i32>, x: i32, y: i32) -> i32 {
+    fn value_at(spreadsheet: &[i32], x: i32, y: i32) -> i32 {
         *spreadsheet
             .get(spiral_grid_value((x, y)) as usize - 1)
             .unwrap_or(&0)

@@ -44,6 +44,7 @@ impl Direction {
     /// Converts this direction into a vector with the given size
     ///  This function interprets north as positive y values.
     pub fn to_vec<T: Copy + Sub<Output = T> + Neg<Output = T>>(self, size: T) -> Vector2<T> {
+        #[allow(clippy::eq_op)]
         let zero = size - size;
         match self {
             Direction::North => Vector2 { x: zero, y: size },

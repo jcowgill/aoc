@@ -15,7 +15,6 @@ where
             '>' => return garbage,
             '!' => {
                 stream.next();
-                ()
             }
             _ => garbage += 1,
         };

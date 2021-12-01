@@ -7,18 +7,18 @@ use regex::Regex;
 /// Parses the input list of dependencies
 fn parse_input<'a, I: Iterator<Item = &'a str>>(lines: I) -> HashMap<char, Vec<char>> {
     lazy_static! {
-        static ref re: Regex =
+        static ref RE: Regex =
             Regex::new("^Step ([A-Z]) must be finished before step ([A-Z]) can begin.$").unwrap();
     }
 
     let mut result = HashMap::new();
 
     for line in lines {
-        let caps = re.captures(line).unwrap();
+        let caps = RE.captures(line).unwrap();
         let from = caps.get(1).unwrap().as_str().chars().next().unwrap();
         let to = caps.get(2).unwrap().as_str().chars().next().unwrap();
 
-        result.entry(from).or_insert(Vec::new()).push(to);
+        result.entry(from).or_insert_with(Vec::new).push(to);
     }
 
     result
@@ -79,7 +79,12 @@ impl<'a> TopologicalSort<'a> {
     pub fn close_node(&mut self, node: char) {
         // Add any nodes which become open, and update remaining
         // incoming edge counts
-        for dest in self.edges.get(&node).map(|v| v.iter()).unwrap_or([].iter()) {
+        for dest in self
+            .edges
+            .get(&node)
+            .map(|v| v.iter())
+            .unwrap_or_else(|| [].iter())
+        {
             let index = self.incoming_count.get_mut(dest).unwrap();
 
             assert!(*index > 0);

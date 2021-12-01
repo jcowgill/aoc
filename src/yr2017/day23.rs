@@ -30,9 +30,8 @@ pub fn star1(input: &str) -> String {
     let mut mul_instructions = 0;
     loop {
         // Count mul instructions we're about to execute
-        match program.get(state.pc as usize) {
-            Some(&Instruction::Mul(_, _)) => mul_instructions += 1,
-            _ => (),
+        if let Some(&Instruction::Mul(_, _)) = program.get(state.pc as usize) {
+            mul_instructions += 1
         }
 
         // Step one instruction
@@ -123,7 +122,7 @@ pub fn star2(input: &str) -> String {
 
     // Execute program until termination and read h register
     let mut state = ExecutionState::new(0);
-    state.regs[('a' as u8 - 'a' as u8) as usize] = 1;
+    state.regs[0] = 1;
     loop {
         // Step one instruction
         match program_step(&program, &mut state) {
@@ -133,5 +132,5 @@ pub fn star2(input: &str) -> String {
         }
     }
 
-    state.regs[('h' as u8 - 'a' as u8) as usize].to_string()
+    state.regs[(b'h' - b'a') as usize].to_string()
 }

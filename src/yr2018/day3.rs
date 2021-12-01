@@ -50,7 +50,7 @@ where
     for rect in iter {
         for y in 0..rect.size.y {
             for x in 0..rect.size.x {
-                *result.entry(Vector2 { x: x, y: y } + rect.pos).or_insert(0) += 1;
+                *result.entry(Vector2 { x, y } + rect.pos).or_insert(0) += 1;
             }
         }
     }
@@ -59,7 +59,7 @@ where
 }
 
 /// Parses the input rectangles string into an iterator
-fn parse_rectangles<'a>(input: &'a str) -> impl Iterator<Item = Rectangle> + Clone + 'a {
+fn parse_rectangles(input: &str) -> impl Iterator<Item = Rectangle> + Clone + '_ {
     input.lines().map(|line| line.parse::<Rectangle>().unwrap())
 }
 
@@ -84,7 +84,7 @@ pub fn star2(input: &str) -> String {
 
         for y in 0..rect.size.y {
             for x in 0..rect.size.x {
-                if points_map[&(Vector2 { x: x, y: y } + rect.pos)] != 1 {
+                if points_map[&(Vector2 { x, y } + rect.pos)] != 1 {
                     non_overlapping = false;
                 }
             }

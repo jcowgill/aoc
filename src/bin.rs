@@ -30,7 +30,7 @@ fn main() {
                     let mut stdin = String::new();
                     match io::stdin().read_to_string(&mut stdin) {
                         Ok(_) => {
-                            println!("{}", stars[index].1(stdin.trim_right()));
+                            println!("{}", stars[index].1(stdin.trim_end()));
                             0
                         }
                         Err(e) => {

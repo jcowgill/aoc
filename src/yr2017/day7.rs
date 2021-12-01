@@ -26,7 +26,7 @@ fn parse_unresolved_tower(line: &str) -> UnresolvedTower {
     assert_eq!(name_weight.len(), 2);
 
     let name = name_weight[0].trim();
-    let weight = name_weight[1].trim_right().trim_right_matches(')').trim();
+    let weight = name_weight[1].trim_end().trim_end_matches(')').trim();
     let children: Vec<&str> = match head_tail.get(1) {
         Some(value) => value.split(',').map(|s| s.trim()).collect(),
         None => vec![],
@@ -110,16 +110,13 @@ fn check_tower(tower: &Tower) -> Result<i32, i32> {
         };
 
         // Find child which doesn't match this weight
-        match child_results
+        if let Some((i, value)) = child_results
             .iter()
             .enumerate()
             .find(|&(_, &value)| value != good_weight)
         {
-            Some((i, value)) => {
-                // Return corrected weight
-                return Err(tower.children[i].weight + good_weight - value);
-            }
-            None => (),
+            // Return corrected weight
+            return Err(tower.children[i].weight + good_weight - value);
         }
     } else if child_results.len() == 2 && child_results[0] != child_results[1] {
         // There are two children with different weights

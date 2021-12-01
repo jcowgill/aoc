@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 /// Parses the input string and returns an iterator over each integer
-fn parse_input<'a>(input: &'a str) -> impl Iterator<Item = i32> + Clone + 'a {
+fn parse_input(input: &str) -> impl Iterator<Item = i32> + Clone + '_ {
     input
         .lines()
         .map(|line| line.trim().parse::<i32>().unwrap())

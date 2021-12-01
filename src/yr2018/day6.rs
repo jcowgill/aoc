@@ -25,7 +25,7 @@ where
         },
         Vector2 {
             x: points.clone().map(|v| v.x).max()?,
-            y: points.clone().map(|v| v.y).max()?,
+            y: points.map(|v| v.y).max()?,
         },
     ))
 }

@@ -38,7 +38,7 @@ fn bounding_rect_size<'a, I: Iterator<Item = &'a Vector2<i32>>>(points: I) -> Op
 /// Finds the smallest bounding rectangle of a set of points by scanning through time
 ///  Returns the number of iterations taken.
 ///  The points vector contains the best points
-fn bounding_rect_smallest(points: &mut Vec<Vector2<i32>>, velocities: &Vec<Vector2<i32>>) -> usize {
+fn bounding_rect_smallest(points: &mut Vec<Vector2<i32>>, velocities: &[Vector2<i32>]) -> usize {
     assert_eq!(points.len(), velocities.len());
 
     let mut prev_score = i32::max_value();
@@ -93,7 +93,7 @@ fn points_to_string(mut points: Vec<Vector2<i32>>) -> String {
 /// Parses the input into point and velocity vectors
 fn parse_input(input: &str) -> (Vec<Vector2<i32>>, Vec<Vector2<i32>>) {
     lazy_static! {
-        static ref re: Regex =
+        static ref RE: Regex =
             Regex::new(r"^position=<\s*([0-9-]+)\s*,\s*([0-9-]+)\s*>\s*velocity=<\s*([0-9-]+)\s*,\s*([0-9-]+)\s*>$")
             .unwrap();
     }
@@ -102,7 +102,7 @@ fn parse_input(input: &str) -> (Vec<Vector2<i32>>, Vec<Vector2<i32>>) {
     let mut velocities: Vec<Vector2<i32>> = Vec::new();
 
     for line in input.lines() {
-        let parts: Vec<i32> = re
+        let parts: Vec<i32> = RE
             .captures(line)
             .unwrap()
             .iter()

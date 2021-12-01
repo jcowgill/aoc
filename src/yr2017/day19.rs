@@ -82,7 +82,7 @@ impl FromStr for Grid {
                     '|' => CellValue::Vertical,
                     '-' => CellValue::Horizontal,
                     '+' => CellValue::Cross,
-                    'A'...'Z' => CellValue::Letter(c as u8 - 'A' as u8),
+                    'A'..='Z' => CellValue::Letter(c as u8 - b'A'),
                     _ => return Err(c),
                 }
             }
@@ -99,8 +99,7 @@ fn find_grid_start(grid: &Grid) -> Option<Vector2<isize>> {
             x: x as isize,
             y: 0,
         })
-        .filter(|p| grid.cell_value(*p) == CellValue::Vertical)
-        .next()
+        .find(|p| grid.cell_value(*p) == CellValue::Vertical)
 }
 
 /// Traces the path in the grid given by the input string
@@ -117,7 +116,7 @@ fn trace_path(input: &str) -> (String, usize) {
     let mut steps = 0;
 
     loop {
-        pos = pos + dir.to_vec_neg(1);
+        pos += dir.to_vec_neg(1);
         steps += 1;
         match grid.cell_value(pos) {
             CellValue::Blank => {
@@ -141,7 +140,7 @@ fn trace_path(input: &str) -> (String, usize) {
             }
             CellValue::Letter(l) => {
                 // Append letter to letters list (and keep going)
-                letters.push((l + 'A' as u8) as char)
+                letters.push((l + b'A') as char)
             }
         }
     }

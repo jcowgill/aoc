@@ -19,10 +19,7 @@ impl Image {
     ///  Size of vector must be a multiple of width
     fn from_raw_data(width: usize, data: Vec<bool>) -> Image {
         assert!(data.len() % width == 0);
-        Image {
-            width: width,
-            data: data,
-        }
+        Image { width, data }
     }
 
     /// Constructs an image from a coordinate generator
@@ -42,7 +39,7 @@ impl Image {
 
     /// Returns the height of the image
     fn height(&self) -> usize {
-        return self.data.len() / self.width;
+        self.data.len() / self.width
     }
 
     /// Transforms this image into a new image based on the given function
