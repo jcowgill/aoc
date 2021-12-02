@@ -16,3 +16,4 @@ path = "src/bin.rs"
 itertools = "0.10"
 lazy_static = "1"
 regex = "1"
+strum = { version = "0.23", features = ["derive"] }
