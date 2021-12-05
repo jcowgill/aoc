@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use num_integer::gcd;
+use num::integer::gcd;
 
 use crate::vector::Vector2;
 
