@@ -116,7 +116,7 @@ fn trace_path(input: &str) -> (String, usize) {
     let mut steps = 0;
 
     loop {
-        pos += dir.to_vec_neg(1);
+        pos += dir.to_vec_neg();
         steps += 1;
         match grid.cell_value(pos) {
             CellValue::Blank => {
@@ -128,11 +128,11 @@ fn trace_path(input: &str) -> (String, usize) {
             }
             CellValue::Cross => {
                 // Test each possible direction
-                if grid.cell_value(pos + dir.to_vec_neg(1)) != CellValue::Blank {
+                if grid.cell_value(pos + dir.to_vec_neg()) != CellValue::Blank {
                     // Don't change direction
-                } else if grid.cell_value(pos + dir.clockwise().to_vec_neg(1)) != CellValue::Blank {
+                } else if grid.cell_value(pos + dir.clockwise().to_vec_neg()) != CellValue::Blank {
                     dir = dir.clockwise();
-                } else if grid.cell_value(pos + dir.anticlockwise().to_vec_neg(1))
+                } else if grid.cell_value(pos + dir.anticlockwise().to_vec_neg())
                     != CellValue::Blank
                 {
                     dir = dir.anticlockwise()

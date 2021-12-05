@@ -1,5 +1,8 @@
+use std::ops::Neg;
+
+use num::{One, Zero};
+
 use crate::vector::Vector2;
-use std::ops::{Neg, Sub};
 
 /// A direction in the input grid
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -41,23 +44,21 @@ impl Direction {
         }
     }
 
-    /// Converts this direction into a vector with the given size
+    /// Converts this direction into a unit vector
     ///  This function interprets north as positive y values.
-    pub fn to_vec<T: Copy + Sub<Output = T> + Neg<Output = T>>(self, size: T) -> Vector2<T> {
-        #[allow(clippy::eq_op)]
-        let zero = size - size;
+    pub fn to_vec<T: Zero + One + Neg<Output=T>>(self) -> Vector2<T> {
         match self {
-            Direction::North => Vector2 { x: zero, y: size },
-            Direction::East => Vector2 { x: size, y: zero },
-            Direction::South => Vector2 { x: zero, y: -size },
-            Direction::West => Vector2 { x: -size, y: zero },
+            Direction::North => Vector2 { x: T::zero(), y: T::one() },
+            Direction::East => Vector2 { x: T::one(), y: T::zero() },
+            Direction::South => Vector2 { x: T::zero(), y: -T::one() },
+            Direction::West => Vector2 { x: -T::one(), y: T::zero() },
         }
     }
 
-    /// Converts this direction into a vector with the given size
+    /// Converts this direction into a unit vector
     ///  This function interprets north as negative y values.
-    pub fn to_vec_neg<T: Copy + Sub<Output = T> + Neg<Output = T>>(self, size: T) -> Vector2<T> {
-        let vec_pos = self.to_vec(size);
+    pub fn to_vec_neg<T: Zero + One + Neg<Output=T>>(self) -> Vector2<T> {
+        let vec_pos = self.to_vec();
         Vector2 {
             x: vec_pos.x,
             y: -vec_pos.y,

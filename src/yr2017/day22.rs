@@ -97,7 +97,7 @@ where
     };
 
     // Advance virus position
-    s.virus_node += s.virus_dir.to_vec_neg(1);
+    s.virus_node += s.virus_dir.to_vec_neg();
 
     new_state == NodeState::Infected
 }
