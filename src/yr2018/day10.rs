@@ -1,7 +1,7 @@
+use crate::vector::VectorExt;
 use lazy_static::lazy_static;
+use nalgebra::Vector2;
 use regex::Regex;
-
-use crate::vector::Vector2;
 
 /// Returns the smallest rectangle which bounds a set of points
 fn bounding_rect<'a, I: Iterator<Item = &'a Vector2<i32>>>(
@@ -83,7 +83,7 @@ fn points_to_string(mut points: Vec<Vector2<i32>>) -> String {
                 result.push(' ')
             }
             result.push('#');
-            cursor = point + Vector2 { x: 1, y: 0 };
+            cursor = point + Vector2::x();
         }
     }
 
@@ -110,14 +110,8 @@ fn parse_input(input: &str) -> (Vec<Vector2<i32>>, Vec<Vector2<i32>>) {
             .map(|m| m.unwrap().as_str().parse().unwrap())
             .collect();
 
-        points.push(Vector2 {
-            x: parts[0],
-            y: parts[1],
-        });
-        velocities.push(Vector2 {
-            x: parts[2],
-            y: parts[3],
-        });
+        points.push(Vector2::from_row_slice(&parts[0..2]));
+        velocities.push(Vector2::from_row_slice(&parts[2..4]));
     }
 
     (points, velocities)

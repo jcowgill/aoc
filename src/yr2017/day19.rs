@@ -1,5 +1,5 @@
 use crate::direction::Direction;
-use crate::vector::Vector2;
+use nalgebra::Vector2;
 use std::str::FromStr;
 
 /// Value of each cell in the grid
@@ -48,10 +48,7 @@ impl Grid {
             let mut new_data = Vec::with_capacity(width * height);
             for y in 0..height {
                 for x in 0..width {
-                    new_data.push(self.cell_value(Vector2 {
-                        x: x as isize,
-                        y: y as isize,
-                    }));
+                    new_data.push(self.cell_value(Vector2::new(x as isize, y as isize)));
                 }
             }
 
@@ -95,10 +92,7 @@ impl FromStr for Grid {
 /// Find the starting point
 fn find_grid_start(grid: &Grid) -> Option<Vector2<isize>> {
     (0..grid.width)
-        .map(|x| Vector2 {
-            x: x as isize,
-            y: 0,
-        })
+        .map(|x| Vector2::new(x as isize, 0))
         .find(|p| grid.cell_value(*p) == CellValue::Vertical)
 }
 

@@ -1,4 +1,5 @@
-use crate::vector::Vector2;
+use crate::vector::VectorExt;
+use nalgebra::Vector2;
 
 /// Parses a single coordinate line
 fn parse_coord(line: &str) -> Vector2<i32> {
@@ -7,10 +8,7 @@ fn parse_coord(line: &str) -> Vector2<i32> {
         .map(|p| p.trim().parse().unwrap())
         .collect();
 
-    Vector2 {
-        x: coords[0],
-        y: coords[1],
-    }
+    Vector2::from_row_slice(&coords)
 }
 
 /// Find the bounding rectangle (as x1y1, x2y2) of a set of points
@@ -19,14 +17,14 @@ where
     I: Iterator<Item = &'a Vector2<i32>> + Clone,
 {
     Some((
-        Vector2 {
-            x: points.clone().map(|v| v.x).min()?,
-            y: points.clone().map(|v| v.y).min()?,
-        },
-        Vector2 {
-            x: points.clone().map(|v| v.x).max()?,
-            y: points.map(|v| v.y).max()?,
-        },
+        Vector2::new(
+            points.clone().map(|v| v.x).min()?,
+            points.clone().map(|v| v.y).min()?,
+        ),
+        Vector2::new(
+            points.clone().map(|v| v.x).max()?,
+            points.map(|v| v.y).max()?,
+        ),
     ))
 }
 
@@ -64,7 +62,7 @@ pub fn star1(input: &str) -> String {
     // Traverse entire rectangle finding the nearest coords
     for x in bounds.0.x..=bounds.1.x {
         for y in bounds.0.y..=bounds.1.y {
-            if let Some(id) = find_nearest_coord(Vector2 { x, y }, coords.iter()) {
+            if let Some(id) = find_nearest_coord(Vector2::new(x, y), coords.iter()) {
                 // If this coordinate is on the boundary, the area found is infinite
                 if x == bounds.0.x || x == bounds.1.x || y == bounds.0.y || y == bounds.1.y {
                     areas[id] = None;
@@ -93,7 +91,7 @@ pub fn star2(input: &str) -> String {
 
     for x in bounds.0.x..=bounds.1.x {
         for y in bounds.0.y..=bounds.1.y {
-            let current = Vector2 { x, y };
+            let current = Vector2::new(x, y);
             let dist_sum: i32 = coords.iter().map(|&c| (current - c).taxicab_norm()).sum();
 
             if dist_sum < safe_distance {

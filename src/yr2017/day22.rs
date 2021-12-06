@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use crate::direction::Direction;
-use crate::vector::Vector2;
+use nalgebra::Vector2;
+use std::collections::HashMap;
 
 /// State of an individual node
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -43,13 +42,7 @@ fn parse_state<'a, I: Iterator<Item = &'a str>>(lines: I) -> SporificaState {
         // Insert pre-infected nodes into the map
         map.extend(line.chars().enumerate().filter_map(|(i, c)| {
             if c == '#' {
-                Some((
-                    Vector2 {
-                        x: i as i32,
-                        y: height,
-                    },
-                    NodeState::Infected,
-                ))
+                Some((Vector2::new(i as i32, height), NodeState::Infected))
             } else {
                 None
             }
@@ -59,10 +52,7 @@ fn parse_state<'a, I: Iterator<Item = &'a str>>(lines: I) -> SporificaState {
 
     SporificaState {
         infection_map: map,
-        virus_node: Vector2 {
-            x: width as i32 / 2,
-            y: height / 2,
-        },
+        virus_node: Vector2::new(width as i32 / 2, height / 2),
         virus_dir: Direction::North,
     }
 }
