@@ -1,7 +1,6 @@
 use itertools::Itertools;
+use nalgebra::Vector2;
 use num::integer::gcd;
-
-use crate::vector::Vector2;
 
 /// A line in parametric vector form (line = pos + t * dir, where 0 <= t <= 1)
 #[derive(Debug, Clone, Copy, Eq, Hash, PartialEq)]
@@ -25,14 +24,8 @@ fn parse_input(input: &str) -> impl Iterator<Item = Line> + '_ {
         let (start, end) = l.split_once("->").unwrap();
         let (x1, y1) = start.trim().split_once(',').unwrap();
         let (x2, y2) = end.trim().split_once(',').unwrap();
-        let pos = Vector2 {
-            x: x1.parse().unwrap(),
-            y: y1.parse().unwrap(),
-        };
-        let dir = Vector2 {
-            x: x2.parse().unwrap(),
-            y: y2.parse().unwrap(),
-        } - pos;
+        let pos = Vector2::new(x1.parse().unwrap(), y1.parse().unwrap());
+        let dir = Vector2::new(x2.parse().unwrap(), y2.parse().unwrap()) - pos;
         Line { pos, dir }
     })
 }

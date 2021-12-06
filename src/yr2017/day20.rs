@@ -1,4 +1,5 @@
-use crate::vector::Vector3;
+use crate::vector::{total_matrix_cmp, VectorExt};
+use nalgebra::Vector3;
 use std::cmp::Ordering;
 
 #[derive(Clone, Debug)]
@@ -27,21 +28,9 @@ fn parse_particle(line: &str) -> Particle {
 
     assert_eq!(ints.len(), 9);
     Particle {
-        position: Vector3 {
-            x: ints[0],
-            y: ints[1],
-            z: ints[2],
-        },
-        velocity: Vector3 {
-            x: ints[3],
-            y: ints[4],
-            z: ints[5],
-        },
-        accel: Vector3 {
-            x: ints[6],
-            y: ints[7],
-            z: ints[8],
-        },
+        position: Vector3::from_row_slice(&ints[0..3]),
+        velocity: Vector3::from_row_slice(&ints[3..6]),
+        accel: Vector3::from_row_slice(&ints[6..9]),
     }
 }
 
@@ -118,7 +107,7 @@ pub fn star2(input: &str) -> String {
         }
 
         // Dedup particles which have collided
-        particles.sort_unstable_by_key(|p| p.position);
+        particles.sort_unstable_by(|a, b| total_matrix_cmp(&a.position, &b.position));
         if remove_duplicates(&mut particles, |a, b| a.position == b.position) {
             last_collision = 0;
         } else {

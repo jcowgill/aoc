@@ -1,8 +1,5 @@
-use std::ops::Neg;
-
-use num::{One, Zero};
-
-use crate::vector::Vector2;
+use nalgebra::{Scalar, Vector2};
+use num::{One, Signed, Zero};
 
 /// A direction in the input grid
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -46,22 +43,23 @@ impl Direction {
 
     /// Converts this direction into a unit vector
     ///  This function interprets north as positive y values.
-    pub fn to_vec<T: Zero + One + Neg<Output=T>>(self) -> Vector2<T> {
+    pub fn to_vec<T: Scalar + Zero + One + Signed>(self) -> Vector2<T> {
         match self {
-            Direction::North => Vector2 { x: T::zero(), y: T::one() },
-            Direction::East => Vector2 { x: T::one(), y: T::zero() },
-            Direction::South => Vector2 { x: T::zero(), y: -T::one() },
-            Direction::West => Vector2 { x: -T::one(), y: T::zero() },
+            Direction::North => Vector2::y(),
+            Direction::East => Vector2::x(),
+            Direction::South => -Vector2::y(),
+            Direction::West => -Vector2::x(),
         }
     }
 
     /// Converts this direction into a unit vector
     ///  This function interprets north as negative y values.
-    pub fn to_vec_neg<T: Zero + One + Neg<Output=T>>(self) -> Vector2<T> {
-        let vec_pos = self.to_vec();
-        Vector2 {
-            x: vec_pos.x,
-            y: -vec_pos.y,
+    pub fn to_vec_neg<T: Scalar + Zero + One + Signed>(self) -> Vector2<T> {
+        match self {
+            Direction::North => -Vector2::y(),
+            Direction::East => Vector2::x(),
+            Direction::South => Vector2::y(),
+            Direction::West => -Vector2::x(),
         }
     }
 }

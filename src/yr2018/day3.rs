@@ -1,7 +1,6 @@
+use nalgebra::Vector2;
 use std::collections::HashMap;
 use std::str::FromStr;
-
-use crate::vector::Vector2;
 
 /// A 2D rectangle with integer dimensions and an ID
 #[derive(Debug, Clone)]
@@ -15,23 +14,17 @@ impl FromStr for Rectangle {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Rectangle, ()> {
-        let parts: Vec<Result<u32, ()>> = s
+        let parts: Vec<_> = s
             .trim_start_matches('#')
             .split(|c| ['@', ',', ':', 'x'].contains(&c))
             .map(|part| part.trim().parse().map_err(|_| ()))
-            .collect();
+            .collect::<Result<_, _>>()?;
 
-        if parts.len() == 5 && parts.iter().all(|part| part.is_ok()) {
+        if parts.len() == 5 {
             return Ok(Rectangle {
-                id: parts[0]?,
-                pos: Vector2 {
-                    x: parts[1]?,
-                    y: parts[2]?,
-                },
-                size: Vector2 {
-                    x: parts[3]?,
-                    y: parts[4]?,
-                },
+                id: parts[0],
+                pos: Vector2::from_row_slice(&parts[1..3]),
+                size: Vector2::from_row_slice(&parts[3..5]),
             });
         }
 
@@ -50,7 +43,7 @@ where
     for rect in iter {
         for y in 0..rect.size.y {
             for x in 0..rect.size.x {
-                *result.entry(Vector2 { x, y } + rect.pos).or_insert(0) += 1;
+                *result.entry(Vector2::new(x, y) + rect.pos).or_insert(0) += 1;
             }
         }
     }
@@ -84,7 +77,7 @@ pub fn star2(input: &str) -> String {
 
         for y in 0..rect.size.y {
             for x in 0..rect.size.x {
-                if points_map[&(Vector2 { x, y } + rect.pos)] != 1 {
+                if points_map[&(Vector2::new(x, y) + rect.pos)] != 1 {
                     non_overlapping = false;
                 }
             }
