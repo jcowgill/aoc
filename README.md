@@ -3,7 +3,7 @@ This is my implementations of [Advent of Code](https://adventofcode.com/) in
 Rust.
 
 ## License
-Copyright (C) 2017-2018 James Cowgill
+Copyright (C) 2017-2021 James Cowgill
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
