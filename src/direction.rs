@@ -11,6 +11,18 @@ pub enum Direction {
 }
 
 impl Direction {
+    /// Returns an iterator over all four directions
+    pub fn iter() -> impl Iterator<Item = Direction> {
+        [
+            Direction::North,
+            Direction::East,
+            Direction::South,
+            Direction::West,
+        ]
+        .iter()
+        .copied()
+    }
+
     /// Get direction clockwise of self
     pub fn clockwise(self) -> Direction {
         match self {
