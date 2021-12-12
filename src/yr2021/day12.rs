@@ -64,10 +64,12 @@ fn graph_start(graph: &[Node]) -> usize {
 }
 
 /// Finds the number of paths from the given node to the end node
-fn search_node<T, F>(graph: &[Node], small_nodes: &T, recorder: F, id: usize) -> usize
-where
-    F: Fn(&T, usize) -> Option<T> + Copy,
-{
+fn search_node(
+    graph: &[Node],
+    small_nodes: &mut Vec<usize>,
+    allow_visit_twice: bool,
+    id: usize,
+) -> usize {
     graph[id]
         .edges
         .iter()
@@ -80,18 +82,23 @@ where
                 NodeType::End => 1,
 
                 // Always visit big nodes
-                NodeType::Big => search_node(graph, small_nodes, recorder, edge),
+                NodeType::Big => search_node(graph, small_nodes, allow_visit_twice, edge),
 
-                // Visit small nodes if the recorder allows it
-                // TODO we could avoid the need to copy small_nodes
-                // here if we poped values when the recursion returned
-                NodeType::Small => {
-                    if let Some(new_small_nodes) = recorder(small_nodes, edge) {
-                        search_node(graph, &new_small_nodes, recorder, edge)
-                    } else {
-                        0
-                    }
+                // If we have never visited a small node before, record and visit it
+                NodeType::Small if !small_nodes.contains(&edge) => {
+                    small_nodes.push(edge);
+                    let result = search_node(graph, small_nodes, allow_visit_twice, edge);
+                    small_nodes.pop();
+                    result
                 }
+
+                // Visit a small node twice if allowed
+                NodeType::Small if allow_visit_twice => {
+                    search_node(graph, small_nodes, false, edge)
+                }
+
+                // Ignore other small nodes
+                NodeType::Small => 0,
             }
         })
         .sum()
@@ -99,34 +106,10 @@ where
 
 pub fn star1(input: &str) -> String {
     let graph = parse_graph(input);
-    let recorder = |small_nodes: &Vec<usize>, id| {
-        if !small_nodes.contains(&id) {
-            let mut new = Vec::with_capacity(small_nodes.len());
-            new.extend_from_slice(small_nodes);
-            new.push(id);
-            Some(new)
-        } else {
-            None
-        }
-    };
-
-    search_node(&graph, &Vec::new(), recorder, graph_start(&graph)).to_string()
+    search_node(&graph, &mut Vec::new(), false, graph_start(&graph)).to_string()
 }
 
 pub fn star2(input: &str) -> String {
     let graph = parse_graph(input);
-    let recorder = |(small_nodes, visited_twice): &(Vec<usize>, bool), id| {
-        if !small_nodes.contains(&id) {
-            let mut new = Vec::with_capacity(small_nodes.len());
-            new.extend_from_slice(small_nodes);
-            new.push(id);
-            Some((new, *visited_twice))
-        } else if !visited_twice {
-            Some((small_nodes.clone(), true))
-        } else {
-            None
-        }
-    };
-
-    search_node(&graph, &(Vec::new(), false), recorder, graph_start(&graph)).to_string()
+    search_node(&graph, &mut Vec::new(), true, graph_start(&graph)).to_string()
 }
