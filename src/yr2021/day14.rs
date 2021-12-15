@@ -3,7 +3,6 @@ use std::collections::HashMap;
 use itertools::Itertools;
 
 type Pair = (u8, u8);
-type FreqMap = HashMap<u8, usize>;
 
 fn parse_input(input: &str) -> (Vec<u8>, HashMap<Pair, u8>) {
     let mut lines = input.lines();
@@ -29,71 +28,26 @@ fn parse_input(input: &str) -> (Vec<u8>, HashMap<Pair, u8>) {
     (start_chars, mappings)
 }
 
-/// Adds the values from frequency map b into map a
-fn add_freq_map(a: &mut FreqMap, b: &FreqMap) {
-    for (&c, freq) in b.iter() {
-        *a.entry(c).or_default() += freq
-    }
-}
-
-fn count_freqs(
-    mappings: &HashMap<Pair, u8>,
-    cache: &mut HashMap<(Pair, usize), HashMap<u8, usize>>,
-    pair: Pair,
-    depth: usize,
-) {
-    if !cache.contains_key(&(pair, depth)) {
-        let mut map;
-
-        // If we reached the bottom generate a new map with just this pair
-        if depth == 0 {
-            map = HashMap::new();
-
-            if pair.0 == pair.1 {
-                map.insert(pair.0, 2);
-            } else {
-                map.insert(pair.0, 1);
-                map.insert(pair.1, 1);
-            }
-        } else {
-            // Expand pair and count frequencies on each side
-            let middle = mappings[&pair];
-            let left_pair = (pair.0, middle);
-            let right_pair = (middle, pair.1);
-            count_freqs(mappings, cache, left_pair, depth - 1);
-            count_freqs(mappings, cache, right_pair, depth - 1);
-
-            // Create new frequency map by adding up sub pairs and
-            // subtracting duplicate middle value
-            map = cache[&(left_pair, depth - 1)].clone();
-            add_freq_map(&mut map, &cache[&(right_pair, depth - 1)]);
-            *map.get_mut(&middle).unwrap() -= 1;
-        }
-
-        cache.insert((pair, depth), map);
-    }
-}
-
 fn star_common(input: &str, depth: usize) -> String {
     let (start_chars, mappings) = parse_input(input);
-    let mut cache = HashMap::new();
-    let mut map =
-        start_chars
+    let mut char_freqs = start_chars.iter().copied().counts();
+    let mut pair_freqs = start_chars.into_iter().tuple_windows().counts();
+
+    for _ in 0..depth {
+        for (pair, freq) in pair_freqs
             .iter()
-            .copied()
-            .tuple_windows()
-            .fold(HashMap::new(), |mut map, pair| {
-                count_freqs(&mappings, &mut cache, pair, depth);
-                add_freq_map(&mut map, &cache[&(pair, depth)]);
-                map
-            });
+            .map(|(&pair, &freq)| (pair, freq))
+            .collect_vec()
+        {
+            let middle = mappings[&pair];
+            *pair_freqs.get_mut(&pair).unwrap() -= freq;
+            *pair_freqs.entry((pair.0, middle)).or_default() += freq;
+            *pair_freqs.entry((middle, pair.1)).or_default() += freq;
+            *char_freqs.entry(middle).or_default() += freq;
+        }
+    }
 
-    // Sutract all middle characters from start string
-    (1..(start_chars.len() - 1)).for_each(|i| {
-        *map.get_mut(&start_chars[i]).unwrap() -= 1;
-    });
-
-    let (min, max) = map.into_values().minmax().into_option().unwrap();
+    let (min, max) = char_freqs.into_values().minmax().into_option().unwrap();
     (max - min).to_string()
 }
 
