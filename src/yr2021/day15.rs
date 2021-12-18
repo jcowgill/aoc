@@ -13,11 +13,13 @@ struct Grid<T> {
 
 impl<T: Copy> Grid<T> {
     fn pos_to_index(&self, pos: Position) -> Option<usize> {
-        if pos.x >= 0 && pos.y >= 0 && (pos.x as usize) < self.width {
-            Some(pos.x as usize + pos.y as usize * self.width)
-        } else {
-            None
+        if let (Ok(x), Ok(y)) = (usize::try_from(pos.x), usize::try_from(pos.y)) {
+            if x < self.width {
+                return Some(x + y * self.width);
+            }
         }
+
+        None
     }
 
     fn get(&self, pos: Position) -> Option<T> {
@@ -30,7 +32,7 @@ impl<T: Copy> Grid<T> {
     }
 
     fn surrounding(&self, pos: Position) -> impl Iterator<Item = (Position, T)> + '_ {
-        Direction::iter().flat_map(move |d| {
+        Direction::iter().filter_map(move |d| {
             let new_pos = pos + d.to_vec();
             self.get(new_pos).map(|v| (new_pos, v))
         })

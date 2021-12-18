@@ -3,7 +3,7 @@ type Grid = [u8; 100];
 fn parse_grid(input: &str) -> Grid {
     input
         .chars()
-        .flat_map(|c| c.to_digit(10).map(|d| d as u8))
+        .filter_map(|c| c.to_digit(10).map(|d| d as u8))
         .collect::<Vec<_>>()
         .try_into()
         .unwrap()

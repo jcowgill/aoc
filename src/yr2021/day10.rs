@@ -18,7 +18,7 @@ fn evaluate_line(line: &str) -> Result<Vec<char>, char> {
 pub fn star1(input: &str) -> String {
     input
         .lines()
-        .flat_map(|l| evaluate_line(l).err())
+        .filter_map(|l| evaluate_line(l).err())
         .map(|c| match c {
             ')' => 3,
             ']' => 57,

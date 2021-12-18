@@ -26,13 +26,13 @@ impl Grid {
     }
 
     fn get(&self, pos: Position) -> Option<u8> {
-        if pos.x >= 0 && pos.y >= 0 && (pos.x as usize) < self.width {
-            self.data
-                .get(pos.x as usize + pos.y as usize * self.width)
-                .copied()
-        } else {
-            None
+        if let (Ok(x), Ok(y)) = (usize::try_from(pos.x), usize::try_from(pos.y)) {
+            if x < self.width {
+                return self.data.get(x + y * self.width).copied();
+            }
         }
+
+        None
     }
 
     fn enumerate(&self) -> impl Iterator<Item = PositionValue> + '_ {
@@ -44,7 +44,7 @@ impl Grid {
     }
 
     fn surrounding(&self, pos: Position) -> impl Iterator<Item = PositionValue> + '_ {
-        Direction::iter().flat_map(move |d| {
+        Direction::iter().filter_map(move |d| {
             let new_pos = pos + d.to_vec();
             self.get(new_pos).map(|v| (new_pos, v))
         })
@@ -66,7 +66,7 @@ impl Grid {
                 open.extend(
                     self.surrounding(pos)
                         .filter(|&point| point.1 < 9 && point.1 >= value),
-                )
+                );
             }
         }
 

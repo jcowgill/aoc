@@ -8,7 +8,7 @@ fn map_fold_binary_number<T, P: FnMut(T) -> bool>(
 }
 
 pub fn star1(input: &str) -> String {
-    let lines: Vec<_> = input.lines().map(|l| l.as_bytes()).collect();
+    let lines: Vec<_> = input.lines().map(str::as_bytes).collect();
     let line_count = lines.len();
     let digit_count = lines[0].len();
     let mut digit_sums = vec![0; digit_count];
@@ -48,7 +48,7 @@ fn find_rating<'a>(
 }
 
 pub fn star2(input: &str) -> String {
-    let mut lines: Vec<_> = input.lines().map(|l| l.as_bytes()).collect();
+    let mut lines: Vec<_> = input.lines().map(str::as_bytes).collect();
     lines.sort_unstable();
 
     let oxygen_rating =

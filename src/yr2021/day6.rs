@@ -2,7 +2,7 @@ fn simulate_fish(input: &str, days: u32) -> String {
     let mut counts = [0; 9];
 
     for fish in input.split(',') {
-        counts[fish.trim().parse::<usize>().unwrap()] += 1
+        counts[fish.trim().parse::<usize>().unwrap()] += 1;
     }
 
     for _ in 0..days {
@@ -16,7 +16,7 @@ fn simulate_fish(input: &str, days: u32) -> String {
             counts[7] + counts[0],
             counts[8],
             counts[0],
-        ]
+        ];
     }
 
     counts.iter().sum::<u64>().to_string()

@@ -12,7 +12,7 @@ impl BoardState {
                 .split_ascii_whitespace()
                 .map(|n| Some(n.parse().unwrap()))
                 .collect(),
-            ..Default::default()
+            ..BoardState::default()
         }
     }
 
@@ -56,7 +56,7 @@ pub fn star1(input: &str) -> String {
     let (numbers, mut boards) = parse_input(input);
 
     for num in numbers {
-        for board in boards.iter_mut() {
+        for board in &mut boards {
             if let Some(score) = board.mark(num) {
                 return score.to_string();
             }
@@ -71,7 +71,7 @@ pub fn star2(input: &str) -> String {
     let mut boards_left = boards.len();
 
     for num in numbers {
-        for board in boards.iter_mut() {
+        for board in &mut boards {
             if let Some(score) = board.mark(num) {
                 boards_left -= 1;
                 if boards_left == 0 {
