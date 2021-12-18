@@ -17,8 +17,14 @@ fn parse_input(input: &str) -> (i32, i32, i32, i32) {
         .unwrap()
 }
 
-fn trajectories(input: &str, mut f: impl FnMut(i32) -> bool) {
+pub fn star1(input: &str) -> String {
+    let (_, _, area_y1, _) = parse_input(input);
+    ((area_y1 + 1) * area_y1 / 2).to_string()
+}
+
+pub fn star2(input: &str) -> String {
     let (area_x1, area_x2, area_y1, area_y2) = parse_input(input);
+    let mut count = 0;
 
     // If u > 0, we know the probe will hit y = 0 twice by the
     // equation of motion:
@@ -47,11 +53,8 @@ fn trajectories(input: &str, mut f: impl FnMut(i32) -> bool) {
                 }
 
                 if area_y1 <= y && y <= area_y2 && area_x1 <= x && x <= area_x2 {
-                    if f(highest_y) {
-                        return;
-                    } else {
-                        break;
-                    }
+                    count += 1;
+                    break;
                 }
 
                 if y < area_y1 {
@@ -60,22 +63,6 @@ fn trajectories(input: &str, mut f: impl FnMut(i32) -> bool) {
             }
         }
     }
-}
 
-pub fn star1(input: &str) -> String {
-    let mut result = 0;
-    trajectories(input, |v| {
-        result = v;
-        true
-    });
-    result.to_string()
-}
-
-pub fn star2(input: &str) -> String {
-    let mut result = 0;
-    trajectories(input, |_| {
-        result += 1;
-        false
-    });
-    result.to_string()
+    count.to_string()
 }
