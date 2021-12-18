@@ -55,12 +55,7 @@ fn reverse_cyclic_sublist<T>(list: &mut Vec<T>, pos: usize, length: usize) {
 ///  initial_pos = initial position to start rotating at
 ///  initial_skip = initial number of positions to skip after each length
 /// Returns final position
-fn knot_round<T, I>(
-    mut knot: &mut Vec<T>,
-    lengths: I,
-    initial_pos: usize,
-    initial_skip: usize,
-) -> usize
+fn knot_round<T, I>(knot: &mut Vec<T>, lengths: I, initial_pos: usize, initial_skip: usize) -> usize
 where
     I: Iterator,
     I::Item: Into<usize>,
@@ -70,7 +65,7 @@ where
     let mut pos = initial_pos;
     for (i, length) in lengths.enumerate() {
         let length_usize: usize = length.into();
-        reverse_cyclic_sublist(&mut knot, pos, length_usize);
+        reverse_cyclic_sublist(knot, pos, length_usize);
         pos = (pos + length_usize + i + initial_skip) % knot.len();
     }
 

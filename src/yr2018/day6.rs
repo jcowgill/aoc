@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use crate::vector::VectorExt;
 use nalgebra::Vector2;
 
@@ -40,11 +42,13 @@ where
     for (id, &coord) in coords.enumerate() {
         let dist = (point - coord).taxicab_norm();
 
-        if dist < nearest_dist {
-            nearest_id = Some(id);
-            nearest_dist = dist;
-        } else if dist == nearest_dist {
-            nearest_id = None;
+        match dist.cmp(&nearest_dist) {
+            Ordering::Less => {
+                nearest_id = Some(id);
+                nearest_dist = dist;
+            }
+            Ordering::Equal => nearest_id = None,
+            Ordering::Greater => (),
         }
     }
 
