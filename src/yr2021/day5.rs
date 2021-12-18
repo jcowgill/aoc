@@ -15,7 +15,7 @@ impl Line {
         let gcd = gcd(self.dir.x, self.dir.y);
         let step = self.dir / gcd;
 
-        (0..gcd + 1).map(move |i| self.pos + step * i)
+        (0..=gcd).map(move |i| self.pos + step * i)
     }
 }
 

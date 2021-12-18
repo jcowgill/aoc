@@ -54,7 +54,7 @@ impl<T: Iterator<Item = u8>> BitReader<T> {
     }
 
     /// Peeks some bits as an unsigned 32 bit integer without consuming them
-    fn peek_u32(&mut self, bits: u8) -> Option<u32> {
+    fn peek_u32(&mut self, bits: u8) -> u32 {
         assert!(bits <= 32);
 
         if self.num_bits < bits {
@@ -67,28 +67,25 @@ impl<T: Iterator<Item = u8>> BitReader<T> {
             }
         }
 
-        Some(((self.cache >> (self.num_bits - bits)) & ((1 << bits) - 1)) as u32)
+        ((self.cache >> (self.num_bits - bits)) & ((1 << bits) - 1)) as u32
     }
 
     /// Reads some bits as an unsigned 32 bit integer
-    fn read_u32(&mut self, bits: u8) -> Option<u32> {
-        if let Some(value) = self.peek_u32(bits) {
-            self.num_bits -= bits;
-            Some(value)
-        } else {
-            None
-        }
+    fn read_u32(&mut self, bits: u8) -> u32 {
+        let value = self.peek_u32(bits);
+        self.num_bits -= bits;
+        value
     }
 
     /// Reads a single bit
-    fn read_bit(&mut self) -> Option<bool> {
-        self.read_u32(1).map(|v| v != 0)
+    fn read_bit(&mut self) -> bool {
+        self.read_u32(1) != 0
     }
 
     /// Reads some bits as an unsigned 8 bit integer
-    fn read_u8(&mut self, bits: u8) -> Option<u8> {
+    fn read_u8(&mut self, bits: u8) -> u8 {
         assert!(bits <= 8);
-        self.read_u32(bits).map(|v| v as u8)
+        self.read_u32(bits) as u8
     }
 
     /// Returns the number of bits read so far
@@ -111,14 +108,14 @@ fn hex_reader(input: &str) -> BitReader<impl Iterator<Item = u8> + '_> {
 
 impl Packet {
     fn parse(reader: &mut BitReader<impl Iterator<Item = u8>>) -> Packet {
-        let version = reader.read_u8(3).unwrap();
-        let ty = reader.read_u8(3).unwrap();
+        let version = reader.read_u8(3);
+        let ty = reader.read_u8(3);
 
         if ty == 4 {
             let mut value = 0;
             loop {
-                let more_bits = reader.read_bit().unwrap();
-                value = value << 4 | reader.read_u8(4).unwrap() as u64;
+                let more_bits = reader.read_bit();
+                value = value << 4 | reader.read_u8(4) as u64;
                 if !more_bits {
                     break;
                 }
@@ -128,12 +125,12 @@ impl Packet {
         } else {
             let mut children = Vec::new();
 
-            if reader.read_bit().unwrap() {
-                for _ in 0..reader.read_u32(11).unwrap() {
+            if reader.read_bit() {
+                for _ in 0..reader.read_u32(11) {
                     children.push(Packet::parse(reader));
                 }
             } else {
-                let end_bits = reader.read_u32(15).unwrap() + reader.bits_read();
+                let end_bits = reader.read_u32(15) + reader.bits_read();
                 while reader.bits_read() < end_bits {
                     children.push(Packet::parse(reader));
                 }
