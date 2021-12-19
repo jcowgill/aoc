@@ -6,49 +6,6 @@ use crate::vector::VectorExt;
 
 type Point = Vector3<i32>;
 
-/// Enumerates all transforms such that
-///  f(b) = a, and f applies one of the 24 rotational symmetries of a cube
-fn enumerate_transforms(
-    a: Point,
-    b: Point,
-) -> impl Iterator<Item = impl Fn(Point) -> Point + Clone> {
-    (0..24).map(move |i| {
-        move |point: Point| {
-            let r = move |p: Point| match i {
-                0 => p,
-                1 => Point::new(p.x, -p.y, -p.z),
-                2 => Point::new(p.x, -p.z, p.y),
-                3 => Point::new(p.x, p.z, -p.y),
-                4 => Point::new(-p.x, -p.y, p.z),
-                5 => Point::new(-p.x, p.y, -p.z),
-                6 => Point::new(-p.x, p.z, p.y),
-                7 => Point::new(-p.x, -p.z, -p.y),
-
-                8 => Point::new(p.y, p.z, p.x),
-                9 => Point::new(p.y, -p.z, -p.x),
-                10 => Point::new(p.y, -p.x, p.z),
-                11 => Point::new(p.y, p.x, -p.z),
-                12 => Point::new(-p.y, -p.z, p.x),
-                13 => Point::new(-p.y, p.z, -p.x),
-                14 => Point::new(-p.y, p.x, p.z),
-                15 => Point::new(-p.y, -p.x, -p.z),
-
-                16 => Point::new(p.z, p.x, p.y),
-                17 => Point::new(p.z, -p.x, -p.y),
-                18 => Point::new(p.z, -p.y, p.x),
-                19 => Point::new(p.z, p.y, -p.x),
-                20 => Point::new(-p.z, -p.x, p.y),
-                21 => Point::new(-p.z, p.x, -p.y),
-                22 => Point::new(-p.z, p.y, p.x),
-                23 => Point::new(-p.z, -p.y, -p.x),
-                _ => unreachable!(),
-            };
-
-            r(point) - r(b) + a
-        }
-    })
-}
-
 /// Parses input returning a list of scanners. Each scanner contains a
 /// list of beacons detected by it.
 fn parse_input(input: &str) -> Vec<Vec<Point>> {
@@ -64,6 +21,48 @@ fn parse_input(input: &str) -> Vec<Vec<Point>> {
         .collect()
 }
 
+/// List of all octahedral rotation functions
+static ROTATIONS: [fn(Point) -> Point; 24] = [
+    |p| p,
+    |p| Point::new(p.x, -p.y, -p.z),
+    |p| Point::new(p.x, -p.z, p.y),
+    |p| Point::new(p.x, p.z, -p.y),
+    |p| Point::new(-p.x, -p.y, p.z),
+    |p| Point::new(-p.x, p.y, -p.z),
+    |p| Point::new(-p.x, p.z, p.y),
+    |p| Point::new(-p.x, -p.z, -p.y),
+
+    |p| Point::new(p.y, p.z, p.x),
+    |p| Point::new(p.y, -p.z, -p.x),
+    |p| Point::new(p.y, -p.x, p.z),
+    |p| Point::new(p.y, p.x, -p.z),
+    |p| Point::new(-p.y, -p.z, p.x),
+    |p| Point::new(-p.y, p.z, -p.x),
+    |p| Point::new(-p.y, p.x, p.z),
+    |p| Point::new(-p.y, -p.x, -p.z),
+
+    |p| Point::new(p.z, p.x, p.y),
+    |p| Point::new(p.z, -p.x, -p.y),
+    |p| Point::new(p.z, -p.y, p.x),
+    |p| Point::new(p.z, p.y, -p.x),
+    |p| Point::new(-p.z, -p.x, p.y),
+    |p| Point::new(-p.z, p.x, -p.y),
+    |p| Point::new(-p.z, p.y, p.x),
+    |p| Point::new(-p.z, -p.y, -p.x),
+];
+
+/// Enumerates all transforms such that
+///  f(b) = a, and f applies one of the 24 rotational symmetries of a cube
+fn enumerate_transforms(
+    a: Point,
+    b: Point,
+) -> impl Iterator<Item = impl Fn(Point) -> Point + Clone> {
+    ROTATIONS.iter().map(move |r| {
+        let offset = a - r(b);
+        move |p| r(p) + offset
+    })
+}
+
 /// Find a stations and it's transform which can be used to add becons
 /// to the joined set
 fn find_transform(
@@ -71,7 +70,7 @@ fn find_transform(
     joined_becons: &HashSet<Point>,
 ) -> Option<(usize, impl Fn(Point) -> Point + Clone)> {
     for (i, station) in stations.iter().enumerate() {
-        // Test every point in the station againsted the joined
+        // Test every point in the station against the joined
         // points to see if this station overlaps given some
         // transform
         for &jp in joined_becons {
@@ -82,7 +81,7 @@ fn find_transform(
                         .iter()
                         .filter(|&&p| joined_becons.contains(&trans(p)))
                         .count()
-                        >= 5
+                        >= 12
                     {
                         // Yay - found a correct transform.
                         return Some((i, trans));
@@ -108,8 +107,14 @@ fn resolve_beacons(input: &str) -> (HashSet<Point>, Vec<Point>) {
 
     while !stations.is_empty() {
         if let Some((station, trans)) = find_transform(&stations, &joined_becons) {
+            // Rotate the stations so that stations we already
+            // searched but couldn't join are not searched again
+            // immediately. This line results in about 2x performance
+            // on my test input.
+            stations.rotate_left(station + 1);
+
             // Move station into the joined set using the found transform.
-            joined_becons.extend(stations.swap_remove(station).into_iter().map(trans.clone()));
+            joined_becons.extend(stations.pop().unwrap().into_iter().map(trans.clone()));
             station_centers.push(trans(Point::zeros()));
         } else {
             // This can happen if there's two sets of non-overlapping stations
