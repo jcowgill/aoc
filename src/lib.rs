@@ -15,6 +15,7 @@ mod yr2015;
 mod yr2017;
 mod yr2018;
 mod yr2021;
+mod yr2022;
 
 /// Function type for all star functions
 pub type StarFunction = fn(&str) -> String;
@@ -57,6 +58,7 @@ pub fn all_stars() -> Vec<(StarId, StarFunction)> {
     result.append(&mut yr2017::stars());
     result.append(&mut yr2018::stars());
     result.append(&mut yr2021::stars());
+    result.append(&mut yr2022::stars());
     result
 }
 
