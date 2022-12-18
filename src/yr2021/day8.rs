@@ -50,7 +50,7 @@ fn deduce_values(line: &str) -> Vec<u32> {
         }
     }
 
-    panic!("no deduction found for line '{}'", line)
+    panic!("no deduction found for line '{line}'")
 }
 
 pub fn star1(input: &str) -> String {

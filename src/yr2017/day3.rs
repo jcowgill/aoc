@@ -7,11 +7,7 @@ use std::cmp;
 ///  3 = Down
 fn xy_to_side((x, y): (i32, i32)) -> i32 {
     if x >= 0 && y >= 0 {
-        if x >= y {
-            0
-        } else {
-            1
-        }
+        i32::from(x < y)
     } else if x < 0 && y >= 0 {
         if y >= -x {
             1

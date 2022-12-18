@@ -149,7 +149,7 @@ fn parse_machine(input: &str) -> (TuringMachine<char, bool>, usize) {
         };
 
         // Handle inner transitions first
-        if current_state != None && current_symbol != None {
+        if let (Some(state), Some(symbol)) = (current_state, current_symbol) {
             if let Some(part) = trim_prefix(line, "Write the value ") {
                 next_symbol = Some(parse_symbol(part));
                 continue;
@@ -163,7 +163,7 @@ fn parse_machine(input: &str) -> (TuringMachine<char, bool>, usize) {
 
             // Flush current transition
             transitions.insert(
-                (current_state.unwrap(), current_symbol.unwrap()),
+                (state, symbol),
                 (
                     next_state.unwrap(),
                     next_symbol.unwrap(),

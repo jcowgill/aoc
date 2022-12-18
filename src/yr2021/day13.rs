@@ -19,7 +19,7 @@ fn parse_input(input: &str) -> (Vec<Vector2<i32>>, Vec<(u8, i32)>) {
                     .split_once('=')
                     .unwrap();
                 (
-                    if axis_str == "x" { 0 } else { 1 },
+                    u8::from(axis_str != "x"),
                     line_str.parse().unwrap(),
                 )
             })

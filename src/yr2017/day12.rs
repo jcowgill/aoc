@@ -35,13 +35,12 @@ fn partition_by_group(initial: i32, nodes: &mut Nodes) -> Vec<i32> {
         let current = open.pop().unwrap();
 
         // Ignore nodes we've already seen.
-        let current_nodes = nodes.remove(&current);
-        if current_nodes.is_some() {
+        if let Some(current_nodes) = nodes.remove(&current) {
             // Add current to closed list
             closed.push(current);
 
             // Add all node children to open list
-            for child in current_nodes.unwrap() {
+            for child in current_nodes {
                 open.push(child);
             }
         }
