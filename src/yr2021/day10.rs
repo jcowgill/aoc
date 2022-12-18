@@ -24,7 +24,7 @@ pub fn star1(input: &str) -> String {
             ']' => 57,
             '}' => 1197,
             '>' => 25137,
-            _ => panic!("invalid char {} found", c),
+            _ => panic!("invalid char {c} found"),
         })
         .sum::<u32>()
         .to_string()

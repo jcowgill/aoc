@@ -3,7 +3,7 @@ fn map_fold_binary_number<T, P: FnMut(T) -> bool>(
     iter: impl Iterator<Item = T>,
     mut pred: P,
 ) -> u32 {
-    iter.map(|d| if pred(d) { 1 } else { 0 })
+    iter.map(|d| u32::from(pred(d)))
         .fold(0, |acc, v| (acc << 1) + v)
 }
 

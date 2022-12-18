@@ -113,8 +113,8 @@ impl Node {
 impl fmt::Display for Node {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
         match self {
-            Node::Leaf(v) => write!(f, "{}", v),
-            Node::Pair(a, b) => write!(f, "[{},{}]", a, b),
+            Node::Leaf(v) => write!(f, "{v}"),
+            Node::Pair(a, b) => write!(f, "[{a},{b}]"),
         }
     }
 }
@@ -129,7 +129,7 @@ fn consume_token(input: &mut Peekable<impl Iterator<Item = char>>, expected: cha
     skip_whitespace(input);
     match input.next() {
         Some(c) if c == expected => (),
-        Some(c) => panic!("syntax error {}, expected {}", c, expected),
+        Some(c) => panic!("syntax error {c}, expected {expected}"),
         None => panic!("unexpected end of string"),
     }
 }
@@ -149,7 +149,7 @@ fn parse_node(input: &mut Peekable<impl Iterator<Item = char>>) -> Node {
         Some(c) if c.is_ascii_digit() => {
             Node::Leaf(input.next().unwrap().to_digit(10).unwrap() as u8)
         }
-        Some(c) => panic!("unexpected char {}", c),
+        Some(c) => panic!("unexpected char {c}"),
         None => panic!("unexpected end of string"),
     }
 }
@@ -160,7 +160,7 @@ fn parse_node_str(input: &str) -> Node {
     let result = parse_node(&mut iter);
     skip_whitespace(&mut iter);
     if let Some(c) = iter.next() {
-        panic!("unexpected char {}, expected end of string", c);
+        panic!("unexpected char {c}, expected end of string");
     }
     result
 }

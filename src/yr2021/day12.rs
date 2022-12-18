@@ -75,9 +75,6 @@ fn search_node(
         .iter()
         .map(|&edge| {
             match graph[edge].ty {
-                // We don't revisit the start again
-                NodeType::Start => 0,
-
                 // We got to the end of this path
                 NodeType::End => 1,
 
@@ -97,8 +94,9 @@ fn search_node(
                     search_node(graph, small_nodes, false, edge)
                 }
 
-                // Ignore other small nodes
-                NodeType::Small => 0,
+                // Ignore other small nodes and don't visit start again
+                // We don't revisit the start again
+                NodeType::Small | NodeType::Start => 0,
             }
         })
         .sum()

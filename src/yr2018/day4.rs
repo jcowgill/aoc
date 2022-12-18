@@ -46,7 +46,7 @@ struct Record {
     action: Action,
 }
 
-impl<'a> FromStr for Record {
+impl FromStr for Record {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Record, ()> {
