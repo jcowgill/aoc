@@ -59,8 +59,12 @@ impl<T: Iterator<Item = u8>> BitReader<T> {
 
         if self.num_bits < bits {
             self.fill_cache();
-            assert!(self.num_bits >= bits, "buffer underflow reading {} bits (only have {})",
-                    bits, self.num_bits);
+            assert!(
+                self.num_bits >= bits,
+                "buffer underflow reading {} bits (only have {})",
+                bits,
+                self.num_bits
+            );
         }
 
         ((self.cache >> (self.num_bits - bits)) & ((1 << bits) - 1)) as u32
