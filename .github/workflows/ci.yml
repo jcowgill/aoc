@@ -1,0 +1,23 @@
+name: ci
+on: [push]
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: update rust
+      run: rustup update
+    - name: build
+      run: cargo build --release
+    - name: test
+      run: cargo test --release --jobs 1
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: update rust
+      run: rustup update
+    - name: clippy
+      run: cargo clippy
