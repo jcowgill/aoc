@@ -102,7 +102,7 @@ impl<State: Copy + Eq + Hash, Symbol: Copy + Eq + Hash> TuringMachine<State, Sym
 ///  Returns the turing machine and the number of steps to run
 fn parse_machine(input: &str) -> (TuringMachine<char, bool>, usize) {
     /// Removes given prefix and returns the second part
-    fn trim_prefix<'a, 'b>(s: &'a str, prefix: &'b str) -> Option<&'a str> {
+    fn trim_prefix<'a>(s: &'a str, prefix: &'_ str) -> Option<&'a str> {
         if s.starts_with(prefix) {
             Some(s.split_at(prefix.len()).1)
         } else {

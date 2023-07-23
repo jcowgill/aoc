@@ -19,7 +19,7 @@ fn parse_particle(line: &str) -> Particle {
         .map(|raw_str| {
             raw_str
                 .chars()
-                .filter(|&c| ('0'..='9').contains(&c) || c == '-')
+                .filter(|&c| c.is_ascii_digit() || c == '-')
                 .collect::<String>()
                 .parse()
                 .unwrap()
@@ -88,7 +88,7 @@ pub fn star1(input: &str) -> String {
         .lines()
         .map(parse_particle)
         .enumerate()
-        .min_by(|&(_, ref a), &(_, ref b)| order_range_at_inf(a, b))
+        .min_by(|(_, a), (_, b)| order_range_at_inf(a, b))
         .unwrap()
         .0
         .to_string()
