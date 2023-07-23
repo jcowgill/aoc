@@ -5,7 +5,7 @@ struct Program(u8);
 
 impl Program {
     fn from_char(prog: char) -> Option<Program> {
-        if ('a'..='z').contains(&prog) {
+        if prog.is_ascii_lowercase() {
             Some(Program(prog as u8 - b'a'))
         } else {
             None

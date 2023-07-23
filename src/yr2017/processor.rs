@@ -45,7 +45,7 @@ impl FromStr for Register {
     type Err = ();
     fn from_str(s: &str) -> Result<Self, ()> {
         if let Some(c) = s.chars().next() {
-            if s.len() == 1 && ('a'..='z').contains(&c) {
+            if s.len() == 1 && c.is_ascii_alphabetic() {
                 return Ok(Register(c as u8 - b'a'));
             }
         }
