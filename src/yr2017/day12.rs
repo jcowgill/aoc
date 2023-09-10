@@ -31,9 +31,7 @@ fn partition_by_group(initial: i32, nodes: &mut Nodes) -> Vec<i32> {
     assert!(nodes.contains_key(&initial));
     open.push(initial);
 
-    while !open.is_empty() {
-        let current = open.pop().unwrap();
-
+    while let Some(current) = open.pop() {
         // Ignore nodes we've already seen.
         if let Some(current_nodes) = nodes.remove(&current) {
             // Add current to closed list
