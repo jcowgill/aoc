@@ -1,4 +1,4 @@
-///! Generalisation of the processor used in days 18 and 23
+//! Generalisation of the processor used in days 18 and 23
 use std::collections::VecDeque;
 use std::str::FromStr;
 
