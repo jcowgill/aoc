@@ -62,10 +62,10 @@ pub fn star2(input: &str) -> String {
     (0..grid.nrows())
         .cartesian_product(0..grid.ncols())
         .map(|(y, x)| {
-            let left = count_trees(grid.slice_range(y, 0..=x).iter().rev());
-            let right = count_trees(grid.slice_range(y, x..).iter());
-            let up = count_trees(grid.slice_range(0..=y, x).iter().rev());
-            let down = count_trees(grid.slice_range(y.., x).iter());
+            let left = count_trees(grid.view_range(y, 0..=x).iter().rev());
+            let right = count_trees(grid.view_range(y, x..).iter());
+            let up = count_trees(grid.view_range(0..=y, x).iter().rev());
+            let down = count_trees(grid.view_range(y.., x).iter());
             left * right * up * down
         })
         .max()
