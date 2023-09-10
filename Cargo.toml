@@ -14,9 +14,9 @@ name = "aoc"
 path = "src/bin.rs"
 
 [dependencies]
-itertools = "0.10"
+itertools = "0.11"
 lazy_static = "1"
-nalgebra = "0.31"
+nalgebra = "0.32"
 num = "0.4"
 regex = "1"
-strum = { version = "0.24", features = ["derive"] }
+strum = { version = "0.25", features = ["derive"] }
