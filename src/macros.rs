@@ -35,3 +35,14 @@ macro_rules! vec_all_days {
         result
     }};
 }
+
+/// Implement a single star test
+#[cfg(test)]
+macro_rules! star_test {
+    ($name:ident, $func:expr, $input: expr, $output: expr) => {
+        #[test]
+        fn $name() {
+            assert_eq!($func($input.trim_end()), $output.trim_end());
+        }
+    };
+}
