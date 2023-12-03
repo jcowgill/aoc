@@ -76,6 +76,11 @@ pub fn star_function(id: StarId) -> Option<StarFunction> {
     None
 }
 
+/// Applies a function combining two heterogeneous tuples
+pub fn apply_tuple2<F: Fn(A, B) -> R, A, B, R>(func: F, left: (A, A), right: (B, B)) -> (R, R) {
+    (func(left.0, right.0), func(left.1, right.1))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -87,11 +92,4 @@ mod tests {
             assert!(window[0].0 < window[1].0);
         }
     }
-}
-
-// ========================================================================
-
-/// Applies a function combining two heterogeneous tuples
-pub fn apply_tuple2<F: Fn(A, B) -> R, A, B, R>(func: F, left: (A, A), right: (B, B)) -> (R, R) {
-    (func(left.0, right.0), func(left.1, right.1))
 }
