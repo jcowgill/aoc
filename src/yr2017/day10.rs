@@ -118,3 +118,33 @@ pub fn star2(input: &str) -> String {
         .iter()
         .fold(String::new(), |acc, &b| acc + &format!("{:02x}", b))
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    star_test!(example1a, star1, "5;3,4,1,5", "12");
+    star_test!(empty1, star1, "", "0");
+    star_test!(
+        me1,
+        star1,
+        "46,41,212,83,1,255,157,65,139,52,39,254,2,86,0,204",
+        "52070"
+    );
+
+    star_test!(
+        example1b,
+        star2,
+        "AoC 2017",
+        "33efeb34ea91902bb2f59c9920caa6cd"
+    );
+    star_test!(example2, star2, "1,2,3", "3efbe78a8d82f29979031a4aa0b16a9d");
+    star_test!(example3, star2, "1,2,4", "63960835bcdc130f0b66d7ff4f6a5a8e");
+    star_test!(empty2, star2, "", "a2582a3a0e66e6e86e3812dcb672a272");
+    star_test!(
+        me2,
+        star2,
+        "46,41,212,83,1,255,157,65,139,52,39,254,2,86,0,204",
+        "7f94112db4e32e19cf6502073c66f9bb"
+    );
+}

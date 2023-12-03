@@ -82,3 +82,25 @@ pub fn star2(input: &str) -> String {
     )
     .to_string()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use indoc::indoc;
+
+    star_test!(example1a, star1, IN1, "588");
+    star_test!(me1, star1, ME, "577");
+
+    star_test!(example1b, star2, IN1, "309");
+    star_test!(me2, star2, ME, "316");
+
+    const IN1: &str = indoc! {"
+        Generator A starts with 65
+        Generator B starts with 8921
+    "};
+
+    const ME: &str = indoc! {"
+        Generator A starts with 618
+        Generator B starts with 814
+    "};
+}

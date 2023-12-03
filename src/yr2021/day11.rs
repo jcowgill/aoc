@@ -73,3 +73,41 @@ pub fn star2(input: &str) -> String {
     let mut grid = parse_grid(input);
     ((0..).find(|_| step_grid(&mut grid) == grid.len()).unwrap() + 1).to_string()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use indoc::indoc;
+
+    star_test!(example1a, star1, IN1, "1656");
+    star_test!(me1, star1, ME, "1725");
+
+    star_test!(example1b, star2, IN1, "195");
+    star_test!(me2, star2, ME, "308");
+
+    const IN1: &str = indoc! {"
+        5483143223
+        2745854711
+        5264556173
+        6141336146
+        6357385478
+        4167524645
+        2176841721
+        6882881134
+        4846848554
+        5283751526
+    "};
+
+    const ME: &str = indoc! {"
+        4134384626
+        7114585257
+        1582536488
+        4865715538
+        5733423513
+        8532144181
+        1288614583
+        2248711141
+        6415871681
+        7881531438
+    "};
+}

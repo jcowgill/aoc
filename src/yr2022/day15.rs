@@ -101,3 +101,62 @@ pub fn star2(input: &str) -> String {
 
     panic!("no point found");
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use indoc::indoc;
+
+    star_test!(example1a, star1, IN1, "26");
+    star_test!(me1, star1, ME, "6078701");
+
+    star_test!(example1b, star2, IN1, "56000011");
+    star_test!(me2, star2, ME, "12567351400528");
+
+    const IN1: &str = indoc! {"
+        Sensor at x=2, y=18: closest beacon is at x=-2, y=15
+        Sensor at x=9, y=16: closest beacon is at x=10, y=16
+        Sensor at x=13, y=2: closest beacon is at x=15, y=3
+        Sensor at x=12, y=14: closest beacon is at x=10, y=16
+        Sensor at x=10, y=20: closest beacon is at x=10, y=16
+        Sensor at x=14, y=17: closest beacon is at x=10, y=16
+        Sensor at x=8, y=7: closest beacon is at x=2, y=10
+        Sensor at x=2, y=0: closest beacon is at x=2, y=10
+        Sensor at x=0, y=11: closest beacon is at x=2, y=10
+        Sensor at x=20, y=14: closest beacon is at x=25, y=17
+        Sensor at x=17, y=20: closest beacon is at x=21, y=22
+        Sensor at x=16, y=7: closest beacon is at x=15, y=3
+        Sensor at x=14, y=3: closest beacon is at x=15, y=3
+        Sensor at x=20, y=1: closest beacon is at x=15, y=3
+    "};
+
+    const ME: &str = indoc! {"
+        Sensor at x=2983166, y=2813277: closest beacon is at x=3152133, y=2932891
+        Sensor at x=2507490, y=122751: closest beacon is at x=1515109, y=970092
+        Sensor at x=3273116, y=2510538: closest beacon is at x=3152133, y=2932891
+        Sensor at x=1429671, y=995389: closest beacon is at x=1515109, y=970092
+        Sensor at x=2465994, y=2260162: closest beacon is at x=2734551, y=2960647
+        Sensor at x=2926899, y=3191882: closest beacon is at x=2734551, y=2960647
+        Sensor at x=1022491, y=1021177: closest beacon is at x=1515109, y=970092
+        Sensor at x=1353273, y=1130973: closest beacon is at x=1515109, y=970092
+        Sensor at x=1565476, y=2081049: closest beacon is at x=1597979, y=2000000
+        Sensor at x=1841125, y=1893566: closest beacon is at x=1597979, y=2000000
+        Sensor at x=99988, y=71317: closest beacon is at x=86583, y=-1649857
+        Sensor at x=3080600, y=3984582: closest beacon is at x=3175561, y=4138060
+        Sensor at x=3942770, y=3002123: closest beacon is at x=3724687, y=3294321
+        Sensor at x=1572920, y=2031447: closest beacon is at x=1597979, y=2000000
+        Sensor at x=218329, y=1882777: closest beacon is at x=1597979, y=2000000
+        Sensor at x=1401723, y=1460526: closest beacon is at x=1515109, y=970092
+        Sensor at x=2114094, y=985978: closest beacon is at x=1515109, y=970092
+        Sensor at x=3358586, y=3171857: closest beacon is at x=3152133, y=2932891
+        Sensor at x=1226284, y=3662922: closest beacon is at x=2514367, y=3218259
+        Sensor at x=3486366, y=3717867: closest beacon is at x=3724687, y=3294321
+        Sensor at x=1271873, y=831354: closest beacon is at x=1515109, y=970092
+        Sensor at x=3568311, y=1566400: closest beacon is at x=3152133, y=2932891
+        Sensor at x=3831960, y=3146611: closest beacon is at x=3724687, y=3294321
+        Sensor at x=2505534, y=3196726: closest beacon is at x=2514367, y=3218259
+        Sensor at x=2736967, y=3632098: closest beacon is at x=2514367, y=3218259
+        Sensor at x=3963402, y=3944423: closest beacon is at x=3724687, y=3294321
+        Sensor at x=1483115, y=2119639: closest beacon is at x=1597979, y=2000000
+    "};
+}

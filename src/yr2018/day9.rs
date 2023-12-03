@@ -72,3 +72,58 @@ pub fn star1(input: &str) -> String {
 pub fn star2(input: &str) -> String {
     max_score(input, 100)
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    star_test!(
+        example1,
+        star1,
+        "9 players; last marble is worth 25 points",
+        "32"
+    );
+    star_test!(
+        example2,
+        star1,
+        "10 players; last marble is worth 1618 points",
+        "8317"
+    );
+    star_test!(
+        example3,
+        star1,
+        "13 players; last marble is worth 7999 points",
+        "146373"
+    );
+    star_test!(
+        example4,
+        star1,
+        "17 players; last marble is worth 1104 points",
+        "2764"
+    );
+    star_test!(
+        example5,
+        star1,
+        "21 players; last marble is worth 6111 points",
+        "54718"
+    );
+    star_test!(
+        example6,
+        star1,
+        "30 players; last marble is worth 5807 points",
+        "37305"
+    );
+    star_test!(
+        me1,
+        star1,
+        "465 players; last marble is worth 71498 points",
+        "383475"
+    );
+
+    star_test!(
+        me2,
+        star2,
+        "465 players; last marble is worth 71498 points",
+        "3148209772"
+    );
+}

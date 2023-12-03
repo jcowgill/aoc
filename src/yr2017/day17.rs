@@ -31,3 +31,13 @@ pub fn star2(input: &str) -> String {
 
     pos1_value.to_string()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    star_test!(example1, star1, "3", "638");
+    star_test!(me1, star1, "337", "600");
+
+    star_test!(me2, star2, "337", "31220910");
+}

@@ -69,3 +69,32 @@ pub fn star1(input: &str) -> String {
 pub fn star2(input: &str) -> String {
     run::<4>(input)
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use indoc::indoc;
+
+    star_test!(example1a, star1, IN1, "112");
+    star_test!(me1, star1, ME, "280");
+
+    star_test!(example1b, star2, IN1, "848");
+    star_test!(me2, star2, ME, "1696");
+
+    const IN1: &str = indoc! {"
+        .#.
+        ..#
+        ###
+    "};
+
+    const ME: &str = indoc! {"
+        ##..#.#.
+        #####.##
+        #######.
+        #..#..#.
+        #.#...##
+        ..#....#
+        ....#..#
+        ..##.#..
+    "};
+}

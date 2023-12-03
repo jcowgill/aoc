@@ -223,3 +223,31 @@ pub fn star2(input: &str) -> String {
         .chain(in_chars.clone().skip(4));
     star_common(spliced_chars.enumerate().map(parse_start_pos).collect())
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use indoc::indoc;
+
+    star_test!(example1a, star1, IN1, "12521");
+    star_test!(me1, star1, ME, "16244");
+
+    star_test!(example1b, star2, IN1, "44169");
+    star_test!(me2, star2, ME, "43226");
+
+    const IN1: &str = indoc! {"
+        #############
+        #...........#
+        ###B#C#B#D###
+          #A#D#C#A#
+          #########
+    "};
+
+    const ME: &str = indoc! {"
+        #############
+        #...........#
+        ###D#D#B#A###
+          #B#C#A#C#
+          #########
+    "};
+}

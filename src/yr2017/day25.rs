@@ -205,3 +205,102 @@ pub fn star1(input: &str) -> String {
     // Count ones
     machine.tape.iter().filter(|&v| *v).count().to_string()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use indoc::indoc;
+
+    star_test!(example1, star1, IN1, "3");
+    star_test!(me, star1, ME, "2794");
+
+    const IN1: &str = indoc! {"
+        Begin in state A.
+        Perform a diagnostic checksum after 6 steps.
+
+        In state A:
+          If the current value is 0:
+            - Write the value 1.
+            - Move one slot to the right.
+            - Continue with state B.
+          If the current value is 1:
+            - Write the value 0.
+            - Move one slot to the left.
+            - Continue with state B.
+
+        In state B:
+          If the current value is 0:
+            - Write the value 1.
+            - Move one slot to the left.
+            - Continue with state A.
+          If the current value is 1:
+            - Write the value 1.
+            - Move one slot to the right.
+            - Continue with state A.
+    "};
+
+    const ME: &str = indoc! {"
+        Begin in state A.
+        Perform a diagnostic checksum after 12399302 steps.
+
+        In state A:
+          If the current value is 0:
+            - Write the value 1.
+            - Move one slot to the right.
+            - Continue with state B.
+          If the current value is 1:
+            - Write the value 0.
+            - Move one slot to the right.
+            - Continue with state C.
+
+        In state B:
+          If the current value is 0:
+            - Write the value 0.
+            - Move one slot to the left.
+            - Continue with state A.
+          If the current value is 1:
+            - Write the value 0.
+            - Move one slot to the right.
+            - Continue with state D.
+
+        In state C:
+          If the current value is 0:
+            - Write the value 1.
+            - Move one slot to the right.
+            - Continue with state D.
+          If the current value is 1:
+            - Write the value 1.
+            - Move one slot to the right.
+            - Continue with state A.
+
+        In state D:
+          If the current value is 0:
+            - Write the value 1.
+            - Move one slot to the left.
+            - Continue with state E.
+          If the current value is 1:
+            - Write the value 0.
+            - Move one slot to the left.
+            - Continue with state D.
+
+        In state E:
+          If the current value is 0:
+            - Write the value 1.
+            - Move one slot to the right.
+            - Continue with state F.
+          If the current value is 1:
+            - Write the value 1.
+            - Move one slot to the left.
+            - Continue with state B.
+
+        In state F:
+          If the current value is 0:
+            - Write the value 1.
+            - Move one slot to the right.
+            - Continue with state A.
+          If the current value is 1:
+            - Write the value 1.
+            - Move one slot to the right.
+            - Continue with state E.
+    "};
+}

@@ -46,3 +46,55 @@ pub fn star2(input: &str) -> String {
 
     x.to_string()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use indoc::indoc;
+
+    star_test!(example1a, star1, IN1, "295");
+    star_test!(me1, star1, ME, "171");
+
+    star_test!(example1b, star2, IN1, "1068781");
+    star_test!(example2, star2, IN2, "3417");
+    star_test!(example3, star2, IN3, "754018");
+    star_test!(example4, star2, IN4, "779210");
+    star_test!(example5, star2, IN5, "1261476");
+    star_test!(example6, star2, IN6, "1202161486");
+    star_test!(me2, star2, ME, "539746751134958");
+
+    const IN1: &str = indoc! {"
+        939
+        7,13,x,x,59,x,31,19
+    "};
+
+    const IN2: &str = indoc! {"
+        0
+        17,x,13,19
+    "};
+
+    const IN3: &str = indoc! {"
+        0
+        67,7,59,61
+    "};
+
+    const IN4: &str = indoc! {"
+        0
+        67,x,7,59,61
+    "};
+
+    const IN5: &str = indoc! {"
+        0
+        67,7,x,59,61
+    "};
+
+    const IN6: &str = indoc! {"
+        0
+        1789,37,47,1889
+    "};
+
+    const ME: &str = indoc! {"
+        1000417
+        23,x,x,x,x,x,x,x,x,x,x,x,x,41,x,x,x,37,x,x,x,x,x,479,x,x,x,x,x,x,x,x,x,x,x,x,13,x,x,x,17,x,x,x,x,x,x,x,x,x,x,x,29,x,373,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,19
+    "};
+}

@@ -111,3 +111,89 @@ pub fn star2(input: &str) -> String {
     let graph = parse_graph(input);
     search_node(&graph, &mut Vec::new(), true, graph_start(&graph)).to_string()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use indoc::indoc;
+
+    star_test!(example1a, star1, IN1, "10");
+    star_test!(example2a, star1, IN2, "19");
+    star_test!(example3a, star1, IN3, "226");
+    star_test!(me1, star1, ME, "4338");
+
+    star_test!(example1b, star2, IN1, "36");
+    star_test!(example2b, star2, IN2, "103");
+    star_test!(example3b, star2, IN3, "3509");
+    star_test!(me2, star2, ME, "114189");
+
+    const IN1: &str = indoc! {"
+        start-A
+        start-b
+        A-c
+        A-b
+        b-d
+        A-end
+        b-end
+    "};
+
+    const IN2: &str = indoc! {"
+        dc-end
+        HN-start
+        start-kj
+        dc-start
+        dc-HN
+        LN-dc
+        HN-end
+        kj-sa
+        kj-HN
+        kj-dc
+    "};
+
+    const IN3: &str = indoc! {"
+        fs-end
+        he-DX
+        fs-he
+        start-DX
+        pj-DX
+        end-zg
+        zg-sl
+        zg-pj
+        pj-he
+        RW-he
+        fs-DX
+        pj-RW
+        zg-RW
+        start-pj
+        he-WI
+        zg-he
+        pj-fs
+        start-RW
+    "};
+
+    const ME: &str = indoc! {"
+        nu-start
+        rt-start
+        db-qh
+        PE-end
+        sl-rt
+        qh-end
+        ZH-rt
+        nu-rt
+        PE-db
+        db-sl
+        nu-ZH
+        nu-qh
+        PE-qh
+        ZH-db
+        ne-end
+        ne-ZH
+        QG-db
+        qh-sl
+        ZH-qh
+        start-ZH
+        nu-PE
+        uf-db
+        ne-sl
+    "};
+}

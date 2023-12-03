@@ -66,3 +66,14 @@ pub fn star2(input: &str) -> String {
 
     count.to_string()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    star_test!(example1a, star1, "target area: x=20..30, y=-10..-5", "45");
+    star_test!(me1, star1, "target area: x=155..182, y=-117..-67", "6786");
+
+    star_test!(example1b, star2, "target area: x=20..30, y=-10..-5", "112");
+    star_test!(me2, star2, "target area: x=155..182, y=-117..-67", "2313");
+}

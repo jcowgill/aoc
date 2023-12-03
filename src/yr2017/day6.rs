@@ -78,3 +78,14 @@ pub fn star1(input: &str) -> String {
 pub fn star2(input: &str) -> String {
     find_repeated_redistribution(input).1.to_string()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    star_test!(example1a, star1, "0 2 7 0", "5");
+    star_test!(me1, star1, "4	10	4	1	8	4	9	14	5	1	14	15	0	15	3	5", "12841");
+
+    star_test!(example1b, star2, "0 2 7 0", "4");
+    star_test!(me2, star2, "4	10	4	1	8	4	9	14	5	1	14	15	0	15	3	5", "8038");
+}

@@ -237,3 +237,21 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    star_test!(example1a, star1, "1", "0");
+    star_test!(example2a, star1, "12", "3");
+    star_test!(example3a, star1, "23", "2");
+    star_test!(example4, star1, "1024", "31");
+    star_test!(example5, star1, "49", "6");
+    star_test!(example6, star1, "37", "6");
+    star_test!(me1, star1, "325489", "552");
+
+    star_test!(example1b, star2, "1", "1");
+    star_test!(example2b, star2, "20", "23");
+    star_test!(example3b, star2, "700", "747");
+    star_test!(me2, star2, "325489", "330785");
+}

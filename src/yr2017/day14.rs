@@ -85,3 +85,14 @@ fn count_regions(mut grid: Vec<KnotHashResult>) -> u32 {
 pub fn star2(input: &str) -> String {
     count_regions(get_grid(input)).to_string()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    star_test!(example1a, star1, "flqrgnkx", "8108");
+    star_test!(me1, star1, "hxtvlmkl", "8214");
+
+    star_test!(example1b, star2, "flqrgnkx", "1242");
+    star_test!(me2, star2, "hxtvlmkl", "1093");
+}

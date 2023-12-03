@@ -84,3 +84,25 @@ pub fn star2(input: &str) -> String {
 
     win_freq.iter().max().unwrap().to_string()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use indoc::indoc;
+
+    star_test!(example1a, star1, IN1, "739785");
+    star_test!(me1, star1, ME, "995904");
+
+    star_test!(example1b, star2, IN1, "444356092776315");
+    star_test!(me2, star2, ME, "193753136998081");
+
+    const IN1: &str = indoc! {"
+        Player 1 starting position: 4
+        Player 2 starting position: 8
+    "};
+
+    const ME: &str = indoc! {"
+        Player 1 starting position: 3
+        Player 2 starting position: 4
+    "};
+}
