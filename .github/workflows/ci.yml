@@ -21,3 +21,11 @@ jobs:
       run: rustup update
     - name: clippy
       run: cargo clippy
+  format:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: update rust
+      run: rustup update
+    - name: format
+      run: cargo fmt --check
