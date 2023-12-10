@@ -12,7 +12,7 @@ jobs:
     - name: build
       run: cargo build --release
     - name: test
-      run: cargo test --release --jobs 1
+      run: cargo test --release
   clippy:
     runs-on: ubuntu-latest
     steps:
