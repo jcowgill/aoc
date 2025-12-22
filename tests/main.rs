@@ -119,3 +119,4 @@ gen_tests!(yr2018);
 gen_tests!(yr2020);
 gen_tests!(yr2021);
 gen_tests!(yr2022);
+gen_tests!(yr2025);
