@@ -39,7 +39,7 @@ struct TopologicalSort<'a> {
 
 impl<'a> TopologicalSort<'a> {
     /// Constructs a new state
-    pub fn new(edges: &HashMap<char, Vec<char>>) -> TopologicalSort {
+    pub fn new(edges: &HashMap<char, Vec<char>>) -> TopologicalSort<'_> {
         // Index number of incoming edges for each node
         let mut incoming_count = HashMap::new();
         for (node, outgoing) in edges {

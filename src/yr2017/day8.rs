@@ -1,6 +1,5 @@
 use std::cmp;
 use std::collections::HashMap;
-use std::i32;
 
 /// A single instruction to be executed
 struct Instruction<'a> {
@@ -16,7 +15,7 @@ struct Instruction<'a> {
 type Registers<'a> = HashMap<&'a str, i32>;
 
 /// Parses a single instruction
-fn parse_instruction(line: &str) -> Instruction {
+fn parse_instruction(line: &str) -> Instruction<'_> {
     let tokens: Vec<&str> = line.split_whitespace().collect();
 
     // Perform some basic validation

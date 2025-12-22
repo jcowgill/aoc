@@ -12,7 +12,7 @@ fn trim_bag(mut bag: &str) -> (u32, &str) {
 
     (
         number,
-        bag.trim_end_matches(&['.', ' '])
+        bag.trim_end_matches(['.', ' '])
             .trim_end_matches("bags")
             .trim_end_matches("bag")
             .trim(),

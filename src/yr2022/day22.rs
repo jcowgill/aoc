@@ -28,7 +28,7 @@ fn parse_instructions(
     instrs: &str,
 ) -> impl Iterator<Item = (usize, fn(Direction) -> Direction)> + '_ {
     instrs.split_inclusive(&['L', 'R']).map(|s| {
-        let num = s.trim_end_matches(&['L', 'R']).parse().unwrap();
+        let num = s.trim_end_matches(['L', 'R']).parse().unwrap();
         let rotation: fn(Direction) -> Direction = if s.ends_with('L') {
             |d| d.anticlockwise()
         } else if s.ends_with('R') {

@@ -59,7 +59,7 @@ fn simulate(input: &str, rounds: usize, item_div: u64) -> String {
                     Add::add
                 };
                 let new = (op(u64::from(item), u64::from(b)) / item_div % modulo) as u32;
-                let dest = if new % monkeys[i].div_test == 0 {
+                let dest = if new.is_multiple_of(monkeys[i].div_test) {
                     monkeys[i].div_true
                 } else {
                     monkeys[i].div_false

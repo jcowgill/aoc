@@ -169,7 +169,7 @@ fn repeat_transformation<T: Transformation + Clone>(transformation: T, n: usize)
     if n == 1 {
         // Base case
         transformation
-    } else if n % 2 == 0 {
+    } else if n.is_multiple_of(2) {
         // If n is even, combine with ourselves and repeat n / 2 times
         let double_transform = transformation.combine(&transformation);
         repeat_transformation(double_transform, n / 2)

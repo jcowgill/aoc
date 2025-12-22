@@ -8,7 +8,7 @@ pub fn star1(input: &str) -> String {
         .map(|line| {
             let mut digits = line.bytes().filter(u8::is_ascii_digit);
             let d1 = digits.next().unwrap();
-            let d2 = digits.last().unwrap_or(d1);
+            let d2 = digits.next_back().unwrap_or(d1);
             u32::from((d1 - b'0') * 10 + (d2 - b'0'))
         })
         .sum::<u32>()

@@ -131,7 +131,7 @@ fn parse_machine(input: &str) -> (TuringMachine<char, bool>, usize) {
     }
 
     let mut initial_state = None;
-    let mut checksum = usize::max_value();
+    let mut checksum = usize::MAX;
 
     let mut transitions: TransitionMap<char, bool> = HashMap::new();
     let mut current_state = None;

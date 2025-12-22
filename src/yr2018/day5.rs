@@ -1,6 +1,6 @@
 /// Predicate which returns true if two units react
 fn units_react(a: char, b: char) -> bool {
-    a != b && a.to_ascii_lowercase() == b.to_ascii_lowercase()
+    a != b && a.eq_ignore_ascii_case(&b)
 }
 
 /// React a polymer returning a new vector

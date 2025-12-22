@@ -37,7 +37,7 @@ where
     I: Iterator<Item = &'a Vector2<i32>>,
 {
     let mut nearest_id = None;
-    let mut nearest_dist = std::i32::MAX;
+    let mut nearest_dist = i32::MAX;
 
     for (id, &coord) in coords.enumerate() {
         let dist = (point - coord).taxicab_norm();
@@ -83,7 +83,7 @@ pub fn star1(input: &str) -> String {
 /// Find size of area "close" to a set of all points
 pub fn star2(input: &str) -> String {
     let mut input_lines = input.lines().peekable();
-    let safe_distance: i32 = if input_lines.peek().map_or(false, |l| !l.contains(',')) {
+    let safe_distance: i32 = if input_lines.peek().is_some_and(|l| !l.contains(',')) {
         input_lines.next().unwrap().parse().unwrap()
     } else {
         10000

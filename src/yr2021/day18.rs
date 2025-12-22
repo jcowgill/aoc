@@ -70,7 +70,7 @@ impl Node {
     fn split(&mut self) -> bool {
         match self {
             &mut Node::Leaf(v) if v >= 10 => {
-                *self = Node::Leaf(v / 2).add(Node::Leaf((v + 1) / 2));
+                *self = Node::Leaf(v / 2).add(Node::Leaf(v.div_ceil(2)));
                 true
             }
             Node::Leaf(_) => false,

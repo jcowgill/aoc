@@ -13,7 +13,7 @@ fn parse_ticket(s: &str) -> Ticket {
     s.split(',').map(|v| v.parse().unwrap()).collect()
 }
 
-fn parse(input: &str) -> (Fields, Ticket, Vec<Ticket>) {
+fn parse(input: &str) -> (Fields<'_>, Ticket, Vec<Ticket>) {
     let paras: Vec<_> = input.split("\n\n").collect();
     (
         paras[0]

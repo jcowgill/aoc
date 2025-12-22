@@ -38,10 +38,10 @@ fn bounding_rect_size<'a, I: Iterator<Item = &'a Vector2<i32>>>(points: I) -> Op
 /// Finds the smallest bounding rectangle of a set of points by scanning through time
 ///  Returns the number of iterations taken.
 ///  The points vector contains the best points
-fn bounding_rect_smallest(points: &mut Vec<Vector2<i32>>, velocities: &[Vector2<i32>]) -> usize {
+fn bounding_rect_smallest(points: &mut [Vector2<i32>], velocities: &[Vector2<i32>]) -> usize {
     assert_eq!(points.len(), velocities.len());
 
-    let mut prev_score = i32::max_value();
+    let mut prev_score = i32::MAX;
     let mut score = bounding_rect_size(points.iter()).unwrap();
     let mut iterations = 0;
 

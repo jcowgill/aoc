@@ -26,7 +26,7 @@ where
 }
 
 /// Performs one redistribution iteration over a vector of banks
-fn redistribute(vector: &mut Vec<i32>) {
+fn redistribute(vector: &mut [i32]) {
     // Find largest bucket
     assert!(!vector.is_empty());
     let mut index = first_max_index(vector.iter()).unwrap();

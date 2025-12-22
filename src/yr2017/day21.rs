@@ -18,7 +18,7 @@ impl Image {
     /// Constructs an image from a raw vector in row major order
     ///  Size of vector must be a multiple of width
     fn from_raw_data(width: usize, data: Vec<bool>) -> Image {
-        assert!(data.len() % width == 0);
+        assert!(data.len().is_multiple_of(width));
         Image { width, data }
     }
 
@@ -163,10 +163,10 @@ fn parse_rules<'a, I: Iterator<Item = &'a str>>(lines: I) -> HashMap<Image, Imag
 ///  rules = ALL the rules (inc rotations etc)
 fn fractal_iterate(image: Image, rules: &HashMap<Image, Image>) -> Image {
     assert!(image.width == image.height());
-    assert!(image.width % 2 == 0 || image.width % 3 == 0);
+    assert!(image.width.is_multiple_of(2) || image.width.is_multiple_of(3));
 
     // Get list of blocks which we're going to expand into
-    let block_size = if image.width % 2 == 0 { 2 } else { 3 };
+    let block_size = if image.width.is_multiple_of(2) { 2 } else { 3 };
     let block_count = image.width / block_size;
     let matched_blocks: Vec<&Image> = (0..block_count)
         .cartesian_product(0..block_count)
