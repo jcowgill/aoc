@@ -3,7 +3,7 @@ name = "aoc"
 version = "0.1.0"
 authors = ["James Cowgill <jcowgill@jcowgill.uk>"]
 edition = "2021"
-rust-version = "1.67"
+rust-version = "1.91"
 
 [lib]
 name = "aoclib"
