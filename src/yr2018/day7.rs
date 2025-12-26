@@ -1,15 +1,13 @@
+use regex::Regex;
 use std::cmp::Reverse;
 use std::collections::{BinaryHeap, HashMap};
-
-use lazy_static::lazy_static;
-use regex::Regex;
+use std::sync::LazyLock;
 
 /// Parses the input list of dependencies
 fn parse_input<'a, I: Iterator<Item = &'a str>>(lines: I) -> HashMap<char, Vec<char>> {
-    lazy_static! {
-        static ref RE: Regex =
-            Regex::new("^Step ([A-Z]) must be finished before step ([A-Z]) can begin.$").unwrap();
-    }
+    static RE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new("^Step ([A-Z]) must be finished before step ([A-Z]) can begin.$").unwrap()
+    });
 
     let mut result = HashMap::new();
 

@@ -1,12 +1,10 @@
 use itertools::Itertools;
-use lazy_static::lazy_static;
 use regex::Regex;
+use std::sync::LazyLock;
 
 fn parse_input(input: &str) -> (i32, i32, i32, i32) {
-    lazy_static! {
-        static ref RE: Regex =
-            Regex::new(r"target area: x=(\d+)..(\d+), y=(-\d+)..(-\d+)").unwrap();
-    }
+    static RE: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"target area: x=(\d+)..(\d+), y=(-\d+)..(-\d+)").unwrap());
 
     RE.captures(input)
         .unwrap()

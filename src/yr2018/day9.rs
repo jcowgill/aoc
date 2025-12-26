@@ -1,7 +1,6 @@
-use std::collections::VecDeque;
-
-use lazy_static::lazy_static;
 use regex::Regex;
+use std::collections::VecDeque;
+use std::sync::LazyLock;
 
 /// Rotates a VecDeque left (move first elements to the back)
 fn rotate_left<T>(deque: &mut VecDeque<T>, amount: u32) {
@@ -49,10 +48,9 @@ fn marble_game(players: u32, last_marble: u32) -> Vec<u32> {
 
 /// From an input description, returns the max score as a string
 fn max_score(input: &str, multiplier: u32) -> String {
-    lazy_static! {
-        static ref RE: Regex =
-            Regex::new("^([0-9]+) players; last marble is worth ([0-9]+) points$").unwrap();
-    }
+    static RE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new("^([0-9]+) players; last marble is worth ([0-9]+) points$").unwrap()
+    });
 
     let caps = RE.captures(input).unwrap();
     let players: u32 = caps.get(1).unwrap().as_str().parse().unwrap();

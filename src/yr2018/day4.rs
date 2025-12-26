@@ -1,7 +1,7 @@
-use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashMap;
 use std::str::FromStr;
+use std::sync::LazyLock;
 
 /// Possible recorded actions
 #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq, PartialOrd, Ord)]
@@ -20,9 +20,8 @@ impl FromStr for Action {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Action, ()> {
-        lazy_static! {
-            static ref GUARD_RE: Regex = Regex::new(r"^Guard #([0-9]*) begins shift$").unwrap();
-        }
+        static GUARD_RE: LazyLock<Regex> =
+            LazyLock::new(|| Regex::new(r"^Guard #([0-9]*) begins shift$").unwrap());
 
         if s == "falls asleep" {
             Ok(Action::FallAsleep)
@@ -50,10 +49,8 @@ impl FromStr for Record {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Record, ()> {
-        lazy_static! {
-            static ref RE: Regex =
-                Regex::new(r"^\s*\[([0-9-]* [0-9]*):([0-9]*)\]\s*(.*)$").unwrap();
-        }
+        static RE: LazyLock<Regex> =
+            LazyLock::new(|| Regex::new(r"^\s*\[([0-9-]* [0-9]*):([0-9]*)\]\s*(.*)$").unwrap());
 
         if let Some(caps) = RE.captures(s) {
             Ok(Record {

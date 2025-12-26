@@ -1,7 +1,7 @@
 use crate::vector::VectorExt;
-use lazy_static::lazy_static;
 use nalgebra::Vector2;
 use regex::Regex;
+use std::sync::LazyLock;
 
 /// Returns the smallest rectangle which bounds a set of points
 fn bounding_rect<'a, I: Iterator<Item = &'a Vector2<i32>>>(
@@ -92,11 +92,9 @@ fn points_to_string(mut points: Vec<Vector2<i32>>) -> String {
 
 /// Parses the input into point and velocity vectors
 fn parse_input(input: &str) -> (Vec<Vector2<i32>>, Vec<Vector2<i32>>) {
-    lazy_static! {
-        static ref RE: Regex =
-            Regex::new(r"^position=<\s*([0-9-]+)\s*,\s*([0-9-]+)\s*>\s*velocity=<\s*([0-9-]+)\s*,\s*([0-9-]+)\s*>$")
-            .unwrap();
-    }
+    static RE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r"^position=<\s*([0-9-]+)\s*,\s*([0-9-]+)\s*>\s*velocity=<\s*([0-9-]+)\s*,\s*([0-9-]+)\s*>$").unwrap()
+    });
 
     let mut points: Vec<Vector2<i32>> = Vec::new();
     let mut velocities: Vec<Vector2<i32>> = Vec::new();

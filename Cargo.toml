@@ -15,7 +15,6 @@ path = "src/bin.rs"
 
 [dependencies]
 itertools = "0.14"
-lazy_static = "1"
 nalgebra = "0.34"
 num = "0.4"
 regex = "1"

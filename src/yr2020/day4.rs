@@ -1,23 +1,23 @@
-use lazy_static::lazy_static;
 use regex::Regex;
+use std::sync::LazyLock;
 
-lazy_static! {
-    static ref FIELDS: [(&'static str, Regex); 7] = [
+static FIELDS: LazyLock<[(&'static str, Regex); 7]> = LazyLock::new(|| {
+    [
         ("byr", Regex::new(r"^(19[2-9][0-9]|200[0-2])$").unwrap()),
         (
             "ecl",
-            Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").unwrap()
+            Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").unwrap(),
         ),
         ("eyr", Regex::new(r"^(202[0-9]|2030)$").unwrap()),
         ("hcl", Regex::new(r"^(#[0-9a-f]{6})$").unwrap()),
         (
             "hgt",
-            Regex::new(r"^(1[5-8][0-9]cm|19[0-3]cm|59in|6[0-9]in|7[0-6]in)$").unwrap()
+            Regex::new(r"^(1[5-8][0-9]cm|19[0-3]cm|59in|6[0-9]in|7[0-6]in)$").unwrap(),
         ),
         ("iyr", Regex::new(r"^(201[0-9]|2020)$").unwrap()),
         ("pid", Regex::new(r"^([0-9]{9})$").unwrap()),
-    ];
-}
+    ]
+});
 
 fn parse_passport(p: &str) -> Vec<(&str, &str)> {
     let mut result: Vec<_> = p
