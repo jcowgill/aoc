@@ -101,11 +101,7 @@ pub fn star1(input: &str) -> String {
                 .map(|s| s.parse::<Value>().unwrap())
                 .collect_tuple()
                 .unwrap();
-            if a < b {
-                i + 1
-            } else {
-                0
-            }
+            if a < b { i + 1 } else { 0 }
         })
         .sum::<usize>()
         .to_string()

@@ -24,7 +24,7 @@ fn parse_input(input: &str) -> (Vec<Vector2<i32>>, Vec<(u8, i32)>) {
     )
 }
 
-fn do_folds(input: &str, max_folds: usize) -> impl Iterator<Item = Vector2<i32>> {
+fn do_folds(input: &str, max_folds: usize) -> impl Iterator<Item = Vector2<i32>> + use<> {
     let (mut dots, folds) = parse_input(input);
     for (axis, line) in folds.into_iter().take(max_folds) {
         for i in 0..dots.len() {

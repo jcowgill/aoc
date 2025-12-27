@@ -50,7 +50,7 @@ impl<'a> TopologicalSort<'a> {
         // Open set initialised to nodes with no incoming edges
         let open = incoming_count
             .iter()
-            .filter(|(_, &c)| c == 0)
+            .filter(|&(_, &c)| c == 0)
             .map(|(&n, _)| Reverse(n))
             .collect();
 

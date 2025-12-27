@@ -63,16 +63,16 @@ where
     // Try pushing all subcomponents which fit
     let mut best_result = (0, 0);
     for i in 0..components.len() {
-        if let Some(c) = components[i] {
-            if let Some(other_port) = c.port_connects(port) {
-                components[i] = None;
-                let sub_result = find_bridge(bridge_cmp, other_port, components);
-                components[i] = Some(c);
+        if let Some(c) = components[i]
+            && let Some(other_port) = c.port_connects(port)
+        {
+            components[i] = None;
+            let sub_result = find_bridge(bridge_cmp, other_port, components);
+            components[i] = Some(c);
 
-                let new_result = (sub_result.0 + 1, sub_result.1 + c.strength());
-                if bridge_cmp(new_result, best_result) == Ordering::Greater {
-                    best_result = new_result;
-                }
+            let new_result = (sub_result.0 + 1, sub_result.1 + c.strength());
+            if bridge_cmp(new_result, best_result) == Ordering::Greater {
+                best_result = new_result;
             }
         }
     }

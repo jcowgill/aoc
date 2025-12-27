@@ -1,4 +1,4 @@
-use crate::yr2017::processor::{program_step, ExecutionState, Instruction, StepResult};
+use crate::yr2017::processor::{ExecutionState, Instruction, StepResult, program_step};
 
 /// Parses the input program into a list of instructions
 fn parse_program(input: &str) -> Vec<Instruction> {

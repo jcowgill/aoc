@@ -54,13 +54,14 @@ fn pathfind(map: &mut DMatrix<Node>, start: (usize, usize), height_fn: impl Fn(u
         let node_height = map[pos].height();
         for (oy, ox) in [(0, 1), (2, 1), (1, 0), (1, 2)] {
             let npos = ((pos.0 + oy).wrapping_sub(1), (pos.1 + ox).wrapping_sub(1));
-            if let Some(node) = map.get_mut(npos) {
-                if node.distance > dist + 1 && height_fn(node_height, node.height()) {
-                    // Try this node
-                    open.remove(&(node.distance, npos));
-                    node.distance = dist + 1;
-                    open.insert((node.distance, npos));
-                }
+            if let Some(node) = map.get_mut(npos)
+                && node.distance > dist + 1
+                && height_fn(node_height, node.height())
+            {
+                // Try this node
+                open.remove(&(node.distance, npos));
+                node.distance = dist + 1;
+                open.insert((node.distance, npos));
             }
         }
     }

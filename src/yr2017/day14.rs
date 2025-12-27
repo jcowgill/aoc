@@ -1,4 +1,4 @@
-use crate::yr2017::day10::{knot_hash, KnotHashResult};
+use crate::yr2017::day10::{KnotHashResult, knot_hash};
 
 /// The size of the grid (in both dimensions)
 const GRID_SIZE: u8 = 128;

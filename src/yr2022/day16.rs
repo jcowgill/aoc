@@ -97,16 +97,16 @@ fn dfs(
 
     if time_left > 1 {
         for (vid, &rate) in rates.iter().enumerate() {
-            if vid != 0 && vid != start {
-                if let Some(new_time_left) = time_left.checked_sub(costs[(start, vid)] + 1) {
-                    if new_time_left > 0 && !opened.contains(&vid) {
-                        opened.push(vid);
-                        best = best.max(
-                            rate * new_time_left + dfs(rates, costs, opened, vid, new_time_left),
-                        );
-                        opened.pop();
-                    }
-                }
+            if vid != 0
+                && vid != start
+                && let Some(new_time_left) = time_left.checked_sub(costs[(start, vid)] + 1)
+                && new_time_left > 0
+                && !opened.contains(&vid)
+            {
+                opened.push(vid);
+                best =
+                    best.max(rate * new_time_left + dfs(rates, costs, opened, vid, new_time_left));
+                opened.pop();
             }
         }
     }

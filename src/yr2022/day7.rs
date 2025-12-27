@@ -26,7 +26,7 @@ fn parse_input(input: &str) -> Node {
             // Find the right map
             let mut map = &mut root_map;
             for &dir in dirs.iter() {
-                if let Some(Node::Dir(ref mut dir)) = map.get_mut(dir) {
+                if let Some(Node::Dir(dir)) = map.get_mut(dir) {
                     map = dir;
                 } else {
                     panic!("{} is not a directory", dir);

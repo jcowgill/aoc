@@ -26,10 +26,10 @@ impl Grid {
     }
 
     fn get(&self, pos: Position) -> Option<u8> {
-        if let (Ok(x), Ok(y)) = (usize::try_from(pos.x), usize::try_from(pos.y)) {
-            if x < self.width {
-                return self.data.get(x + y * self.width).copied();
-            }
+        if let (Ok(x), Ok(y)) = (usize::try_from(pos.x), usize::try_from(pos.y))
+            && x < self.width
+        {
+            return self.data.get(x + y * self.width).copied();
         }
 
         None

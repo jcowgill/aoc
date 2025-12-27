@@ -1,6 +1,6 @@
 use std::collections::{HashSet, VecDeque};
 
-use nalgebra::{try_convert, DMatrix, Vector2};
+use nalgebra::{DMatrix, Vector2, try_convert};
 
 use crate::direction::Direction;
 

@@ -132,7 +132,7 @@ fn longest_sleep<'a, I: Iterator<Item = &'a Record>>(records: I) -> u32 {
         *minutes_asleep.entry(guard).or_insert(0) += (wakeup - sleep) as u32;
     }
 
-    *minutes_asleep.iter().max_by_key(|(_, &v)| v).unwrap().0
+    *minutes_asleep.iter().max_by_key(|&(_, &v)| v).unwrap().0
 }
 
 /// Returns the frequency map which counts the frequency each guard is
@@ -156,7 +156,7 @@ fn most_frequent_minute<'a, I: Iterator<Item = &'a Record>>(records: I, freq_gua
     (minute_frequency_map(records)
         .iter()
         .filter(|&(&(guard, _), _)| guard == freq_guard)
-        .max_by_key(|(_, &v)| v)
+        .max_by_key(|&(_, &v)| v)
         .unwrap()
         .0)
         .1
@@ -178,7 +178,7 @@ pub fn star2(input: &str) -> String {
 
     let (guard, minute) = *minute_frequency_map(records.iter())
         .iter()
-        .max_by_key(|(_, &v)| v)
+        .max_by_key(|&(_, &v)| v)
         .unwrap()
         .0;
 

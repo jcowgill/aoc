@@ -26,7 +26,7 @@ fn parse_tile(line: &str) -> Vector2<i32> {
         .0
 }
 
-fn parse_input(input: &str) -> impl Iterator<Item = Vector2<i32>> {
+fn parse_input(input: &str) -> impl Iterator<Item = Vector2<i32>> + use<> {
     input
         .lines()
         .map(parse_tile)

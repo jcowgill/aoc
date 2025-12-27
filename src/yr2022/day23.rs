@@ -1,7 +1,7 @@
 use crate::direction::Direction;
 use itertools::Itertools;
 use nalgebra::Vector2;
-use std::collections::{hash_map::Entry, HashMap};
+use std::collections::{HashMap, hash_map::Entry};
 
 fn simulate(input: &str, max_rounds: u32) -> (HashMap<Vector2<i32>, Option<Vector2<i32>>>, u32) {
     let mut grid: HashMap<_, _> = input

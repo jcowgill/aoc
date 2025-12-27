@@ -1,4 +1,4 @@
-use crate::vector::{total_matrix_cmp, VectorExt};
+use crate::vector::{VectorExt, total_matrix_cmp};
 use nalgebra::Vector3;
 use std::cmp::Ordering;
 

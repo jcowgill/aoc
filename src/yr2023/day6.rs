@@ -1,4 +1,4 @@
-use itertools::{multizip, Itertools};
+use itertools::{Itertools, multizip};
 
 fn solve((t, d): (i64, i64)) -> i64 {
     // y = x * (t - x) - d = xt - x^2 - (d + 1)

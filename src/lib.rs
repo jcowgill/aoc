@@ -42,12 +42,11 @@ impl FromStr for StarId {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut part_iter = s.splitn(3, '-');
-        if let Some(Some(year)) = part_iter.next().map(|s| s.parse().ok()) {
-            if let Some(Some(day)) = part_iter.next().map(|s| s.parse().ok()) {
-                if let Some(Some(star)) = part_iter.next().map(|s| s.parse().ok()) {
-                    return Ok(StarId { year, day, star });
-                }
-            }
+        if let Some(Some(year)) = part_iter.next().map(|s| s.parse().ok())
+            && let Some(Some(day)) = part_iter.next().map(|s| s.parse().ok())
+            && let Some(Some(star)) = part_iter.next().map(|s| s.parse().ok())
+        {
+            return Ok(StarId { year, day, star });
         }
 
         Err(())

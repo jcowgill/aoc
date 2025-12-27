@@ -87,9 +87,8 @@ fn resolve_towers(mut input: HashMap<String, UnresolvedTower>) -> Tower {
     }
 
     // Extract last entry in hashmap
-    assert!(resolved.len() == 1);
-    let result = resolved.drain().next().unwrap().1;
-    result
+    assert_eq!(resolved.len(), 1);
+    resolved.drain().next().unwrap().1
 }
 
 /// Checks a tower to ensure all the weights are correct

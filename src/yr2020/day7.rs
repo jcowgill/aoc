@@ -38,10 +38,10 @@ pub fn star1(input: &str) -> String {
     let mut seen = HashSet::new();
     let mut open = vec!["shiny gold"];
     while let Some(bag) = open.pop() {
-        if seen.insert(bag) {
-            if let Some(w) = within.get(bag) {
-                open.extend_from_slice(w);
-            }
+        if seen.insert(bag)
+            && let Some(w) = within.get(bag)
+        {
+            open.extend_from_slice(w);
         }
     }
 

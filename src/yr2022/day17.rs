@@ -90,23 +90,22 @@ fn solve(input: &str, count: u64) -> String {
 
         if let Some((old_i, old_row, old_drop)) =
             states.insert((rock_id, jet_id), (i, rows.len(), drop))
+            && drop == old_drop
         {
-            if drop == old_drop {
-                if consecutive_found >= 5 {
-                    // Found cycle - chop out middle and simulate the rest
-                    let remaining_cycles = (count - i) / (i - old_i);
-                    let remaining_rocks = (count - i) % (i - old_i);
-                    let skipped_rows = remaining_cycles * ((rows.len() - old_row) as u64);
+            if consecutive_found >= 5 {
+                // Found cycle - chop out middle and simulate the rest
+                let remaining_cycles = (count - i) / (i - old_i);
+                let remaining_rocks = (count - i) % (i - old_i);
+                let skipped_rows = remaining_cycles * ((rows.len() - old_row) as u64);
 
-                    for j in 1..remaining_rocks {
-                        drop_rock(&mut rows, &mut jet, i + j);
-                    }
-
-                    return (skipped_rows + rows.len() as u64).to_string();
-                } else {
-                    consecutive_found += 1;
-                    continue;
+                for j in 1..remaining_rocks {
+                    drop_rock(&mut rows, &mut jet, i + j);
                 }
+
+                return (skipped_rows + rows.len() as u64).to_string();
+            } else {
+                consecutive_found += 1;
+                continue;
             }
         }
 

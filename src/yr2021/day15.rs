@@ -13,10 +13,10 @@ struct Grid<T> {
 
 impl<T: Copy> Grid<T> {
     fn pos_to_index(&self, pos: Position) -> Option<usize> {
-        if let (Ok(x), Ok(y)) = (usize::try_from(pos.x), usize::try_from(pos.y)) {
-            if x < self.width {
-                return Some(x + y * self.width);
-            }
+        if let (Ok(x), Ok(y)) = (usize::try_from(pos.x), usize::try_from(pos.y))
+            && x < self.width
+        {
+            return Some(x + y * self.width);
         }
 
         None

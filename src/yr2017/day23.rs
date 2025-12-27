@@ -1,4 +1,4 @@
-use crate::yr2017::processor::{program_step, ExecutionState, Instruction, RegImm, StepResult};
+use crate::yr2017::processor::{ExecutionState, Instruction, RegImm, StepResult, program_step};
 
 /// Parses the input program into a list of instructions
 fn parse_program(input: &str) -> Vec<Instruction> {
@@ -54,44 +54,30 @@ fn star2_optimize(program: &mut [Instruction]) {
         .windows(10)
         .enumerate()
         .filter_map(|(i, window)| {
-            // Slice pattern matching not yet stablized so we have to use an if-let chain
-            if let Instruction::Set(e, RegImm::Imm(2)) = window[0] {
-                if let Instruction::Set(g, RegImm::Reg(d)) = window[1] {
-                    if let Instruction::Mul(g1, RegImm::Reg(e1)) = window[2] {
-                        if let Instruction::Sub(g2, RegImm::Reg(b)) = window[3] {
-                            if let Instruction::Jnz(RegImm::Reg(g3), RegImm::Imm(2)) = window[4] {
-                                if let Instruction::Set(f, RegImm::Imm(0)) = window[5] {
-                                    if let Instruction::Sub(e2, RegImm::Imm(-1)) = window[6] {
-                                        if let Instruction::Set(g4, RegImm::Reg(e3)) = window[7] {
-                                            if let Instruction::Sub(g5, RegImm::Reg(b1)) = window[8]
-                                            {
-                                                if let Instruction::Jnz(
-                                                    RegImm::Reg(g6),
-                                                    RegImm::Imm(-8),
-                                                ) = window[9]
-                                                {
-                                                    if b == b1
-                                                        && e == e1
-                                                        && e == e2
-                                                        && e == e3
-                                                        && g == g1
-                                                        && g == g2
-                                                        && g == g3
-                                                        && g == g4
-                                                        && g == g5
-                                                        && g == g6
-                                                    {
-                                                        return Some((i, b, d, e, f, g));
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            if let [
+                Instruction::Set(e, RegImm::Imm(2)),
+                Instruction::Set(g, RegImm::Reg(d)),
+                Instruction::Mul(g1, RegImm::Reg(e1)),
+                Instruction::Sub(g2, RegImm::Reg(b)),
+                Instruction::Jnz(RegImm::Reg(g3), RegImm::Imm(2)),
+                Instruction::Set(f, RegImm::Imm(0)),
+                Instruction::Sub(e2, RegImm::Imm(-1)),
+                Instruction::Set(g4, RegImm::Reg(e3)),
+                Instruction::Sub(g5, RegImm::Reg(b1)),
+                Instruction::Jnz(RegImm::Reg(g6), RegImm::Imm(-8)),
+            ] = window
+                && b == b1
+                && e == e1
+                && e == e2
+                && e == e3
+                && g == g1
+                && g == g2
+                && g == g3
+                && g == g4
+                && g == g5
+                && g == g6
+            {
+                return Some((i, *b, *d, *e, *f, *g));
             }
 
             None

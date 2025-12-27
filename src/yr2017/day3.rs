@@ -9,17 +9,9 @@ fn xy_to_side((x, y): (i32, i32)) -> i32 {
     if x >= 0 && y >= 0 {
         i32::from(x < y)
     } else if x < 0 && y >= 0 {
-        if y >= -x {
-            1
-        } else {
-            2
-        }
+        if y >= -x { 1 } else { 2 }
     } else if x < 0 && y < 0 {
-        if x <= y {
-            2
-        } else {
-            3
-        }
+        if x <= y { 2 } else { 3 }
     } else if y <= -x {
         3
     } else {

@@ -63,7 +63,7 @@ fn enumerate_transforms(
 fn find_transform(
     stations: &[(Vec<Point>, HashMap<i32, usize>)],
     joined_becons: &HashSet<Point>,
-) -> Option<(usize, impl Fn(Point) -> Point + Clone)> {
+) -> Option<(usize, impl Fn(Point) -> Point + Clone + use<>)> {
     // Compute every combination of distances between joined points
     let joined_dist_freq = joined_becons
         .iter()
