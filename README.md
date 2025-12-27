@@ -2,6 +2,11 @@
 This is my implementations of [Advent of Code](https://adventofcode.com/) in
 Rust.
 
+## Tests
+
+Running the testsuite requires test data from the "aoc-private"
+repository which (as the name suggests) is not publicly available.
+
 ## License
 Copyright (C) 2017-2023 James Cowgill
 
