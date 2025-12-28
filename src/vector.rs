@@ -23,7 +23,7 @@ impl<T: Scalar + Signed + Zero, R: Dim, S: Storage<T, R, U1>> VectorExt<T> for M
 /// Compares two matrixes elementwise to create a total ordering between them
 pub fn total_matrix_cmp<T, R, C, S>(a: &Matrix<T, R, C, S>, b: &Matrix<T, R, C, S>) -> Ordering
 where
-    T: Ord,
+    T: Scalar + Ord,
     R: Dim,
     C: Dim,
     S: Storage<T, R, C>,
