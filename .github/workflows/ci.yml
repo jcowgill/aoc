@@ -6,17 +6,28 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: checkout aoc
+      uses: actions/checkout@v6
+      with:
+        path: aoc
+    - name: checkout aoc-private
+      uses: actions/checkout@v6
+      with:
+        repository: jcowgill/aoc-private
+        token: ${{ secrets.AOC_PRIVATE_TOKEN }}
+        path: aoc-private
     - name: update rust
       run: rustup update
     - name: build
       run: cargo build --release
+      working-directory: aoc
     - name: test
       run: cargo test --release
+      working-directory: aoc
   clippy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
     - name: update rust
       run: rustup update
     - name: clippy
@@ -24,7 +35,7 @@ jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
     - name: update rust
       run: rustup update
     - name: format
